@@ -11,10 +11,7 @@ var users = require('./routes/users');
 var app = express();
 var server = app.listen(3001);
 
-//var server = require('http').createServer(app);
-//var io = require('socket.io')(server);
 
-//var app = require('http').createServer(handler),
   var  io = require('socket.io')(server);
   var fs = require('fs');
 var serialport = require('serialport');
@@ -33,17 +30,6 @@ var sp = new serialport.SerialPort(portName, {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -58,9 +44,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-
-
-
 
 
 // catch 404 and forward to error handler
@@ -100,14 +83,14 @@ io.sockets.on('connection', function(socket){
     //button pushed
     socket.on('emit_from_client', function(data){
         //check the data
-        console.log(data);
+        //console.log(data);
 
         var receive = JSON.stringify(data);
-        console.log("data: [" + receive + "]");
+     //////////////// console.log("Out: " + receive + "");
 
         //write to serialport
         sp.write(receive + "\n", function(err, results) {
-            console.log('bytes written: ', results);
+            //console.log('bytes written: ', results);
         });
 
     });
@@ -123,11 +106,9 @@ io.sockets.on('connection', function(socket){
     });
 });
 
-
-
 //data from arduino
 sp.on('data', function(data) {
-    console.log('serialport data received: ' + data);
+   ///////////////////////// console.log('IN: ' + data);
     try{
         //var length = JSON.parse(data).length;
         //console.log("length = " + length);
@@ -138,8 +119,6 @@ sp.on('data', function(data) {
     }
 
 });
-
-
 
 
 module.exports = app;

@@ -40,13 +40,22 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li>
+          <a href="#">Settings</a>
+        </li>
+        <li>
           <a href="#">Notifications</a>
         </li>
         <li>
-          <a href="#">Services</a>
+          <a href="#">Register Devices</a>
         </li>
         <li>
-          <a href="#">Reports</a>
+          <a href="#">Users</a>
+        </li>
+        <li>
+          <a href="#">Rules</a>
+        </li>
+        <li>
+          <a href="#">Dashboards</a>
         </li>
       </ul>
     </div>
@@ -66,14 +75,23 @@
   <!-- /.row -->
 
 </div>
+
+
+
+
 <!-- /.container -->
 <div class="container-fluid">
-  <h2>Sensors</h2>
+
+  <div class="row">
+    <div class="col-xs-2 col-md-2"></div>
+    <div class="col-xs-8 col-md-8">
+      <h2>Sensors</h2>
       <p>Status of sensors in different rooms </p>
-  <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
-  <table  class="table ">
+      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+
+  <table  class="table">
     <thead>
-      <tr>
+      <tr class="active ">
         <!--<th>MicroController ID</th>-->
         <!--<th>Component ID</th>-->
         <th>Description</th>
@@ -91,7 +109,7 @@
 
       </tr>
 
-      <tr class="danger">
+      <tr class="warning">
 
         <!--<td><div id="mcID_1_2"></div></td>-->
         <!--<td><div id="compId_1_2"></div></td>-->
@@ -101,7 +119,7 @@
 
 
       </tr>
-      <tr class="info">
+      <tr class="danger">
 
 
         <!--<td><div id="mcID_1_3"></div></td>-->
@@ -112,7 +130,7 @@
 
       </tr>
 
-      <tr class="success">
+      <tr class="info">
         <!--<td><div id="mcID_2_1"></div></td>-->
         <!--<td><div id="compId_2_1"></div></td>-->
         <td><div id="compDesc_2_1"></div></td>
@@ -121,7 +139,7 @@
 
       </tr>
 
-      <tr class="danger">
+      <tr class="success">
 
         <!--<td><div id="mcID_2_2"></div></td>-->
         <!--<td><div id="compId_2_2"></div></td>-->
@@ -131,8 +149,76 @@
       </tr>
 
 
+      <tr class="warning">
+
+        <!--<td><div id="mcID_1_4""></div></td>-->
+        <!--<td><div id="compId_1_4""></div></td>-->
+        <td><div id="compDesc_1_4"></div></td>
+        <!--<td><div id="compAction_1_4""></div></td>-->
+        <td><div id="compValue_1_4""></div></td>
+      </tr>
+
+
+
+      <tr class="danger">
+
+        <!--<td><div id="mcID_1_5"></div></td>-->
+        <!--<td><div id="compId_1_5"></div></td>-->
+        <td><div id="compDesc_1_5"></div></td>
+        <!--<td><div id="compAction_1_5"></div></td>-->
+        <td><div id="compValue_1_5"></div></td>
+      </tr>
+
+
+
+<tr class="info">
+
+  <!--<td><div id="mcID_1_6"></div></td>-->
+  <!--<td><div id="compId_1_6"></div></td>-->
+  <td><div id="compDesc_1_6"></div></td>
+  <!--<td><div id="compAction_1_6"></div></td>-->
+  <td><div id="compValue_1_6"></div></td>
+</tr>
+
+
+
+      <tr class="success">
+        <!--<td><div id="mcID_3_1"></div></td>-->
+        <!--<td><div id="compId_3_1"></div></td>-->
+        <td><div id="compDesc_3_1"></div></td>
+        <!--<td><div id="compAction_3_1"></div></td>-->
+        <td><div id="compValue_3_1"></div></td>
+      </tr>
+
+
+<tr class="warning">
+
+  <!--<td><div id="mcID_3_2"></div></td>-->
+  <!--<td><div id="compId_3_2"></div></td>-->
+  <td><div id="compDesc_3_2"></div></td>
+  <!--<td><div id="compAction_3_2"></div></td>-->
+  <td><div id="compValue_3_2"></div></td>
+</tr>
+
+
+    <tr class="danger">
+
+      <!--<td><div id="mcID_1_7"></div></td>-->
+      <!--<td><div id="compId_1_7"></div></td>-->
+      <td><div id="compDesc_1_7"></div></td>
+      <!--<td><div id="compAction_1_7"></div></td>-->
+      <td><div id="compValue_1_7"></div></td>
+    </tr>
+
+
     </tbody>
   </table>
+
+
+</div>
+  <div class="col-xs-2 col-md-2"></div>
+</div>
+
 </div>
 
 
@@ -166,18 +252,35 @@
   </p>
 
 <p>
-<button id="setOnL_1_1" onclick="clickButton(this.id)">setOnLight1.1</button>
-<button id="setOffL_1_1" onclick="clickButton(this.id)">setOffLight1.1</button>
+<button id="setOnL_1_1" onclick="clickButton(this.id)">ON 1.1</button>
+<button id="setOffL_1_1" onclick="clickButton(this.id)">OFF 1.1</button>
 </p>
   <p>
 
-  <button id="setOnL_2_1" onclick="clickButton(this.id)">setOnLight2.1</button>
-<button id="setOffL_2_1" onclick="clickButton(this.id)">setOffLight2.1</button>
-</p><p>
-
-  <button id="setOnL_2_2" onclick="clickButton(this.id)">setOnLight2.2</button>
-<button id="setOffL_2_2" onclick="clickButton(this.id)">setOffLight2.2</button>
+  <button id="setOnL_2_1" onclick="clickButton(this.id)">ON 2.1</button>
+<button id="setOffL_2_1" onclick="clickButton(this.id)">OFF 2.1</button>
+</p>
+  <p>
+  <button id="setOnL_2_2" onclick="clickButton(this.id)">ON 2.2</button>
+<button id="setOffL_2_2" onclick="clickButton(this.id)">OFF 2.2</button>
   </p>
+  <p>
+    <button id="setOnL_3_2" onclick="clickButton(this.id)">ON 3.2</button>
+    <button id="setOffL_3_2" onclick="clickButton(this.id)">OFF 3.2</button>
+  </p>
+  <p>
+
+    <button id="testall" onclick="clickButton(this.id)">TESTALL</button>
+    <button id="broadcast" onclick="clickButton(this.id)">BROADCAST</button>
+  </p>
+
+
+  <p>
+
+    <button id="discoComponents" onclick="clickButton(this.id)">DISCO_COMPS</button>
+    <button id="discoDevices" onclick="clickButton(this.id)">DISCO_DEVICES</button>
+  </p>
+
 
 </div>
 
@@ -187,7 +290,7 @@
   <p>Send different commands </p>
 
   <div class="form-group">
-    <textarea class="form-control" rows="2" id="testBox">{"mcId":"0","compId":"0","desc":"ALL","action":"BROADCAST","value":"-"}</textarea>
+    <textarea class="form-control" rows="2" id="testBox">{"m":"","c":"","d":"","a":"BROADCAST","v":""}</textarea>
   </div>
   <button id="testButton" onclick="clickButton(this.id)">Test</button>
 
