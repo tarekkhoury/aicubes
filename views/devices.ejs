@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include partials/head %>
+
+</head>
+
+<header>
+    <% include partials/header %>
+</header>
+
+<body>
+
+<!-- Custom CSS -->
+<style>
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
+</style>
+
+
+<!-- Page Content -->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h1><i>ai</i><b>Cubes</b></h1>
+        </div>
+    </div>
+    <!-- /.row -->
+
+</div>
+
+
+
+
+<!-- /.container -->
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xs-2 col-md-2"></div>
+        <div class="col-xs-8 col-md-8">
+            <h2>Devices</h2>
+            <p>Status of Devices </p>
+            <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+
+            <table  class="table">
+
+
+                <thead>
+                <tr class="active ">
+                    <th>Device ID</th>
+                    <th>Name</th>
+                    <!--<th>Component ID</th>-->
+                    <th>Description</th>
+                    <!--<th>Action</th>-->
+                    <th>Value</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <% devices.forEach(function(device){ %>
+
+                <tr class="info">
+                    <td><div id="device_mcID_<%= device.value %>d"><%= device.value %></div></td>
+                    <td><div id="device_name_<%= device.value %>d"><%= device.name %></div></td>
+
+                    <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
+                    <td class="col-md-1d"><div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div></td>
+                    <!--<td><div id="compAction_<%= device.value %>d"></div><%= device.action %></td>-->
+                    <td class="col-md-2"><div id="device_compValue_<%= device.value %>d"> ... </div></td>
+                    <td class="col-md-2"> <button id="discoComponents<%= device.value %>" onclick="clickButton(this.id)" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-refresh"></span></button>
+                     <button id="updateDevice<%= device.value %>d" onclick="clickButton(this.id)" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-pencil"></span></button>
+                    <button id="deleteDevice<%= device.value %>d" onclick="clickButton(this.id)" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-trash"></span></button></td>
+
+                </tr>
+
+            <% })%>
+
+                </tbody>
+            </table>
+
+            <h2>Components</h2>
+            <p>List of Devices </p>
+
+
+                    <table  class="table">
+                        <thead>
+
+
+                        <tr class="active ">
+                            <th>Device ID</th>
+                            <th>Component ID</th>
+                            <th>Name</th>
+
+                            <th>Description</th>
+                            <!--<th>Action</th>-->
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <% components.forEach(function(component){ %>
+
+                        <tr class="warning">
+                            <td><div id="device_mcID_<%= component.mcId %>_<%= component.compId %>c"><%= component.mcId %></div></td>
+                            <td><div id="device_compId_<%= component.mcId %>_<%= component.compId %>c"><%= component.compId %></div></td>
+                            <td><div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div></td>
+                            <td class="col-md-1d"><div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div></td>
+                            <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
+                            <td class="col-md-2"><div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value%></div></td>
+                            <td class="col-md-2"> <button id="updateDevice_<%= component.mcId %>_<%= component.compId %>c" onclick="clickButton(this.id)" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-pencil"></span></button>
+                            <button id="deleteDevice_<%= component.mcId %>_<%= component.compId %>c" onclick="clickButton(this.id)" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-trash"></span></button></td>                            <!--<td class="col-md-2"> <button id="discoComponents<%= component.value %>" onclick="clickButton(this.id)">COMPONENTS</button></td>-->
+
+                        </tr>
+                        <% })%>
+
+                        <tbody>
+                    </table>
+
+
+
+
+                <!--<tr class="warning">-->
+
+                    <!--<td><div id="device_mcID_2"></div></td>-->
+                    <!--&lt;!&ndash;<td><div id="device_compId_2"></div></td>&ndash;&gt;-->
+                    <!--<td><div id="device_compDesc_2"></div></td>-->
+                    <!--&lt;!&ndash;<td><div id="device_compAction_1_2"></div></td>&ndash;&gt;-->
+                    <!--<td><div id="device_compValue_2"></div></td>-->
+
+
+                <!--</tr>-->
+                <!--<tr class="danger">-->
+
+
+                    <!--<td><div id="device_mcID_3"></div></td>-->
+                    <!--&lt;!&ndash;<td><div id="device_compId_3"></div></td>&ndash;&gt;-->
+                    <!--<td><div id="device_compDesc_3"></div></td>-->
+                    <!--&lt;!&ndash;<td><div id="device_compAction_1_3"></div></td>&ndash;&gt;-->
+                    <!--<td><div id="device_compValue_3"></div></td>-->
+
+                <!--</tr>-->
+
+
+
+
+
+
+
+    </div>
+    <div class="col-xs-2 col-md-2"></div>
+</div>
+
+</div>
+
+
+
+<!--<div class="table-responsive">-->
+<!--<table class="table table-hover" >-->
+<!--<thead>-->
+<!--<tr>-->
+<!--&lt;!&ndash;<th>MicroController ID</th>&ndash;&gt;-->
+<!--&lt;!&ndash;<th>Component ID</th>&ndash;&gt;-->
+<!--<th>Description</th>-->
+<!--&lt;!&ndash;<th>Action</th>&ndash;&gt;-->
+<!--<th>Value</th>-->
+<!--</tr>-->
+<!--</thead>-->
+
+<!--<tbody id="table_div">-->
+<!--</tbody>-->
+<!--</table>-->
+<!--</div>-->
+
+
+<div class="container-fluid" align="center">
+    <h2>Remote Control</h2>
+    <p>Control different components </p>
+
+    <p>
+
+        <button id="testall" onclick="clickButton(this.id)">TESTALL</button>
+        <button id="broadcast" onclick="clickButton(this.id)">BROADCAST</button>
+    </p>
+
+
+    <p>
+
+        <button id="discoComponents" onclick="clickButton(this.id)">DISCO_COMPS</button>
+        <button id="discoDevices" onclick="clickButton(this.id)">DISCO_DEVICES</button>
+    </p>
+
+
+</div>
+
+
+<div class="container-fluid">
+    <h2>Test</h2>
+    <p>Send different commands </p>
+
+    <div class="form-group">
+        <textarea class="form-control" rows="2" id="testBox">{"m":"","c":"","d":"","a":"BROADCAST","v":""}</textarea>
+    </div>
+    <button id="testButton" onclick="clickButton(this.id)">Test</button>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="container-fluid">-->
+<!--<h1><%= title %></h1>-->
+<!--<p>Welcome to <%= title %></p>-->
+<!--<h1>My First Bootstrap Page</h1>-->
+<!--<p>This is some text.</p> -->
+<!--</div>-->
+
+<footer>
+    <% include partials/footer %>
+</footer>
+</body>
+</html>
+
+

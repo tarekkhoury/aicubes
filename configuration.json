@@ -1,7 +1,7 @@
 [
-  {"mcId":"1","compId":"1","desc":"Door Sensor","type":["sensor", "digital","event"]},
-  {"mcId":"1","compId":"2","desc":"Light Switch","type":["digital"]},
-  {"mcId":"1","compId":"3","desc":"Temperature Sensor","type":["sensor", "analog"]},
-  {"mcId":"2","compId":"1","desc":"Light Switch","type":["digital"]},
-  {"mcId":"2","compId":"2","desc":"Light Switch","type":["digital"]}
+  {"mcId":"1","compId":"1","desc":"Door Sensor","type":["sensor", "digitalSensor","event"]},
+  {"mcId":"1","compId":"2","desc":"Light Switch","type":["digitalSwitch"]},
+  {"mcId":"1","compId":"3","desc":"Temperature Sensor","type":["sensor", "analogSensor"]},
+  {"mcId":"2","compId":"1","desc":"Light Switch","type":["digitalSwitch"]},
+  {"mcId":"2","compId":"2","desc":"Light Switch","type":["digitalSwitch"]}
 ]

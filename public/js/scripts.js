@@ -47,116 +47,181 @@ $(function(){
 
 
 
-
-
-
-
-
 	//length data from server
 	socket.on('emit_from_server', function(data){
 		var obj = jQuery.parseJSON( data );
 		//console.log("received from server>> : " + obj.m  + " " + obj.c + " " + obj.d+ " " + obj.a + "" + obj.v);
 
-		if (obj.m == '1'&& obj.c == '1') {
-
-			$('#mcID_1_1').text(obj.m);
-			$('#compId_1_1').text(obj.c);
-			$('#compDesc_1_1').text(obj.d);
-			$('#compAction_1_1').text(obj.a);
-			$('#compValue_1_1').text(obj.v);
-		}
-
-        if (obj.m == '1'&& obj.c == '2') {
-			$('#mcID_1_2').text(obj.m);
-			$('#compId_1_2').text(obj.c);
-			$('#compDesc_1_2').text(obj.d);
-			$('#compAction_1_2').text(obj.a);
-			$('#compValue_1_2').text(obj.v);
-		}
-
-        if (obj.m == '1'&& obj.c == '3') {
-			$('#mcID_1_3').text(obj.m);
-			$('#compId_1_3').text(obj.c);
-			$('#compDesc_1_3').text(obj.d);
-			$('#compAction_1_3').text(obj.a);
-			$('#compValue_1_3').text(obj.v+ ' C');
-		}
-
-        if (obj.m == '2'&& obj.c == '1') {
-            $('#mcID_2_1').text(obj.m);
-            $('#compId_2_1').text(obj.c);
-            $('#compDesc_2_1').text(obj.d);
-            $('#compAction_2_1').text(obj.a);
-            $('#compValue_2_1').text(obj.v);
-        }
-
-        if (obj.m == '2'&& obj.c == '2') {
-            $('#mcID_2_2').text(obj.m);
-            $('#compId_2_2').text(obj.c);
-            $('#compDesc_2_2').text(obj.d);
-            $('#compAction_2_2').text(obj.a);
-            $('#compValue_2_2').text(obj.v);
-        }
 
 
-		/////
+		//if (top.location.pathname === '/index') {
 
-		if (obj.m == '1'&& obj.c == '4') {
-			$('#mcID_1_4').text(obj.m);
-			$('#compId_1_4').text(obj.c);
-			$('#compDesc_1_4').text(obj.d);
-			$('#compAction_1_4').text(obj.a);
-			$('#compValue_1_4').text(obj.v+ ' %');
-		}
+			$('#mcID_'+obj.m+'_'+obj.c).text(obj.m);
+			$('#compId_'+obj.m+'_'+obj.c).text(obj.c);
+			$('#compDesc_'+obj.m+'_'+obj.c).text(obj.d);
+			$('#compAction_'+obj.m+'_'+obj.c).text(obj.a);
+			$('#compValue_'+obj.m+'_'+obj.c).text(obj.v);
 
-		if (obj.m == '1'&& obj.c == '5') {
-			$('#mcID_1_5').text(obj.m);
-			$('#compId_1_5').text(obj.c);
-			$('#compDesc_1_5').text(obj.d);
-			$('#compAction_1_5').text(obj.a);
-			$('#compValue_1_5').text(obj.v + ' Pa');
-		}
+		//}
 
 
-		if (obj.m == '1'&& obj.c == '6') {
-			$('#mcID_1_6').text(obj.m);
-			$('#compId_1_6').text(obj.c);
-			$('#compDesc_1_6').text(obj.d);
-			$('#compAction_1_6').text(obj.a);
-			$('#compValue_1_6').text(obj.v+ ' m');
-		}
-
-
-
-		if (obj.m == '3'&& obj.c == '1') {
-			$('#mcID_3_1').text(obj.m);
-			$('#compId_3_1').text(obj.c);
-			$('#compDesc_3_1').text(obj.d);
-			$('#compAction_3_1').text(obj.a);
-			$('#compValue_3_1').text(obj.v);
-		}
-
-		if (obj.m == '3'&& obj.c == '2') {
-			$('#mcID_3_2').text(obj.m);
-			$('#compId_3_2').text(obj.c);
-			$('#compDesc_3_2').text(obj.d);
-			$('#compAction_3_2').text(obj.a);
-			$('#compValue_3_2').text(obj.v);
-		}
-
-		if (obj.m == '1'&& obj.c == '7') {
-			$('#mcID_1_7').text(obj.m);
-			$('#compId_1_7').text(obj.c);
-			$('#compDesc_1_7').text(obj.d);
-			$('#compAction_1_7').text(obj.a);
-			$('#compValue_1_7').text(obj.v);
-		}
+		//if (obj.m == '1'&& obj.c == '1') {
+        //
+		//	$('#mcID_1_1').text(obj.m);
+		//	$('#compId_1_1').text(obj.c);
+		//	$('#compDesc_1_1').text(obj.d);
+		//	$('#compAction_1_1').text(obj.a);
+		//	$('#compValue_1_1').text(obj.v);
+		//}
+        //
+        //if (obj.m == '1'&& obj.c == '2') {
+		//	$('#mcID_1_2').text(obj.m);
+		//	$('#compId_1_2').text(obj.c);
+		//	$('#compDesc_1_2').text(obj.d);
+		//	$('#compAction_1_2').text(obj.a);
+		//	$('#compValue_1_2').text(obj.v);
+		//}
+        //
+        //if (obj.m == '1'&& obj.c == '3') {
+		//	$('#mcID_1_3').text(obj.m);
+		//	$('#compId_1_3').text(obj.c);
+		//	$('#compDesc_1_3').text(obj.d);
+		//	$('#compAction_1_3').text(obj.a);
+		//	$('#compValue_1_3').text(obj.v+ ' C');
+		//}
+        //
+        //if (obj.m == '2'&& obj.c == '1') {
+         //   $('#mcID_2_1').text(obj.m);
+         //   $('#compId_2_1').text(obj.c);
+         //   $('#compDesc_2_1').text(obj.d);
+         //   $('#compAction_2_1').text(obj.a);
+         //   $('#compValue_2_1').text(obj.v);
+        //}
+        //
+        //if (obj.m == '2'&& obj.c == '2') {
+         //   $('#mcID_2_2').text(obj.m);
+         //   $('#compId_2_2').text(obj.c);
+         //   $('#compDesc_2_2').text(obj.d);
+         //   $('#compAction_2_2').text(obj.a);
+         //   $('#compValue_2_2').text(obj.v);
+        //}
+        //
+        //
+		///////
+        //
+		//if (obj.m == '1'&& obj.c == '4') {
+		//	$('#mcID_1_4').text(obj.m);
+		//	$('#compId_1_4').text(obj.c);
+		//	$('#compDesc_1_4').text(obj.d);
+		//	$('#compAction_1_4').text(obj.a);
+		//	$('#compValue_1_4').text(obj.v+ ' %');
+		//}
+        //
+		//if (obj.m == '1'&& obj.c == '5') {
+		//	$('#mcID_1_5').text(obj.m);
+		//	$('#compId_1_5').text(obj.c);
+		//	$('#compDesc_1_5').text(obj.d);
+		//	$('#compAction_1_5').text(obj.a);
+		//	$('#compValue_1_5').text(obj.v + ' Pa');
+		//}
+        //
+        //
+		//if (obj.m == '1'&& obj.c == '6') {
+		//	$('#mcID_1_6').text(obj.m);
+		//	$('#compId_1_6').text(obj.c);
+		//	$('#compDesc_1_6').text(obj.d);
+		//	$('#compAction_1_6').text(obj.a);
+		//	$('#compValue_1_6').text(obj.v+ ' m');
+		//}
+        //
+        //
+        //
+		//if (obj.m == '3'&& obj.c == '1') {
+		//	$('#mcID_3_1').text(obj.m);
+		//	$('#compId_3_1').text(obj.c);
+		//	$('#compDesc_3_1').text(obj.d);
+		//	$('#compAction_3_1').text(obj.a);
+		//	$('#compValue_3_1').text(obj.v);
+		//}
+        //
+		//if (obj.m == '3'&& obj.c == '2') {
+		//	$('#mcID_3_2').text(obj.m);
+		//	$('#compId_3_2').text(obj.c);
+		//	$('#compDesc_3_2').text(obj.d);
+		//	$('#compAction_3_2').text(obj.a);
+		//	$('#compValue_3_2').text(obj.v);
+		//}
+        //
+		//if (obj.m == '1'&& obj.c == '7') {
+		//	$('#mcID_1_7').text(obj.m);
+		//	$('#compId_1_7').text(obj.c);
+		//	$('#compDesc_1_7').text(obj.d);
+		//	$('#compAction_1_7').text(obj.a);
+		//	$('#compValue_1_7').text(obj.v);
+		//}
 
 
 
 
 
 	});
+
+	//length data from server
+	socket.on('emit_from_server_devices', function(data) {
+		var obj = jQuery.parseJSON(data);
+
+		if (top.location.pathname === '/devices')
+		{
+			//console.log("received from server>> : " + obj.m  + " " + obj.c + " " + obj.d+ " " + obj.a + "" + obj.v);
+
+
+			$('#device_mcID_'+obj.v+'d').text(obj.v);
+			$('#device_compId_'+obj.v+'d').text(obj.c);
+			$('#device_compDesc_'+obj.v+'d').text(obj.d);
+			$('#device_compAction_'+obj.v+'d').text(obj.a);
+			$('#device_compValue_'+obj.v+'d').text('OK');
+
+			$('#discoComponents'+obj.v).click(function(){
+				sendToServer(obj.v,'','','DISCO_COMPS','');
+			});
+
+
+        //
+        //
+		//	if (obj.v == '1') {
+        //
+		//		var status = 'NA';
+		//		if(obj.v ==='1') { status ='OK' };
+        //
+		//	$('#device_mcID_1d').text(obj.v);
+		//	$('#device_compId_1d').text(obj.c);
+		//	$('#device_compDesc_1d').text(obj.a);
+		//	$('#device_compAction_1d').text(obj.a);
+		//	$('#device_compValue_1d').text(status);
+		//}
+        //
+		//if (obj.v == '2') {
+		//	var status = 'NA';
+		//	if(obj.v ==='2') { status ='OK' };
+        //
+		//	$('#device_mcID_2').text(obj.v);
+		//	$('#device_compId_2').text(obj.c);
+		//	$('#device_compDesc_2').text(obj.a);
+		//	$('#device_compAction_2').text(obj.a);
+		//	$('#device_compValue_2').text(status);
+		//}
+        //
+		//if (obj.v == '3') {
+		//	var status = 'NA';
+		//	if(obj.v ==='3') { status ='OK' };
+		//	$('#device_mcID_3').text(obj.v);
+		//	$('#device_compId_3').text(obj.c);
+		//	$('#device_compDesc_3').text(obj.a);
+		//	$('#device_compAction_3').text(obj.a);
+		//	$('#device_compValue_3').text(status);
+		//}
+
+	}});
 
 	////power data from server ;
 	//socket.on('emit_from_server_pw', function(data){
@@ -181,6 +246,8 @@ $(function(){
         sendToServer('1','3','Temperature','GET','');
         //lastCmd = $('#go').text();
     });
+
+
 
 
 
@@ -241,6 +308,8 @@ $(function(){
 		sendToServer('2','','','DISCO_COMPS','');
 		//sendToServer('3','','','DISCO_COMPS','');
 	});
+
+
 
 	$('#discoDevices').click(function(){
 		sendToServer('','','','DISCO_DEVICES','');
@@ -307,7 +376,22 @@ $(function(){
 
 });
 
+
 function clickButton(go){
     //var val = document.getElementById("slideValue").value;
     //console.log(go + ": power:" + val);
+}
+
+//sending command to server from the ui
+function sendToServer( mc_id, comp_id, desc , action , value){
+	var socket1 = io.connect();
+	//alert( mc_id + "" +  comp_id+ "" +  comp_value);
+	socket1.json.emit('emit_from_client', {
+
+		m: mc_id,
+		c: comp_id,
+		d: desc,
+		a: action,
+		v: value
+	});
 }
