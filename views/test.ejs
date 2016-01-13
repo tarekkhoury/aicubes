@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head %>
+</head>
+
+<header>
+  <% include partials/header %>
+</header>
+
+<body>
+
+
+
+<!-- Custom CSS -->
+<style>
+  body {
+    padding-top: 70px;
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  }
+</style>
+
+<!-- Page Content -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <h1><i>ai</i><b>Cubes</b></h1>
+    </div>
+  </div>
+  <!-- /.row -->
+
+</div>
+
+
+
+
+<!-- /.container -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-xs-2 col-md-2"></div>
+    <div class="col-xs-8 col-md-8">
+      <h2>Test</h2>
+      <p>Test </p>
+      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+
+      <p>
+        <button id="testall" onclick="clickButton(this.id)">TESTALL</button>
+      </p>
+
+      <p>
+
+        <button id="broadcast" onclick="clickButton(this.id)">BROADCAST</button>
+      </p>
+
+
+      <p>
+        <button id="discoComponents" onclick="clickButton(this.id)">DISCO_COMPS</button>
+      </p>
+
+      <p>
+        <button id="discoDevices" onclick="clickButton(this.id)">DISCO_DEVICES</button>
+      </p>
+
+
+      <div class="container-fluid">
+        <h2>Test</h2>
+        <p>Send different commands </p>
+
+        <div class="form-group">
+          <textarea class="form-control" rows="2" id="testBox">{"m":"","c":"","d":"","a":"BROADCAST","v":""}</textarea>
+        </div>
+        <button id="testButton" onclick="clickButton(this.id)">Test</button>
+
+      </div>
+
+      <footer>
+        <% include partials/footer %>
+      </footer>
+
+
+</body>
+</html>
+
+
+<script>
+
+</script>

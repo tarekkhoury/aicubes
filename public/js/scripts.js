@@ -186,51 +186,11 @@ $(function(){
 			});
 
 
-        //
-        //
-		//	if (obj.v == '1') {
-        //
-		//		var status = 'NA';
-		//		if(obj.v ==='1') { status ='OK' };
-        //
-		//	$('#device_mcID_1d').text(obj.v);
-		//	$('#device_compId_1d').text(obj.c);
-		//	$('#device_compDesc_1d').text(obj.a);
-		//	$('#device_compAction_1d').text(obj.a);
-		//	$('#device_compValue_1d').text(status);
-		//}
-        //
-		//if (obj.v == '2') {
-		//	var status = 'NA';
-		//	if(obj.v ==='2') { status ='OK' };
-        //
-		//	$('#device_mcID_2').text(obj.v);
-		//	$('#device_compId_2').text(obj.c);
-		//	$('#device_compDesc_2').text(obj.a);
-		//	$('#device_compAction_2').text(obj.a);
-		//	$('#device_compValue_2').text(status);
-		//}
-        //
-		//if (obj.v == '3') {
-		//	var status = 'NA';
-		//	if(obj.v ==='3') { status ='OK' };
-		//	$('#device_mcID_3').text(obj.v);
-		//	$('#device_compId_3').text(obj.c);
-		//	$('#device_compDesc_3').text(obj.a);
-		//	$('#device_compAction_3').text(obj.a);
-		//	$('#device_compValue_3').text(status);
-		//}
+
 
 	}});
 
-	////power data from server ;
-	//socket.on('emit_from_server_pw', function(data){
-	//	console.log("from_server power : " + data);
-	//	var power = JSON.parse(data).power;
-	//	$("#slider").slider("value",power)
-     //   //$('#defaultSlider').val(power);
-     //   $('#slideValue').val(power);
-	//});
+
 
     $('#getDoor').click(function(){
 		sendToServer('1','1','Door','GET','');
@@ -317,63 +277,6 @@ $(function(){
 	});
 
 
-    //$('#blink').click(function(){
-		//sendToServer($('#blink').text(), $('#slideValue').val());
-		//lastCmd = $('#blink').text();
-    //});
-    //$('#right').click(function(){
-		//sendToServer($('#right').text(), $('#slideValue').val());
-		//lastCmd = $('#right').text();
-    //});
-    //$('#back').click(function(){
-		//sendToServer($('#back').text(), $('#slideValue').val());
-		//lastCmd = $('#back').text();
-    //});
-    //$('#stop').click(function(){
-		//sendToServer($('#stop').text(), $('#slideValue').val());
-		//lastCmd = $('#stop').text();
-    //});
-
-    //
-    ////slider
-    //$("#slider").slider({
-		//range: "max",
-		//min: 0,
-		//max: 244,
-		//value: 150,
-    //
-		////default
-		//create: function( event, ui ) {
-    //    	$('#slideValue').val(150);
-		//	console.log("create val : " + 150);
-		//},
-		////change slider
-		//slide: function( event, ui ) {
-		//	console.log("slider val : " + ui.v);
-    //    	$('#slideValue').val(ui.v);
-		//	socket.emit('emit_from_client_pw', {power : ui.value});
-		//},
-		////slider change done
-		//stop: function( event, ui ) {
-		//	console.log("stop val : " + ui.value);
-		//	sendToServer(lastCmd, $('#slideValue').val());
-		//}
-    //});
-    //
-    ////change input field
-    //$('#slideValue').change( function () {
-		//$("#slider").slider("value",this.value)
-		//socket.emit('emit_from_client_pw', {power : this.value});
-    //});
-
-/***
-	//change slider
-    $('#defaultSlider').change(function(){
-        $('#slideValue').val(this.value);
-		socket.emit('emit_from_client_pw', {power : this.value});
-    });
-***/
-
 });
 
 
@@ -395,3 +298,77 @@ function sendToServer( mc_id, comp_id, desc , action , value){
 		v: value
 	});
 }
+
+
+function deleteDevice( mc_id){
+
+
+	var delItem = confirm ('Do you want to delete record: ' + mc_id + ' ?');
+	if(delItem) {
+
+		//alert('will be deleted')
+
+
+//$('#deleteDevice_'+mc_id).val(function(){
+
+		$.ajax({
+			url: '/device/'+mc_id,
+			type: 'DELETE',
+			success: function(result) {
+				//$("#alertSuccess").show();
+				$('#device_id_'+mc_id).remove();
+
+
+				$.ajax({
+					url: '/components/'+mc_id,
+					type: 'DELETE',
+					success: function(result) {
+						//$("#alertSuccess").show();
+
+
+
+						$("[id^=component_id_"+mc_id+"]").remove();
+
+
+
+
+					},
+					error: function (xhr) {alert('error');}
+				});
+
+
+
+
+			},
+			error: function (xhr) {alert('error');}
+		});
+
+//})
+	}
+	};
+
+
+
+function deleteComponent( mc_id, comp_id){
+
+
+	var delItem = confirm ('Do you want to delete Component: ' + mc_id + ' ' + comp_id +' ?');
+	if(delItem) {
+
+
+
+		$.ajax({
+			url: '/component/'+mc_id+'/'+comp_id,
+			type: 'DELETE',
+			success: function(result) {
+				//$("#alertSuccess").show();
+				$('#component_id_'+mc_id+'_'+comp_id).remove();
+
+			},
+			error: function (xhr) {alert('error');}
+		});
+
+
+	}
+};
+

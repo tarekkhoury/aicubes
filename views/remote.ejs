@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head %>
+</head>
+
+<header>
+  <% include partials/header %>
+</header>
+
+<body>
+
+
+
+<!-- Custom CSS -->
+<style>
+  body {
+    padding-top: 70px;
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  }
+</style>
+
+<!-- Page Content -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <h1><i>ai</i><b>Cubes</b></h1>
+    </div>
+  </div>
+  <!-- /.row -->
+
+</div>
+
+
+
+
+<!-- /.container -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-xs-2 col-md-2"></div>
+    <div class="col-xs-8 col-md-8">
+
+
+      <div class="container-fluid" align="center">
+        <h2>Remote Control</h2>
+        <p>Control different components </p>
+        <p>
+
+          <button id="getDoor" onclick="clickButton(this.id)">getDoor</button>
+          <button id="getLED" onclick="clickButton(this.id)">getLED</button>
+          <button id="getTemp" onclick="clickButton(this.id)">getTemp</button>
+        </p>
+
+        <p>
+          <button id="setOnL_1_1" onclick="clickButton(this.id)">ON 1.1</button>
+          <button id="setOffL_1_1" onclick="clickButton(this.id)">OFF 1.1</button>
+        </p>
+        <p>
+
+          <button id="setOnL_2_1" onclick="clickButton(this.id)">ON 2.1</button>
+          <button id="setOffL_2_1" onclick="clickButton(this.id)">OFF 2.1</button>
+        </p>
+        <p>
+          <button id="setOnL_2_2" onclick="clickButton(this.id)">ON 2.2</button>
+          <button id="setOffL_2_2" onclick="clickButton(this.id)">OFF 2.2</button>
+        </p>
+        <p>
+          <button id="setOnL_3_2" onclick="clickButton(this.id)">ON 3.2</button>
+          <button id="setOffL_3_2" onclick="clickButton(this.id)">OFF 3.2</button>
+        </p>
+
+
+
+
+      </div>
+
+
+
+      <footer>
+        <% include partials/footer %>
+      </footer>
+
+
+</body>
+</html>
+
+
+<script>
+
+</script>

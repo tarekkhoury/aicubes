@@ -14,8 +14,6 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('cozy.db');
 
 
-
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -149,14 +147,7 @@ console.log("Out: " + receive + "");
 
     });
 
-    //slider changed
-    //socket.on('emit_from_client_pw', function (data) {
-    //    var receive = JSON.stringify(data);
-    //    console.log("slider: [" + receive + "]");
-    //    socket.broadcast.emit('emit_from_server_pw', receive);
-    //
-    //
-    //});
+
 });
 
 //data from arduino
@@ -174,8 +165,6 @@ console.log('IN: ' + data);
         var stmt_streams = db.prepare('INSERT or REPLACE INTO streams_master VALUES (?,?,?,?,?,?,?)');
 
 
-        //});
-
             if (JSON.parse(data).a == "DEVICES") {
                 db.all('SELECT value FROM devices_master WHERE action = "DEVICES" AND value = ' + JSON.parse(data).v, function(err, row) {
                     if(err !== null) {
@@ -184,7 +173,7 @@ console.log('IN: ' + data);
                     else {
                         console.log(row);
 
-                        if (row == '')
+                        if (!row.length > 0)
                         {
                             console.log('row is empty');
                             console.log('insert device....');
@@ -197,6 +186,7 @@ console.log('IN: ' + data);
                     }
                 });
 
+
                 io.sockets.emit('emit_from_server_devices', data);
 
             } else if (JSON.parse(data).a == "COMPS") {
@@ -208,7 +198,7 @@ console.log('IN: ' + data);
                     else {
                         console.log(row);
 
-                        if (row == '')
+                        if (row.length <= 0)
                         {
                             console.log('row is empty');
                             console.log('insert component....');
@@ -245,6 +235,8 @@ console.log('IN: ' + data);
         }
 
     }
+
+
 );
 
 
