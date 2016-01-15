@@ -195,15 +195,8 @@ function sendToServer( mc_id, comp_id, desc , action , value){
 
 function deleteDevice( mc_id){
 
-
-	var delItem = confirm ('Do you want to delete record: ' + mc_id + ' ?');
-	if(delItem) {
-
-		//alert('will be deleted')
-
-
-//$('#deleteDevice_'+mc_id).val(function(){
-
+	//var delItem = confirm ('Do you want to delete : ' + mc_id + ' ?');
+	if(true) {
 		$.ajax({
 			url: '/device/'+mc_id,
 			type: 'DELETE',
@@ -226,7 +219,6 @@ function deleteDevice( mc_id){
 			},
 			error: function (xhr) {alert('error');}
 		});
-//})
 	}
 	};
 
@@ -246,8 +238,6 @@ function deleteComponent( mc_id, comp_id){
 			},
 			error: function (xhr) {alert('error');}
 		});
-
-
 	}
 };
 

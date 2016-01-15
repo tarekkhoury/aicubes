@@ -118,7 +118,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='devices_mast
             console.log(err);
         }
         else if (rows === undefined) {
-            db.run('CREATE TABLE devices_master (mcId TEXT, compId TEXT, desc TEXT, action TEXT,value TEXT, name TEXT, cdatetime DATETIME)', function (err) {
+            db.run('CREATE TABLE devices_master (mcId TEXT, compId TEXT, desc TEXT, action TEXT,value TEXT, name TEXT, visible TEXT, category TEXT, cdatetime DATETIME)', function (err) {
                 if (err !== null) {
                     console.log(err);
                 }
@@ -140,8 +140,10 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notification
             console.log(err);
         }
         else if (rows === undefined) {
-            db.run('CREATE TABLE notifications_master (id TEXT, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
-                if (err !== null) {
+         //   db.run('CREATE TABLE notifications_master (id integer primary key autoincrement, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+                db.run('CREATE TABLE notifications_master (id TEST, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+
+                    if (err !== null) {
                     console.log(err);
                 }
                 else {
@@ -153,6 +155,26 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notification
             console.log("SQL Table 'notifications_master' already initialized.");
     });
 
+
+// Database initialization
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users_master'",
+    function (err, rows) {
+        if (err !== null) {
+            console.log(err);
+        }
+        else if (rows === undefined) {
+            db.run('CREATE TABLE users_master (user_id TEXT PRIMARY KEY, password TEXT, first_name TEXT, last_name TEXT,email TEXT, cdatetime DATETIME)', function (err) {
+                if (err !== null) {
+                    console.log(err);
+                }
+                else {
+                    console.log("SQL Table 'users_master' initialized.");
+                }
+            });
+        }
+        else
+            console.log("SQL Table 'users_master' already initialized.");
+    });
 
 
 
@@ -188,7 +210,7 @@ console.log('IN: ' + data);
         var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
        // console.log(dt);
 
-        var stmt_devices = db.prepare('INSERT or REPLACE INTO devices_master VALUES (?,?,?,?,?,?,?)');
+        var stmt_devices = db.prepare('INSERT or REPLACE INTO devices_master VALUES (?,?,?,?,?,?,?,?,?)');
         var stmt_streams = db.prepare('INSERT or REPLACE INTO streams_master VALUES (?,?,?,?,?,?,?)');
 
 
@@ -230,7 +252,7 @@ console.log('IN: ' + data);
                         {
                             console.log('row is empty');
                             console.log('insert component....');
-                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d, dt);
+                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d,'y','all', dt);
                         }
                         else {
                             console.log('row is NOT empty');

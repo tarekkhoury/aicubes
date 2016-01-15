@@ -204,34 +204,30 @@ router.get('/remote', function (req, res, next) {
 
 /* GET Remote page. */
 router.get('/users', function (req, res, next) {
-    //var db = new sqlite3.Database('cozy.db');
-    //// all components
-    //db.serialize(function() {
-    //db.all('SELECT mcId, compId, desc, action, value, name FROM devices_master WHERE action = "COMPS" ORDER BY mcID', function (err, row) {
-    //    if (err !== null) {
-    //      next(err);
-    //    }
-    //    else {
-    //      notifications = row;
-    //      console.log("remote_devices>>");
-    //      console.log(remote_devices);
-    //      console.log("--");
-    //    }
-    //  });
-    //});
-    //db.close();
+    var db = new sqlite3.Database('cozy.db');
+    // all components
+    db.serialize(function () {
+        db.all('SELECT user_id, password, first_name, last_name, email FROM users_master', function (err, row) {
+            if (err !== null) {
+                next(err);
+            }
+            else {
+                users = row;
+                console.log("users>>");
+                console.log(users);
+                console.log("--");
 
-    res.render('users',
-        {
-            title: 'aiCubes - Users',
-            users: [{
-                "user_id": "tkhoury",
-                "name": "Tarek Khoury",
-                "Password": "!@#$%^&*",
-                "Role": "Admin",
-                "active": "Y"
-            }]
+                res.render('users',
+                    {
+                        title: 'aiCubes - users',
+                        users: users
+                    });
+            }
         });
+    });
+    db.close();
+
+
 });
 
 
@@ -619,43 +615,319 @@ router.delete('/notification/:id', function (req, res, next) {
 
 });
 
+////////////////////////////// USERS APIs ////////////////////////////
 
-router.post('/api/v1.0/notifications', function (req, res, next) {
+
+router.post('/api/v1.0/users', function (req, res, next) {
     var db = new sqlite3.Database('cozy.db');
 
-    var obj = {};
-    obj = JSON.stringify(req.body)
-    console.log('body: ' + obj);
-
-    var stmt = "UPDATE notifications_master SET id = '" + req.body.id + "', name_short =  '" + req.body.name_short + "', name_long = '" + req.body.name_long + "', type = '" + req.body.type + "', contact = '" + req.body.contact + "' WHERE id = '" + req.body.id + "'";
-    console.log(stmt);
-
-
-    ///////////
     db.serialize(function () {
+        try {
 
-        db.run(stmt, function (err, row) {
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+            var obj = {};
+            obj = JSON.stringify(req.body)
+
+            //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
+            var insert_stmt = "INSERT or REPLACE INTO users_master VALUES ('" + req.body.user_id + "','" + req.body.password + "','" + req.body.first_name + "','" + req.body.last_name + "','" + req.body.email + "','" + dt + "')";
+            var update_stmt = "UPDATE users_master SET user_id = '" + req.body.id + "', password =  '" + req.body.password + "', first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name + "', email = '" + req.body.email + "' WHERE user_id = '" + req.body.user_id + "'";
+            var select_stmt = 'SELECT user_id FROM users_master WHERE user_id = ' + req.body.user_id;
+
+
+            db.all(select_stmt, function (err, row) {
+                if (err !== null) {
+                    next(err);
+                }
+                else {
+                    console.log(row);
+
+                    if (row.length > 0) {
+                        console.log('row is NOT empty');
+
+
+                        /////new code
+
+
+                        db.serialize(function () {
+                            db.run(update_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("users update success");
+
+                                    res.status(202);
+
+                                }
+                                res.end();
+                            });
+
+                        });
+
+
+                        ///// new code
+
+                    }
+                    else {
+                        console.log('row is empty');
+                        console.log('insert users....');
+
+                        db.serialize(function () {
+                            db.run(insert_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("users insert success");
+
+                                    res.status(202);
+
+                                }
+                            });
+
+                        });
+
+
+                    }
+
+
+                }
+
+            });
+
+
+        } catch
+            (e) {
+            //eat it;
+            console.log(e);
+
+        }
+    });
+    // db.close();
+
+
+});
+
+
+router.delete('/user/:id', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        db.get("DELETE FROM users_master WHERE user_id = ?", req.params.id, function (err, row) {
 
             if (err) {
                 console.log(err);
                 res.status(500);
             }
             else {
-                console.log("notification update success");
-
                 res.status(202);
+                console.log("users deleted success");
 
             }
             res.end();
+
         });
 
     });
-/////////////
-
 
     db.close();
 
 });
+
+
+////////////////////////////// USERS APIs ////////////////////////////
+
+
+
+
+
+router.post('/api/v1.0/devices', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        try {
+
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+            var obj = {};
+            obj = JSON.stringify(req.body)
+
+            //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
+            //var insert_stmt = "INSERT or REPLACE INTO devices_master VALUES ('" + req.body.mcId + "','" + req.body.compId + "','" + req.body.desc + "','" + req.body.action + "','" + req.body.value + "','" +  req.body.name+"','" + dt + "')";
+           // var update_stmt = "UPDATE devices_master SET mcId = '" + req.body.mcId + "', compId =  '" + req.body.compId + "', desc = '" + req.body.desc + "', action = '" + req.body.action + "', value = '" + req.body.value + "', name = '" + req.body.name +"' WHERE mcId = '" + req.body.mcId + "'";
+
+            var update_stmt = "UPDATE devices_master SET  desc = '" + req.body.desc  +"' ,name = '" + req.body.name +"' WHERE action = 'DEVICES' AND mcId = '" + req.body.mcId + "'";
+            var select_stmt = "SELECT mcId FROM devices_master WHERE action = 'DEVICES' AND mcId = " + req.body.mcId;
+
+            db.all(select_stmt, function (err, row) {
+                if (err !== null) {
+                    next(err);
+                }
+                else {
+                    console.log(row);
+
+                    if (row.length > 0) {
+                        console.log('row is NOT empty');
+
+
+                        /////new code
+
+
+                        db.serialize(function () {
+                            db.run(update_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("devices update success");
+
+                                    res.status(202);
+
+                                }
+                                res.end();
+                            });
+
+                        });
+
+
+                        ///// new code
+
+                    }
+                    else {
+                        //console.log('row is empty');
+                        //console.log('insert device....');
+
+                        //db.serialize(function () {
+                        //    db.run(insert_stmt, function (err, row) {
+                        //        if (err) {
+                        //            console.log(err);
+                        //            res.status(500);
+                        //        }
+                        //        else {
+                        //            console.log("devices insert success");
+                        //
+                        //            res.status(202);
+                        //
+                        //        }
+                        //    });
+                        //
+                        //});
+
+
+                    }
+
+
+                }
+
+            });
+
+
+        } catch
+            (e) {
+            //eat it;
+            console.log(e);
+
+        }
+    });
+    // db.close();
+
+
+});
+
+
+
+
+
+
+router.post('/api/v1.0/components', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        try {
+
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+            var obj = {};
+            obj = JSON.stringify(req.body)
+
+            //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
+            //var insert_stmt = "INSERT or REPLACE INTO devices_master VALUES ('" + req.body.mcId + "','" + req.body.compId + "','" + req.body.desc + "','" + req.body.action + "','" + req.body.value + "','" +  req.body.name+"','" + dt + "')";
+            // var update_stmt = "UPDATE devices_master SET mcId = '" + req.body.mcId + "', compId =  '" + req.body.compId + "', desc = '" + req.body.desc + "', action = '" + req.body.action + "', value = '" + req.body.value + "', name = '" + req.body.name +"' WHERE mcId = '" + req.body.mcId + "'";
+
+            var update_stmt = "UPDATE devices_master SET  desc = '" + req.body.desc  +  "' ,visible = '"+ req.body.visible + "' , category = '"+ req.body.category +   "' ,name = '" + req.body.name +"' WHERE action = 'COMPS' AND mcId = '" + req.body.mcId + "' AND compId = '" + req.body.compId + "'" ;
+            var select_stmt = "SELECT mcId FROM devices_master WHERE action = 'COMPS' AND mcId = '" + req.body.mcId + "' AND compId = '" + req.body.compId +"'";
+
+
+
+            db.all(select_stmt, function (err, row) {
+                if (err !== null) {
+
+                    next(err);
+                }
+                else {
+                    //console.log(row);
+
+                    if (row.length > 0) {
+                        console.log('row is NOT empty');
+
+
+                        /////new code
+
+
+                        db.serialize(function () {
+                            db.run(update_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("components update success");
+
+                                    res.status(202);
+
+                                }
+                                res.end();
+                            });
+
+                        });
+
+
+                        ///// new code
+
+                    }
+                    else {
+
+
+                    }
+
+
+                }
+
+            });
+
+
+        } catch
+            (e) {
+            //eat it;
+            console.log(e);
+
+        }
+    });
+    // db.close();
+
+
+});
+
+
+
+
 
 
 function formatDate(date, format, utc) {
