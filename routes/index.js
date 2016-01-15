@@ -55,9 +55,10 @@ router.get('/devices', function (req, res, next) {
         else {
 
             devices_devices = row;
-            console.log("devices>>");
-            console.log(devices_devices);
-            console.log("--");
+
+            //console.log("devices>>");
+            //console.log(devices_devices);
+            //console.log("--");
 
         }
 
@@ -73,9 +74,9 @@ router.get('/devices', function (req, res, next) {
             else {
 
                 devices_components = row;
-                console.log("components>>");
-                console.log(devices_components);
-                console.log("--");
+                //console.log("components>>");
+                //console.log(devices_components);
+                //console.log("--");
 
             }
 

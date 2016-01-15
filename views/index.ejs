@@ -22,14 +22,14 @@
 </style>
 
 <!-- Page Content -->
-<div class="container-fluid">
+<!--<div class="container-fluid">-->
 
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h1><i>ai</i><b>Cubes</b></h1>
-    </div>
-  </div>
-  <!-- /.row -->
+  <!--<div class="row">-->
+    <!--<div class="col-lg-12 text-center">-->
+      <!--<h1><i>ai</i><b>Cubes</b></h1>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--&lt;!&ndash; /.row &ndash;&gt;-->
 
 </div>
 
@@ -46,11 +46,11 @@
       <p>Status of sensors in different rooms </p>
       <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
 
-      <table  class="table">
+      <table  class="table table-hover table-striped table-responsive">
         <thead>
 
 
-        <tr class="active ">
+        <tr class=" ">
           <!--<th>MicroController ID</th>-->
           <!--<th>Component ID</th>-->
           <th>Description</th>
@@ -67,17 +67,15 @@
         <% components.forEach(function(component){ %>
 
 
-        <tr class="info">
+        <tr class="">
           <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
           <!--<td><div id="compId_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
           <td class="col-md-1"><div id="compDesc_<%= component.mcId %>_<%= component.compId %>"><%= component.desc %></div></td>
           <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
           <td class="col-md-2"><div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div></td>
           <th>
-
             <% if (component.value === 'digital_switch'){ %>
-
-            <button id="setOnL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-flash	"></span></button>
+            <button id="setOnL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-record"></span></button>
             <button id="setOffL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-off"></span></button>
           <%  } else { %>
             <button id="refreshValue" onClick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'GET', '')" class="btn btn-default btn-sm">
