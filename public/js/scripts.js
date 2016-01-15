@@ -65,103 +65,6 @@ $(function(){
 		//}
 
 
-		//if (obj.m == '1'&& obj.c == '1') {
-        //
-		//	$('#mcID_1_1').text(obj.m);
-		//	$('#compId_1_1').text(obj.c);
-		//	$('#compDesc_1_1').text(obj.d);
-		//	$('#compAction_1_1').text(obj.a);
-		//	$('#compValue_1_1').text(obj.v);
-		//}
-        //
-        //if (obj.m == '1'&& obj.c == '2') {
-		//	$('#mcID_1_2').text(obj.m);
-		//	$('#compId_1_2').text(obj.c);
-		//	$('#compDesc_1_2').text(obj.d);
-		//	$('#compAction_1_2').text(obj.a);
-		//	$('#compValue_1_2').text(obj.v);
-		//}
-        //
-        //if (obj.m == '1'&& obj.c == '3') {
-		//	$('#mcID_1_3').text(obj.m);
-		//	$('#compId_1_3').text(obj.c);
-		//	$('#compDesc_1_3').text(obj.d);
-		//	$('#compAction_1_3').text(obj.a);
-		//	$('#compValue_1_3').text(obj.v+ ' C');
-		//}
-        //
-        //if (obj.m == '2'&& obj.c == '1') {
-         //   $('#mcID_2_1').text(obj.m);
-         //   $('#compId_2_1').text(obj.c);
-         //   $('#compDesc_2_1').text(obj.d);
-         //   $('#compAction_2_1').text(obj.a);
-         //   $('#compValue_2_1').text(obj.v);
-        //}
-        //
-        //if (obj.m == '2'&& obj.c == '2') {
-         //   $('#mcID_2_2').text(obj.m);
-         //   $('#compId_2_2').text(obj.c);
-         //   $('#compDesc_2_2').text(obj.d);
-         //   $('#compAction_2_2').text(obj.a);
-         //   $('#compValue_2_2').text(obj.v);
-        //}
-        //
-        //
-		///////
-        //
-		//if (obj.m == '1'&& obj.c == '4') {
-		//	$('#mcID_1_4').text(obj.m);
-		//	$('#compId_1_4').text(obj.c);
-		//	$('#compDesc_1_4').text(obj.d);
-		//	$('#compAction_1_4').text(obj.a);
-		//	$('#compValue_1_4').text(obj.v+ ' %');
-		//}
-        //
-		//if (obj.m == '1'&& obj.c == '5') {
-		//	$('#mcID_1_5').text(obj.m);
-		//	$('#compId_1_5').text(obj.c);
-		//	$('#compDesc_1_5').text(obj.d);
-		//	$('#compAction_1_5').text(obj.a);
-		//	$('#compValue_1_5').text(obj.v + ' Pa');
-		//}
-        //
-        //
-		//if (obj.m == '1'&& obj.c == '6') {
-		//	$('#mcID_1_6').text(obj.m);
-		//	$('#compId_1_6').text(obj.c);
-		//	$('#compDesc_1_6').text(obj.d);
-		//	$('#compAction_1_6').text(obj.a);
-		//	$('#compValue_1_6').text(obj.v+ ' m');
-		//}
-        //
-        //
-        //
-		//if (obj.m == '3'&& obj.c == '1') {
-		//	$('#mcID_3_1').text(obj.m);
-		//	$('#compId_3_1').text(obj.c);
-		//	$('#compDesc_3_1').text(obj.d);
-		//	$('#compAction_3_1').text(obj.a);
-		//	$('#compValue_3_1').text(obj.v);
-		//}
-        //
-		//if (obj.m == '3'&& obj.c == '2') {
-		//	$('#mcID_3_2').text(obj.m);
-		//	$('#compId_3_2').text(obj.c);
-		//	$('#compDesc_3_2').text(obj.d);
-		//	$('#compAction_3_2').text(obj.a);
-		//	$('#compValue_3_2').text(obj.v);
-		//}
-        //
-		//if (obj.m == '1'&& obj.c == '7') {
-		//	$('#mcID_1_7').text(obj.m);
-		//	$('#compId_1_7').text(obj.c);
-		//	$('#compDesc_1_7').text(obj.d);
-		//	$('#compAction_1_7').text(obj.a);
-		//	$('#compValue_1_7').text(obj.v);
-		//}
-
-
-
 
 
 	});
@@ -172,8 +75,6 @@ $(function(){
 
 		if (top.location.pathname === '/devices')
 		{
-			//console.log("received from server>> : " + obj.m  + " " + obj.c + " " + obj.d+ " " + obj.a + "" + obj.v);
-
 
 			$('#device_mcID_'+obj.v+'d').text(obj.v);
 			$('#device_compId_'+obj.v+'d').text(obj.c);
@@ -184,10 +85,6 @@ $(function(){
 			$('#discoComponents'+obj.v).click(function(){
 				sendToServer(obj.v,'','','DISCO_COMPS','');
 			});
-
-
-
-
 	}});
 
 
@@ -206,9 +103,6 @@ $(function(){
         sendToServer('1','3','Temperature','GET','');
         //lastCmd = $('#go').text();
     });
-
-
-
 
 
 	$('#setOnL_1_1').click(function(){
@@ -270,7 +164,6 @@ $(function(){
 	});
 
 
-
 	$('#discoDevices').click(function(){
 		sendToServer('','','','DISCO_DEVICES','');
 
@@ -325,24 +218,14 @@ function deleteDevice( mc_id){
 					success: function(result) {
 						//$("#alertSuccess").show();
 
-
-
 						$("[id^=component_id_"+mc_id+"]").remove();
-
-
-
-
 					},
 					error: function (xhr) {alert('error');}
 				});
 
-
-
-
 			},
 			error: function (xhr) {alert('error');}
 		});
-
 //})
 	}
 	};
@@ -351,12 +234,8 @@ function deleteDevice( mc_id){
 
 function deleteComponent( mc_id, comp_id){
 
-
 	var delItem = confirm ('Do you want to delete Component: ' + mc_id + ' ' + comp_id +' ?');
 	if(delItem) {
-
-
-
 		$.ajax({
 			url: '/component/'+mc_id+'/'+comp_id,
 			type: 'DELETE',
@@ -371,4 +250,5 @@ function deleteComponent( mc_id, comp_id){
 
 	}
 };
+
 

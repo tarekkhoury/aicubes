@@ -2,55 +2,286 @@
 <html lang="en">
 
 <head>
-  <% include partials/head %>
+    <% include partials/head %>
 </head>
 
 <header>
-  <% include partials/header %>
+    <% include partials/header %>
 </header>
 
 <body>
 
 
-
 <!-- Custom CSS -->
 <style>
-  body {
-    padding-top: 70px;
-    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  }
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
 </style>
 
 <!-- Page Content -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h1><i>ai</i><b>Cubes</b></h1>
-    </div>
-  </div>
-  <!-- /.row -->
 
 </div>
-
-
 
 
 <!-- /.container -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-xs-2 col-md-2"></div>
-    <div class="col-xs-8 col-md-8">
-      <h2>Notifications</h2>
-      <p>Add notification details </p>
-      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+    <div class="row">
+        <div class="col-xs-2 col-md-2"></div>
+        <div class="col-xs-8 col-md-8">
+            <h2>Notifications</h2>
+            <p>Create notification details to receive emails and text messages based on events </p>
+            <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+
+            <main>
+
+                <div class="tab-content">
+
+                    <!-- Start Add Modal -->
+                    <div class="tab-pane active" id="crudAdd">
+                        <a id="modal-1" href="#modal-container-1" role="button" class="btn btn-primary"
+                           data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> Add record</a>
+                        <a id="refresh-1" href="notifications" role="button" class="btn btn-primary"
+                           data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+
+                        <div class="modal fade" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">
+                                            Add new record
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addForm" role="form" method="" action="">
+
+                                            <div class="form-group">
+                                                <label for="id">ID</label><input type="text" class="form-control"
+                                                                                 required name="id"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="name_short">Name Short</label><input type="text"
+                                                                                                 class="form-control"
+                                                                                                 required
+                                                                                                 name="name_short"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="name_long">Name Long </label><input type="text"
+                                                                                                class="form-control"
+                                                                                                required
+                                                                                                name="name_long"/>
+                                                <!--placeholder="Email address"-->
+                                            </div>
+
+                                            <div class="form-group">
+                                                <!--<label for="type"> Type (mobile,email)</label><input type="text"-->
+                                                                                                     <!--class="form-control"-->
+                                                                                                     <!--required  name="type"/>-->
+
+                                                <label for="notificationType">Operation Type</label>
+                                                <select id="operationDropdownMenu" name="notificationType" class="form-control dropdown-toggle">
+                                                    <option value="email">Email</option>
+                                                    <option value="sms">SMS</option>
+                                                </select>
+
+                                            </div>
 
 
 
-<footer>
-  <% include partials/footer %>
-</footer>
+
+                                            <div class="form-group">
+                                                <label for="contact">contact</label><input type="text"
+                                                                                           class="form-control" required
+                                                                                           name="contact"/>
+                                            </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                        </button>
+                                        <button id="insertButton" type="submit" class="btn btn-primary">Save changes
+                                        </button>
+                                    </div>
+                                    </form>
+                                    <!--  -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Add Modal -->
+
+                        <!-- Start Update Modal -->
+                        <div class="tab-pane active" id="crudUpdate">
+                            <div class="modal fade" id="modal-container-2" role="dialog"
+                                 aria-labelledby="myModalLabel_1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                ×
+                                            </button>
+                                            <h4 class="modal-title" id="myModalLabel_1">
+                                                Update record
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="updateForm" role="form" method="" action="">
+
+                                                <div class="form-group">
+                                                    <label for="userId"> ID</label><input type="text"
+                                                                                          class="form-control" required
+                                                                                          name="id" readonly/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="name">Name Short</label><input type="text"
+                                                                                               class="form-control"
+                                                                                               required
+                                                                                               name="name_short"/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="email">Name Long</label><input type="text"
+                                                                                               class="form-control"
+                                                                                               required
+                                                                                               name="name_long"/>
+                                                    <!--placeholder="Email address" -->
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <!--<label for="address">Type</label><input type="text"-->
+                                                                                            <!--class="form-control"-->
+                                                                                            <!--required name="type"/>-->
+
+
+
+                                                    <label for="notificationType">Operation Type</label>
+                                                    <select id="operationDropdownMenu" name="notificationType" class="form-control dropdown-toggle">
+                                                        <option value="email">Email</option>
+                                                        <option value="sms">SMS</option>
+                                                    </select>
+
+
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="contact">Contact</label><input type="text"
+                                                                                               class="form-control"
+                                                                                               required name="contact"/>
+                                                </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                            </button>
+                                            <button id="updateButton" type="submit" class="btn btn-primary">Update
+                                                changes
+                                            </button>
+                                        </div>
+                                        </form>
+
+                                        <!--  -->
+                                    </div>
+                                </div>
+                                <!-- End Update Modal -->
+
+                            </div>
+
+                        </div>
+                        <!-- End Modal -->
+                        <br/>
+
+
+                        <!--<div id="alertSuccess" class="alert alert-dismissable alert-success">-->
+                            <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>-->
+                            <!--<h4>-->
+                                <!--Alert!-->
+                            <!--</h4> <strong>Warning!</strong> <a href="#" class="alert-link">alert link</a>-->
+                        <!--</div>-->
+
+
+                        <!--<div id="alertWarning" class="alert alert-dismissable alert-danger" style="display:none;">-->
+                            <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>-->
+                            <!--<h4>-->
+                                <!--Alert!-->
+                            <!--</h4> <strong>Warning!</strong> <a href="#" class="alert-link">alert link</a>-->
+                        <!--</div>-->
+
+                        <br/>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name Short</th>
+                                    <th>Name Long</th>
+                                    <th>Type</th>
+                                    <th>Contact</th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="table_div">
+
+                                <% notifications.forEach(function(notification){ %>
+
+                                <tr id="notification_<%= notification.id %>" class="info">
+                                    <td>
+                                        <div id="notificationId_<%= notification.id %>"><%= notification.id %></div>
+                                    </td>
+                                    <td>
+                                        <div id="notificationNameShort_<%= notification.id %>"><%= notification.name_short %></div>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <div id="notificationNameLong_<%= notification.id %>"><%= notification.name_long %></div>
+                                    </td>
+                                    <td>
+                                        <div id="notificationType_<%= notification.id %>"><%= notification.type %></div>
+                                    </td>
+                                    <td class="col-md-2">
+                                        <div id="notificationContact_<%= notification.id %>"><%= notification.contact %></div>
+                                    </td>
+
+                                    <td class="col-md-2">
+                                        <!--<a id="updateNotification_<%= notification.id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
+
+                                        <button id="updateNotification_<%= notification.id %>"
+                                                onclick="updatenotification('<%= notification.id %>', '<%= notification.name_short %>','<%= notification.name_long %>','<%= notification.type %>','<%= notification.contact %>')"
+                                                class="btn btn-default btn-sm"><span
+                                                    class="glyphicon glyphicon-pencil"></span></button>
+                                        <!---->
+                                        <button id="deleteNotification_<%= notification.id %>"
+                                                onclick="deletenotification('<%= notification.id %>')"
+                                                class="btn btn-default btn-sm"><span
+                                                    class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </td>
+
+
+                                </tr>
+
+                                <% }) %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </main>
+
+            <footer>
+                <% include partials/footer %>
+            </footer>
 
 
 </body>
@@ -58,5 +289,121 @@
 
 
 <script>
+    //$('#alertSuccess').hide();
+    //$('#alertWarning').hide();
+
+//    $("#modal-container-1").on('hide', function () {
+//        //alert('modal hidden');
+//    });
+
+    $('#refresh-1').click(function () {
+        document.location.reload();
+    });
+
+
+    $('#insertButton').click(function () {
+        $('#modal-container-1').modal('hide');
+    });
+
+
+    $('#insertButton').click(function () {
+        //var insertItem = confirm('Do you want to update record: ' + $('#addForm').find('input[name="name_short"]').val() + ' ?');
+        var data1 = {
+            id: $('#addForm').find('input[name="id"]').val(),
+            name_short: $('#addForm').find('input[name="name_short"]').val(),
+            name_long: $('#addForm').find('input[name="name_long"]').val(),
+           // type: $('#addForm').find('input[name="type"]').val(),
+            type:$('#updateForm').find('select[name="notificationType"]').val(),
+            contact: $('#addForm').find('input[name="contact"]').val()
+        };
+
+        // alert('------------------' + data1);
+        $.ajax({
+            url: '/api/v1.0/notifications',
+            dataType: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data1),
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+//                $('#alertSuccess').show();
+            },
+            error: function (xhr) {
+//                alert('ERROR');
+            }
+        });
+    });
+
+
+
+
+    function updatenotification(id, name_short, name_long, type, contact) {
+        $('#modal-container-2').modal('show');
+        $('#updateForm').find('input[name="id"]').val(id);
+        $('#updateForm').find('input[name="name_short"]').val(name_short);
+        $('#updateForm').find('input[name="name_long"]').val(name_long);
+        //$('#updateForm').find('input[name="type"]').val(type);
+        $('#updateForm').find('select[name^="notificationType"] option[value='+ type +  ']').prop("selected",true);
+        $('#updateForm').find('input[name="contact"]').val(contact);
+    }
+
+
+    $('#updateButton').click(function () {
+        // var updateItem = confirm ('Do you want to update record: ' + $('#updateForm').find('input[name="name_short"]').val() + ' ?');
+        var data1 = {
+            id: $('#updateForm').find('input[name="id"]').val(),
+            name_short: $('#updateForm').find('input[name="name_short"]').val(),
+            name_long: $('#updateForm').find('input[name="name_long"]').val(),
+            //type: $('#updateForm').find('input[name="type"]').val(),
+            type: $('#updateForm').find('select[name="notificationType"]').val(),
+            contact: $('#updateForm').find('input[name="contact"]').val()};
+        $.ajax({
+            url: '/api/v1.0/notifications',
+            dataType: "json",
+            type: "post",
+           contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data1),
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+//                $('#alertSuccess').show();
+//                alert('SUCCESS'+data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+//                alert(xhr.status);
+//                alert(ajaxOptions);
+//                alert(thrownError);
+            }
+        });
+    });
+
+
+
+    function deletenotification(id) {
+
+        //var delItem = confirm ('Do you want to delete notification: ' + id  +' ?');
+        if (true) {
+            $.ajax({
+                url: '/notification/' + id,
+                type: 'DELETE',
+                success: function (result) {
+                    //$("#alertSuccess").show();
+                    $('#notification_' + id).remove();
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+
+
+        }
+    };
+
+
+
 
 </script>

@@ -130,6 +130,32 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='devices_mast
             console.log("SQL Table 'devices_master' already initialized.");
     });
 
+
+
+// Database initialization
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notifications_master'",
+    function (err, rows) {
+        if (err !== null) {
+            console.log(err);
+        }
+        else if (rows === undefined) {
+            db.run('CREATE TABLE notifications_master (id TEXT, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+                if (err !== null) {
+                    console.log(err);
+                }
+                else {
+                    console.log("SQL Table 'notifications_master' initialized.");
+                }
+            });
+        }
+        else
+            console.log("SQL Table 'notifications_master' already initialized.");
+    });
+
+
+
+
+
 //click from client
 io.sockets.on('connection', function (socket) {
     //button pushed
@@ -156,7 +182,7 @@ console.log('IN: ' + data);
     try {
 
 
-        var devicesFile = 'config/devices.json';
+        //var devicesFile = 'config/devices.json';
         var d = new Date();
         var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
        // console.log(dt);
@@ -173,10 +199,11 @@ console.log('IN: ' + data);
                     else {
                         console.log(row);
 
-                        if (!row.length > 0)
+                        if (row.length <= 0)
                         {
                             console.log('row is empty');
                             console.log('insert device....');
+
                             stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v,JSON.parse(data).d , dt);
                         }
                         else {
