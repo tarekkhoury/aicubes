@@ -239,7 +239,7 @@
                     <th>Device ID</th>
                     <th>Name</th>
                     <!--<th>Component ID</th>-->
-                    <th>Desc</th>
+                    <!--<th>Desc</th>-->
                     <!--<th>Action</th>-->
                     <th>Value</th>
                     <th></th>
@@ -255,9 +255,9 @@
                         <div id="device_name_<%= device.value %>d"><%= device.name %></div>
                     </td>
                     <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
-                    <td class="col-md-1d">
-                        <div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div>
-                    </td>
+                    <!--<td class="col-md-1d">-->
+                        <!--<div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div>-->
+                    <!--</td>-->
                     <!--<td><div id="device_action_<%= device.value %>d"></div><%= device.action %></td>-->
                     <td class="col-md-2">
                         <div id="device_compValue_<%= device.value %>d"> ...</div>
@@ -297,7 +297,7 @@
                                 <th>Comp#</th>
                                 <th>Name</th>
 
-                                <th>Desc</th>
+                                <!--<th>Desc</th>-->
                                 <!--<th>Action</th>-->
                                 <th>Value</th>
                                 <th></th>
@@ -318,9 +318,9 @@
                                     <td>
                                         <div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div>
                                     </td>
-                                    <td class="col-md-1d">
-                                        <div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>
-                                    </td>
+                                    <!--<td class="col-md-1d">-->
+                                        <!--<div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>-->
+                                    <!--</td>-->
                                     <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
                                     <td class="col-md-2">
                                         <div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value %></div>
@@ -435,11 +435,15 @@
             processData: false,
             cache: false,
             success: function (data) {
+                document.location.reload(true);
+
 //                $('#alertSuccess').show();
 //                alert('SUCCESS'+data);
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
+                document.location.reload(true);
+
 //                alert(xhr.status);
 //                alert(ajaxOptions);
 //                alert(thrownError);
@@ -452,7 +456,10 @@
 
 
     function updateComponent(mcId, compId, desc, action, value, name, visible, category) {
+
+
         $('#modal-container-3').modal('show');
+
         $('#updateFormC').find('input[name="mcId"]').val(mcId);
         $('#updateFormC').find('input[name="compId"]').val(compId);
         $('#updateFormC').find('input[name="name"]').val(name);
@@ -463,6 +470,7 @@
 //        $('#updateFormC').find('input[name="category"]').val(value);
         $('#updateFormC').find('select[name^="visible"] option[value=' + visible + ']').prop("selected", true);
         $('#updateFormC').find('select[name^="category"] option[value=' + category + ']').prop("selected", true);
+
 
     }
 
@@ -496,9 +504,12 @@
             success: function (data) {
 //                $('#alertSuccess').show();
 //                alert('SUCCESS'+data);
+                document.location.reload(true);
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
+                document.location.reload(true);
+
 //                alert(xhr.status);
 //                alert(ajaxOptions);
 //                alert(thrownError);

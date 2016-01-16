@@ -9,11 +9,6 @@ $(function(){
     //sending command to server
 	function sendToServer( mc_id, comp_id, comp_desc, comp_action, comp_value){
 		socket.json.emit('emit_from_client', {
-			//m: mc_id,
-			//compId: comp_id,
-			//desc: comp_desc,
-			//action: comp_action,
-			//value: comp_value
 
 			m: mc_id,
 			c: comp_id,
@@ -38,34 +33,89 @@ $(function(){
 	}
 
 
-    //
-	//setInterval((function(){sendToServer('2','1','','GET','');}), 5000);
-	//setInterval((function(){sendToServer('1','1','','GET','');}), 5500);
-	//setInterval((function(){sendToServer('2','2','','GET','');}), 6000);
-	//setInterval((function(){sendToServer('1','2','','GET','');}), 6500);
-	//setInterval((function(){sendToServer('1','3','','GET','');}), 7000);
-
-
-
 	//length data from server
-	socket.on('emit_from_server', function(data){
-		var obj = jQuery.parseJSON( data );
+	socket.on('emit_from_server', function(data) {
+		var obj = jQuery.parseJSON(data);
 		//console.log("received from server>> : " + obj.m  + " " + obj.c + " " + obj.d+ " " + obj.a + "" + obj.v);
+
 
 
 
 		//if (top.location.pathname === '/index') {
 
-			$('#mcID_'+obj.m+'_'+obj.c).text(obj.m);
-			$('#compId_'+obj.m+'_'+obj.c).text(obj.c);
-			$('#compDesc_'+obj.m+'_'+obj.c).text(obj.d);
-			$('#compAction_'+obj.m+'_'+obj.c).text(obj.a);
-			$('#compValue_'+obj.m+'_'+obj.c).text(obj.v);
+		$('#mcID_' + obj.m + '_' + obj.c).text(obj.m);
+		$('#compId_' + obj.m + '_' + obj.c).text(obj.c);
+		$('#compDesc_' + obj.m + '_' + obj.c).text(obj.d);
+		$('#compAction_' + obj.m + '_' + obj.c).text(obj.a);
+		$('#compValue_' + obj.m + '_' + obj.c).text(obj.v);
 
+		//}
+
+		//var pubnub = PUBNUB.init({
+		//	publish_key: 'pub-c-5ffcf96e-f028-415c-aa7d-ff5aff2beb79',
+		//	subscribe_key: 'sub-c-b3264f3c-bbf7-11e5-b522-0619f8945a4f'
+		//});
+		//if (obj.d == 'Temperature') {
+        //
+		//	pubnub.publish({
+		//		channel: 'aiCubesDashboards',
+		//		message: {
+		//			eon: {
+		//				'TemperatureC': Math.floor(obj.v)
+		//			}
+		//		}
+		//	});
+		//}
+        //
+		//if ( obj.d == 'Humidity') {
+        //
+		//	pubnub.publish({
+		//		channel: channel,
+		//		message: {
+		//			eon: {
+		//				'Humidity': Math.floor(obj.v)
+		//			}
+		//		}
+		//	});
+        //
 		//}
 
 
 
+			//setInterval(function(){
+            //
+			//	pubnub.publish({
+			//		channel: channel,
+			//		message: {
+			//			eon: {
+			//				'TemperatureC': Math.floor(obj.v),
+            //
+			//			}
+			//		}
+			//	});
+            //
+			//}, 10000);
+
+
+		//if (obj.d == 'Humidity')  {
+		//	var pubnub = PUBNUB.init({
+		//		publish_key: 'humidity',
+		//		subscribe_key: 'humidity'
+		//	});
+		//	setInterval(function(){
+        //
+		//		pubnub.publish({
+		//			channel: channel,
+		//			message: {
+		//				eon: {
+		//					'Humidity %': Math.floor(obj.v),
+        //
+		//				}
+		//			}
+		//		});
+        //
+		//	}, 10000);
+		//}
 
 	});
 

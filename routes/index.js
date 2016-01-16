@@ -67,7 +67,7 @@ router.get('/devices', function (req, res, next) {
 
     db.serialize(function () {
 
-        db.all('SELECT mcId, compId, desc, action, value, name FROM devices_master WHERE action = "COMPS" ORDER BY mcId ', function (err, row) {
+        db.all('SELECT mcId, compId, desc, action, value, name, visible, category FROM devices_master WHERE action = "COMPS" ORDER BY mcId ', function (err, row) {
             if (err !== null) {
                 next(err);
             }
@@ -863,6 +863,9 @@ router.post('/api/v1.0/components', function (req, res, next) {
 
             var update_stmt = "UPDATE devices_master SET  desc = '" + req.body.desc  +  "' ,visible = '"+ req.body.visible + "' , category = '"+ req.body.category +   "' ,name = '" + req.body.name +"' WHERE action = 'COMPS' AND mcId = '" + req.body.mcId + "' AND compId = '" + req.body.compId + "'" ;
             var select_stmt = "SELECT mcId FROM devices_master WHERE action = 'COMPS' AND mcId = '" + req.body.mcId + "' AND compId = '" + req.body.compId +"'";
+
+console.log(update_stmt);
+            console.log(select_stmt);
 
 
 

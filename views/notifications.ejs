@@ -331,9 +331,13 @@
             processData: false,
             cache: false,
             success: function (data) {
+                document.location.reload(true);
+
 //                $('#alertSuccess').show();
             },
             error: function (xhr) {
+                document.location.reload(true);
+
 //                alert('ERROR');
             }
         });
@@ -371,11 +375,15 @@
             processData: false,
             cache: false,
             success: function (data) {
+                document.location.reload(true);
+
 //                $('#alertSuccess').show();
 //                alert('SUCCESS'+data);
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
+                document.location.reload(true);
+
 //                alert(xhr.status);
 //                alert(ajaxOptions);
 //                alert(thrownError);
