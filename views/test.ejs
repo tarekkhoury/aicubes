@@ -21,17 +21,17 @@
   }
 </style>
 
-<!-- Page Content -->
-<div class="container-fluid">
+<!--&lt;!&ndash; Page Content &ndash;&gt;-->
+<!--<div class="container-fluid">-->
 
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h1><i>ai</i><b>Cubes</b></h1>
-    </div>
-  </div>
-  <!-- /.row -->
+  <!--<div class="row">-->
+    <!--<div class="col-lg-12 text-center">-->
+      <!--<h1><i>ai</i><b>Cubes</b></h1>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--&lt;!&ndash; /.row &ndash;&gt;-->
 
-</div>
+<!--</div>-->
 
 
 
@@ -42,49 +42,73 @@
   <div class="row">
     <div class="col-xs-2 col-md-2"></div>
     <div class="col-xs-8 col-md-8">
-      <h2>Test</h2>
-      <p>Test </p>
+      <h2>Test your connected devices</h2>
+      <p> </p>
       <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
 
       <p>
-        <button id="testall" onclick="clickButton(this.id)">TESTALL</button>
+        <button id="testall" onclick="clickButton(this.id)" class="btn btn-primary">Test All</button>
       </p>
 
       <p>
 
-        <button id="broadcast" onclick="clickButton(this.id)">BROADCAST</button>
+        <button id="broadcast" onclick="clickButton(this.id)" class="btn btn-primary">Broadcast</button>
       </p>
 
 
       <p>
-        <button id="discoComponents" onclick="clickButton(this.id)">DISCO_COMPS</button>
+        <button id="discoComponents" onclick="clickButton(this.id)" class="btn btn-primary">Discover Components</button>
       </p>
 
       <p>
-        <button id="discoDevices" onclick="clickButton(this.id)">DISCO_DEVICES</button>
+        <button id="discoDevices" onclick="clickButton(this.id)" class="btn btn-primary">Discover Devices</button>
       </p>
 
 
       <div class="container-fluid">
-        <h2>Test</h2>
-        <p>Send different commands </p>
+        <!--<h2>Test</h2>-->
+        <p>Use text field to send commands </p>
 
         <div class="form-group">
-          <textarea class="form-control" rows="2" id="testBox">{"m":"","c":"","d":"","a":"BROADCAST","v":""}</textarea>
+          <textarea class="form-control" rows="2" id="testBox">{"m":"","c":"","d":"","a":"TESTALL","v":""}</textarea>
         </div>
         <button id="testButton" onclick="clickButton(this.id)">Test</button>
 
       </div>
+    </div>
+  </div>
+</div>
 
+      <div class="col-xs-2 col-md-2"></div>
       <footer>
         <% include partials/footer %>
       </footer>
-
-
 </body>
 </html>
 
 
 <script>
+
+  $('#testButton').click(function(){
+    sendToServerText(jQuery.parseJSON($('#testBox').val()));
+  });
+
+  $('#testall').click(function(){
+    sendToServer('','','','TESTALL','');
+  });
+
+  $('#broadcast').click(function(){
+    sendToServer('','','','BROADCAST','');
+  });
+
+  $('#discoComponents').click(function(){
+    sendToServer('2','','','DISCO_COMPS','');
+  });
+
+
+  $('#discoDevices').click(function(){
+    sendToServer('','','','DISCO_DEVICES','');
+  });
+
 
 </script>

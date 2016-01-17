@@ -184,7 +184,7 @@ io.sockets.on('connection', function (socket) {
     //button pushed
     socket.on('emit_from_client', function (data) {
         //check the data
-        console.log(data);
+        //console.log(data);
 
         var receive = JSON.stringify(data);
 console.log("Out: " + receive + "");
@@ -220,17 +220,17 @@ console.log('IN: ' + data);
                         next(err);
                     }
                     else {
-                        console.log(row);
+                        //console.log(row);
 
                         if (row.length <= 0)
                         {
-                            console.log('row is empty');
-                            console.log('insert device....');
+                            //console.log('row is empty');
+                            //console.log('insert device....');
 
                             stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v,JSON.parse(data).d , dt);
                         }
                         else {
-                            console.log('row is NOT empty');
+                            //console.log('row is NOT empty');
                         }
 
                     }
@@ -246,16 +246,16 @@ console.log('IN: ' + data);
                         next(err);
                     }
                     else {
-                        console.log(row);
+                        //console.log(row);
 
                         if (row.length <= 0)
                         {
-                            console.log('row is empty');
-                            console.log('insert component....');
-                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d,'y','all', dt);
+                            //console.log('row is empty');
+                            //console.log('insert component....');
+                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d,'y',JSON.parse(data).v, dt);
                         }
                         else {
-                            console.log('row is NOT empty');
+                            //console.log('row is NOT empty');
                         }
 
                     }

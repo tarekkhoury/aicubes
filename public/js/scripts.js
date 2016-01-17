@@ -51,71 +51,6 @@ $(function(){
 
 		//}
 
-		//var pubnub = PUBNUB.init({
-		//	publish_key: 'pub-c-5ffcf96e-f028-415c-aa7d-ff5aff2beb79',
-		//	subscribe_key: 'sub-c-b3264f3c-bbf7-11e5-b522-0619f8945a4f'
-		//});
-		//if (obj.d == 'Temperature') {
-        //
-		//	pubnub.publish({
-		//		channel: 'aiCubesDashboards',
-		//		message: {
-		//			eon: {
-		//				'TemperatureC': Math.floor(obj.v)
-		//			}
-		//		}
-		//	});
-		//}
-        //
-		//if ( obj.d == 'Humidity') {
-        //
-		//	pubnub.publish({
-		//		channel: channel,
-		//		message: {
-		//			eon: {
-		//				'Humidity': Math.floor(obj.v)
-		//			}
-		//		}
-		//	});
-        //
-		//}
-
-
-
-			//setInterval(function(){
-            //
-			//	pubnub.publish({
-			//		channel: channel,
-			//		message: {
-			//			eon: {
-			//				'TemperatureC': Math.floor(obj.v),
-            //
-			//			}
-			//		}
-			//	});
-            //
-			//}, 10000);
-
-
-		//if (obj.d == 'Humidity')  {
-		//	var pubnub = PUBNUB.init({
-		//		publish_key: 'humidity',
-		//		subscribe_key: 'humidity'
-		//	});
-		//	setInterval(function(){
-        //
-		//		pubnub.publish({
-		//			channel: channel,
-		//			message: {
-		//				eon: {
-		//					'Humidity %': Math.floor(obj.v),
-        //
-		//				}
-		//			}
-		//		});
-        //
-		//	}, 10000);
-		//}
 
 	});
 
@@ -139,85 +74,9 @@ $(function(){
 
 
 
-    $('#getDoor').click(function(){
-		sendToServer('1','1','Door','GET','');
-		//lastCmd = $('#go').text();
-    });
-
-	$('#getLED').click(function(){
-		sendToServer('1','2','Light','GET','');
-		//lastCmd = $('#go').text();
-	});
-
-    $('#getTemp').click(function(){
-        sendToServer('1','3','Temperature','GET','');
-        //lastCmd = $('#go').text();
-    });
-
-
-	$('#setOnL_1_1').click(function(){
-		sendToServer('1','2','Light','SET','ON');
-		//lastCmd = $('#go').text();
-	});
-
-	$('#setOffL_1_1').click(function(){
-		sendToServer('1','2','Light','SET','OFF');
-		//lastCmd = $('#go').text();
-	});
-
-    $('#setOnL_2_1').click(function(){
-        sendToServer('2','1','Light','SET','ON');
-        //lastCmd = $('#go').text();
-    });
-
-    $('#setOffL_2_1').click(function(){
-        sendToServer('2','1','Light','SET','OFF');
-        //lastCmd = $('#go').text();
-    });
-
-    $('#setOnL_2_2').click(function(){
-        sendToServer('2','2','Light','SET','ON');
-        //lastCmd = $('#go').text();
-    });
-	$('#setOffL_2_2').click(function(){
-		sendToServer('2','2','Light','SET','OFF');
-		//lastCmd = $('#go').text();
-	});
-
-	$('#setOnL_3_2').click(function(){
-		sendToServer('3','2','Light','SET','ON');
-		//lastCmd = $('#go').text();
-	});
-	$('#setOffL_3_2').click(function(){
-		sendToServer('3','2','Light','SET','OFF');
-		//lastCmd = $('#go').text();
-	});
 
 
 
-    $('#testButton').click(function(){
-		sendToServerText(jQuery.parseJSON($('#testBox').val()));
-    });
-
-	$('#testall').click(function(){
-		sendToServer('','','','TESTALL','');
-	});
-
-	$('#broadcast').click(function(){
-		sendToServer('','','','BROADCAST','');
-	});
-
-	$('#discoComponents').click(function(){
-		//sendToServer('1','','','DISCO_COMPS','');
-		sendToServer('2','','','DISCO_COMPS','');
-		//sendToServer('3','','','DISCO_COMPS','');
-	});
-
-
-	$('#discoDevices').click(function(){
-		sendToServer('','','','DISCO_DEVICES','');
-
-	});
 
 
 });
@@ -231,7 +90,6 @@ function clickButton(go){
 //sending command to server from the ui
 function sendToServer( mc_id, comp_id, desc , action , value){
 	var socket1 = io.connect();
-	//alert( mc_id + "" +  comp_id+ "" +  comp_value);
 	socket1.json.emit('emit_from_client', {
 
 		m: mc_id,
@@ -290,5 +148,6 @@ function deleteComponent( mc_id, comp_id){
 		});
 	}
 };
+
 
 

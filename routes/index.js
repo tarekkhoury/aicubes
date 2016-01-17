@@ -7,6 +7,9 @@ var index_components = [];
 var devices_devices = [];
 var devices_components = [];
 var notifications = [];
+var categories =[];
+var data = [];
+var data2 = [];
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -15,30 +18,46 @@ router.get('/', function (req, res, next) {
 
     // all components
     db.serialize(function () {
-        db.all('SELECT mcId, compId, desc, action, value, name FROM devices_master WHERE action = "COMPS" ORDER BY mcId', function (err, row) {
+        db.all('SELECT mcId, compId, desc, action, value, name, category, visible FROM devices_master WHERE action = "COMPS" ORDER BY mcId', function (err, row) {
             if (err !== null) {
                 next(err);
             }
             else {
 
                 index_components = row;
-                console.log("components>>");
-                console.log(index_components);
-                console.log("--");
+                //console.log("components>>");
+                //console.log(index_components);
+                //console.log("--");
             }
         });
+
+        db.serialize(function () {
+            db.all('SELECT DISTINCT category FROM devices_master WHERE action = "COMPS" AND visible = "y" ORDER BY category', function (err, row) {
+                if (err !== null) {
+                    next(err);
+                }
+                else {
+
+                    categories = row;
+                    //console.log("categories>>");
+                    //console.log(categories);
+                    //console.log("--");
+                }
+            });
 
 
         res.render('index',
             {
                 title: 'aiCubes',
-                components: index_components
+                components: index_components,
+                categories: categories
 
             });
 
     });
     db.close();
 
+});
 });
 
 
@@ -109,9 +128,9 @@ router.get('/notifications', function (req, res, next) {
             }
             else {
                 notifications = row;
-                console.log("notifications>>");
-                console.log(notifications);
-                console.log("--");
+                //console.log("notifications>>");
+                //console.log(notifications);
+                //console.log("--");
 
                 res.render('notifications',
                     {
@@ -213,9 +232,9 @@ router.get('/users', function (req, res, next) {
             }
             else {
                 users = row;
-                console.log("users>>");
-                console.log(users);
-                console.log("--");
+                //console.log("users>>");
+                //console.log(users);
+                //console.log("--");
 
                 res.render('users',
                     {
@@ -231,35 +250,75 @@ router.get('/users', function (req, res, next) {
 });
 
 
+
+
+
+
 /* GET Remote page. */
 router.get('/dashboards', function (req, res, next) {
     //var db = new sqlite3.Database('cozy.db');
     //// all components
     //db.serialize(function() {
-    //db.all('SELECT mcId, compId, desc, action, value, name FROM devices_master WHERE action = "COMPS" ORDER BY mcID', function (err, row) {
+    //db.all('SELECT  * FROM (SELECT * FROM streams_master WHERE desc = "Temperature (C)" ORDER BY cdatetime DESC LIMIT 10)  ORDER BY cdatetime', function (err, row) {
     //    if (err !== null) {
     //      next(err);
     //    }
     //    else {
-    //      notifications = row;
-    //      console.log("remote_devices>>");
-    //      console.log(remote_devices);
+    //        data = row;
+    //      console.log("data>>");
+    //      console.log(data);
     //      console.log("--");
     //    }
     //  });
     //});
     //db.close();
 
+
+     data = [{
+        "sale": "202",
+        "year": "2012"
+    }, {
+        "sale": "215",
+        "year": "2002"
+    }, {
+        "sale": "179",
+        "year": "2004"
+    }, {
+        "sale": "199",
+        "year": "2006"
+    }, {
+        "sale": "134",
+        "year": "2008"
+    }, {
+        "sale": "176",
+        "year": "2010"
+    }];
+     data2 = [{
+        "sale": "152",
+        "year": "2000"
+    }, {
+        "sale": "189",
+        "year": "2002"
+    }, {
+        "sale": "179",
+        "year": "2004"
+    }, {
+        "sale": "199",
+        "year": "2006"
+    }, {
+        "sale": "134",
+        "year": "2008"
+    }, {
+        "sale": "176",
+        "year": "2010"
+    }];
+
+
     res.render('dashboards',
         {
             title: 'aiCubes - Dashboards',
-            dashboards: [{
-                "user_id": "tkhoury",
-                "name": "Tarek Khoury",
-                "Password": "!@#$%^&*",
-                "Role": "Admin",
-                "active": "Y"
-            }]
+            data: data,
+            data2: data2
         });
 });
 

@@ -159,17 +159,17 @@
                         <label for="category">Display Category or Group</label>
                         <select id="category" name="category"
                                 class="form-control dropdown-toggle">
-                            <option value="all">All</option>
-                            <option value="sensors">Sensors</option>
-                            <option value="digital_switch">Digital switch</option>
-                            <option value="lights">Lights</option>
-                            <option value="weather">Weather</option>
-                            <option value="analog_switch">Analog switch</option>
-                            <option value="analog_sensors">Analog sensors</option>
-                            <option value="security">Security</option>
-                            <option value="safety">Safety</option>
-                            <option value="room1">Room 1</option>
-                            <option value="room2">Room 2</option>
+                            <option value="All">All</option>
+                            <option value="Digital Sensors">Digital Sensors</option>
+                            <option value="Digital Switches">Digital Switches</option>
+                            <option value="Lights">Lights</option>
+                            <option value="Weather Sensors">Weather Sensors</option>
+                            <option value="Analog Switches">Analog Switches</option>
+                            <option value="Analog Sensors">Analog Sensors</option>
+                            <option value="Security">Security</option>
+                            <option value="Safety">Safety</option>
+                            <option value="Room 1">Room 1</option>
+                            <option value="Room 2">Room 2</option>
 
                         </select>
 
@@ -457,7 +457,6 @@
 
     function updateComponent(mcId, compId, desc, action, value, name, visible, category) {
 
-
         $('#modal-container-3').modal('show');
 
         $('#updateFormC').find('input[name="mcId"]').val(mcId);
@@ -466,10 +465,8 @@
         $('#updateFormC').find('input[name="desc"]').val(desc);
         $('#updateFormC').find('input[name="action"]').val(action);
         $('#updateFormC').find('input[name="value"]').val(value);
-//        $('#updateFormC').find('input[name="visible"]').val(action);
-//        $('#updateFormC').find('input[name="category"]').val(value);
-        $('#updateFormC').find('select[name^="visible"] option[value=' + visible + ']').prop("selected", true);
-        $('#updateFormC').find('select[name^="category"] option[value=' + category + ']').prop("selected", true);
+        $('#updateFormC').find('select[name^="visible"] option[value="' + visible + '"]').prop("selected", true);
+        $('#updateFormC').find('select[name^="category"] option[value="' + category + '"]').prop("selected", true);
 
 
     }

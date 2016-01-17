@@ -42,11 +42,18 @@
   <div class="row">
     <div class="col-xs-2 col-md-2"></div>
     <div class="col-xs-8 col-md-8">
-      <h2>Sensors</h2>
-      <p>Status of sensors in different rooms </p>
+      <!--<h2>Sensors</h2>-->
+      <!--<p>Status of sensors in different rooms </p>-->
       <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
       <div><a id="refresh-1" href="notifications" role="button" class="btn"
               data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a> <p></div>
+
+
+
+      <% categories.forEach(function(category){ %>
+      <h2><%=category.category%></h2>
+      <p> </p>
+
       <table  class="table table-hover table-striped table-responsive">
         <thead>
 
@@ -66,7 +73,7 @@
         <tbody>
 
         <% components.forEach(function(component){ %>
-
+        <% if (component.category === category.category && component.visible ==='y') { %>
 
         <tr class="">
           <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
@@ -77,7 +84,7 @@
           <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
           <td class="col-md-2"><div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div></td>
           <th>
-            <% if (component.value === 'digital_switch'){ %>
+            <% if (component.value === 'Digital Switches'){ %>
             <button id="setOnL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-record"></span></button>
             <button id="setOffL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-off"></span></button>
           <%  } else { %>
@@ -87,17 +94,21 @@
 
 
 
-          <%}%>
+          <%};%>
           </th>
 
         </tr>
-
+        <% };%>
         <% })%>
+
+
 
         <tbody>
       </table>
 
 
+
+      <%})%>
 
 
     </div>
