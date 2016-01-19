@@ -800,7 +800,131 @@ router.delete('/user/:id', function (req, res, next) {
 
 ////////////////////////////// USERS APIs ////////////////////////////
 
+////////////////////////////// RULES APIs ////////////////////////////
 
+
+router.post('/api/v1.0/rules', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        try {
+
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+            var obj = {};
+            obj = JSON.stringify(req.body)
+
+            //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
+            var insert_stmt = "INSERT or REPLACE INTO rules_master VALUES ('" + req.body.rule_id + "','" + req.body.password + "','" + req.body.first_name + "','" + req.body.last_name + "','" + req.body.email + "','" + dt + "')";
+            var update_stmt = "UPDATE users_master SET rules_id = '" + req.body.id + "', password =  '" + req.body.password + "', first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name + "', email = '" + req.body.email + "' WHERE user_id = '" + req.body.user_id + "'";
+            var select_stmt = 'SELECT user_id FROM rules_master WHERE user_id = ' + req.body.user_id;
+
+
+            db.all(select_stmt, function (err, row) {
+                if (err !== null) {
+                    next(err);
+                }
+                else {
+                    console.log(row);
+
+                    if (row.length > 0) {
+                        console.log('row is NOT empty');
+
+
+                        /////new code
+
+
+                        db.serialize(function () {
+                            db.run(update_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("rules update success");
+
+                                    res.status(202);
+
+                                }
+                                res.end();
+                            });
+
+                        });
+
+
+                        ///// new code
+
+                    }
+                    else {
+                        console.log('row is empty');
+                        console.log('insert rules....');
+
+                        db.serialize(function () {
+                            db.run(insert_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("rules insert success");
+
+                                    res.status(202);
+
+                                }
+                            });
+
+                        });
+
+
+                    }
+
+
+                }
+
+            });
+
+
+        } catch
+            (e) {
+            //eat it;
+            console.log(e);
+
+        }
+    });
+    // db.close();
+
+
+});
+
+
+router.delete('/rule/:id', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        db.get("DELETE FROM rules_master WHERE rule_id = ?", req.params.id, function (err, row) {
+
+            if (err) {
+                console.log(err);
+                res.status(500);
+            }
+            else {
+                res.status(202);
+                console.log("rules deleted success");
+
+            }
+            res.end();
+
+        });
+
+    });
+
+    db.close();
+
+});
+
+
+////////////////////////////// RULES APIs ////////////////////////////
 
 
 

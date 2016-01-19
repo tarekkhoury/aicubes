@@ -16,6 +16,7 @@
 "serialport":"latest",
 "socket.io":"latest",
     "jsonfile":"latest",
-    "sqlite3": "latest"
+    "sqlite3": "latest",
+    "node-rules": "3.0.3"
   }
 }

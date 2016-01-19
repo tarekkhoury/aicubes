@@ -12,7 +12,6 @@
 <body>
 
 
-
 <!-- Custom CSS -->
 <style>
   body {
@@ -24,16 +23,8 @@
 <!-- Page Content -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h1><i>ai</i><b>Cubes</b></h1>
-    </div>
-  </div>
-  <!-- /.row -->
 
 </div>
-
-
 
 
 <!-- /.container -->
@@ -42,21 +33,362 @@
   <div class="row">
     <div class="col-xs-2 col-md-2"></div>
     <div class="col-xs-8 col-md-8">
-      <h2>Rules</h2>
-      <p>Add rules to take automatic actions </p>
+      <h2>Users</h2>
+      <p>Create rules to use to app </p>
       <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
 
+      <main>
 
+        <div class="tab-content">
+
+          <!-- Start Add Modal -->
+          <div class="tab-pane active" id="crudAdd">
+            <a id="modal-1" href="#modal-container-1" role="button" class="btn"
+               data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> Add record</a>
+            <a id="refresh-1" href="rules" role="button" class="btn"
+               data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+
+            <div class="modal fade" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                      Add new record
+                    </h4>
+                  </div>
+                  <div class="modal-body">
+                    <form id="addForm" role="form" method="" action="">
+
+                      <div class="form-group">
+                        <label for="ruleId">ID</label><input type="text" class="form-control"
+                                                             required name="ruleId"/>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="password">Password</label><input type="text"
+                                                                     class="form-control"
+                                                                     required
+                                                                     name="password"/>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="firstName">First Name </label><input type="text"
+                                                                         class="form-control"
+                                                                         required
+                                                                         name="firstName"/>
+                        <!--placeholder="Email address"-->
+                      </div>
+
+                      <div class="form-group">
+                        <label for="lastName"> Last Name </label><input type="text"
+                                                                        class="form-control"
+                                                                        required  name="lastName"/>
+
+                        <!--<label for="lastName">Operation Type</label>-->
+                        <!--<select id="operationDropdownMenu" name="lastName"-->
+                        <!--class="form-control dropdown-toggle">-->
+                        <!--<option value="email">Email</option>-->
+                        <!--<option value="sms">SMS</option>-->
+                        <!--</select>-->
+
+                      </div>
+
+
+                      <div class="form-group">
+                        <label for="email">email</label><input type="text"
+                                                               class="form-control" required
+                                                               name="email"/>
+                      </div>
+
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                        </button>
+                        <button id="insertButton" type="submit" class="btn btn-primary">Save
+                          changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <!--  -->
+                </div>
+              </div>
+            </div>
+            <!-- End Add Modal -->
+
+            <!-- Start Update Modal -->
+            <div class="tab-pane active" id="crudUpdate">
+              <div class="modal fade" id="modal-container-2" role="dialog"
+                   aria-labelledby="myModalLabel_1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel_1">
+                        Update record
+                      </h4>
+                    </div>
+                    <div class="modal-body">
+                      <form id="updateForm" role="form" method="" action="">
+
+                        <div class="form-group">
+                          <label for="ruleId">User ID</label><input type="text"
+                                                                    class="form-control" required
+                                                                    name="ruleId" readonly/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="password">Password</label><input type="text"
+                                                                       class="form-control"
+                                                                       required
+                                                                       name="password"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="email">First Name</label><input type="text"
+                                                                      class="form-control"
+                                                                      required
+                                                                      name="firstName"/>
+                          <!--placeholder="Email address" -->
+                        </div>
+
+                        <div class="form-group">
+                          <label for="lastName">Last Name</label><input type="text"
+                                                                        class="form-control"
+                                                                        required name="lastName"/>
+
+
+                          <!--<label for="lastName">Operation Type</label>-->
+                          <!--<select id="operationDropdownMenu" name="lastName"-->
+                          <!--class="form-control dropdown-toggle">-->
+                          <!--<option value="email">Email</option>-->
+                          <!--<option value="sms">SMS</option>-->
+                          <!--</select>-->
+
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="email">email</label><input type="text"
+                                                                 class="form-control"
+                                                                 required name="email"/>
+                        </div>
+
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                          </button>
+                          <button id="updateButton" type="submit" class="btn btn-primary">
+                            Update
+                            changes
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    <!--  -->
+                  </div>
+                </div>
+                <!-- End Update Modal -->
+
+              </div>
+
+            </div>
+            <!-- End Modal -->
+            <br/>
+
+
+
+            <br/>
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-responsive">
+                <thead>
+                <tr>
+                  <th>Login id</th>
+                  <th>Password</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th></th>
+
+                </tr>
+                </thead>
+
+                <tbody id="table_div">
+
+                <% rules.forEach(function(rule){ %>
+
+                <tr id="rule_<%= rule.rule_id %>" class="">
+                  <td>
+                    <div id="ruleId_<%= rule.rule_id %>"><%= rule.rule_id %></div>
+                  </td>
+                  <td>
+                    <div id="ruleNameShort_<%= rule.rule_id %>"><%= rule.password %></div>
+                  </td>
+                  <td class="col-md-1">
+                    <div id="ruleNameLong_<%= rule.rule_id %>"><%= rule.first_name %></div>
+                  </td>
+                  <td>
+                    <div id="lastName_<%= rule.rule_id %>"><%= rule.last_name %></div>
+                  </td>
+                  <td class="col-md-2">
+                    <div id="ruleContact_<%= rule.rule_id %>"><%= rule.email %></div>
+                  </td>
+
+                  <td class="col-md-2">
+                    <!--<a id="updateUser_<%= rule.rule_id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
+
+                    <button id="updateUser_<%= rule.rule_id %>"
+                            onclick="updaterule('<%= rule.rule_id %>', '<%= rule.password %>','<%= rule.first_name %>','<%= rule.last_name %>','<%= rule.email %>')"
+                            class="btn btn-default btn-sm"><span
+                              class="glyphicon glyphicon-pencil"></span></button>
+                    <!---->
+                    <button id="deleteUser_<%= rule.rule_id %>"
+                            onclick="deleterule('<%= rule.rule_id %>')"
+                            class="btn btn-default btn-sm"><span
+                              class="glyphicon glyphicon-trash"></span>
+                    </button>
+                  </td>
+                </tr>
+
+                <% }) %>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
 
       <footer>
         <% include partials/footer %>
       </footer>
-
+    </div>
+    <div class="col-xs-2 col-md-2"></div>
+  </div>
+</div>
 
 </body>
 </html>
 
 
 <script>
+  //$('#alertSuccess').hide();
+  //$('#alertWarning').hide();
+
+  //    $("#modal-container-1").on('hide', function () {
+  //        //alert('modal hidden');
+  //    });
+
+  $('#refresh-1').click(function () {
+    document.location.reload();
+  });
+
+
+  $('#insertButton').click(function () {
+    $('#modal-container-1').modal('hide');
+  });
+
+
+  $('#insertButton').click(function () {
+    //var insertItem = confirm('Do you want to update record: ' + $('#addForm').find('input[name="password"]').val() + ' ?');
+    var data1 = {
+      rule_id: $('#addForm').find('input[name="ruleId"]').val(),
+      password: $('#addForm').find('input[name="password"]').val(),
+      first_name: $('#addForm').find('input[name="firstName"]').val(),
+      last_name: $('#addForm').find('input[name="lastName"]').val(),
+      //last_name: $('#updateForm').find('select[name="lastName"]').val(),
+      email: $('#addForm').find('input[name="email"]').val()
+    };
+
+    // alert('------------------' + data1);
+    $.ajax({
+      url: '/api/v1.0/rules',
+      dataType: "json",
+      type: "POST",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data1),
+      async: true,
+      processData: false,
+      cache: false,
+      success: function (data) {
+//                $('#alertSuccess').show();
+      },
+      error: function (xhr) {
+//                alert('ERROR');
+      }
+    });
+  });
+
+
+  function updaterule(id, password, firstName, lastName, email) {
+    $('#modal-container-2').modal('show');
+    $('#updateForm').find('input[name="ruleId"]').val(id);
+    $('#updateForm').find('input[name="password"]').val(password);
+    $('#updateForm').find('input[name="firstName"]').val(firstName);
+    $('#updateForm').find('input[name="lastName"]').val(lastName);
+    $('#updateForm').find('input[name="email"]').val(email);
+  }
+
+
+  $('#updateButton').click(function () {
+    // var updateItem = confirm ('Do you want to update record: ' + $('#updateForm').find('input[name="password"]').val() + ' ?');
+    var data1 = {
+      rule_id: $('#updateForm').find('input[name="ruleId"]').val(),
+      password: $('#updateForm').find('input[name="password"]').val(),
+      first_name: $('#updateForm').find('input[name="firstName"]').val(),
+      last_name: $('#updateForm').find('input[name="lastName"]').val(),
+      //lastName: $('#updateForm').find('select[name="lastName"]').val(),
+      email: $('#updateForm').find('input[name="email"]').val()
+    };
+    $.ajax({
+      url: '/api/v1.0/rules',
+      dataType: "json",
+      type: "post",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data1),
+      async: true,
+      processData: false,
+      cache: false,
+      success: function (data) {
+//                $('#alertSuccess').show();
+//                alert('SUCCESS'+data);
+
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+//                alert(xhr.status);
+//                alert(ajaxOptions);
+//                alert(thrownError);
+      }
+    });
+  });
+
+
+  function deleterule(id) {
+
+    //var delItem = confirm ('Do you want to delete rule: ' + id  +' ?');
+    if (true) {
+      $.ajax({
+        url: '/rule/' + id,
+        type: 'DELETE',
+        success: function (result) {
+          //$("#alertSuccess").show();
+          $('#rule_' + id).remove();
+        },
+        error: function (xhr) {
+          alert('error');
+        }
+      });
+
+
+    }
+  }
+  ;
+
 
 </script>
