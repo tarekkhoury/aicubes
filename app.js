@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var RuleEngine = require("node-rules");
+//var RuleEngine = require("node-rules");
 
 
 //var jsonFile = require('jsonfile');
@@ -194,6 +194,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='rules_master
                 'consequence_action TEXT, ' +
                 'consequence_value TEXT, ' +
                 'active TEXT, ' +
+                'isPrimary TEXT, ' +
                 'cdatetime DATETIME)', function (err) {
                 if (err !== null) {
                     console.log(err);
@@ -232,9 +233,10 @@ io.sockets.on('connection', function (socket) {
 sp.on('data', function (data) {
         console.log('IN: ' + data);
         try {
-            if (JSON.parse(data).d === "Temperature (C)") {
-                evaluateRules(data);
-            }
+            evaluateRules(data);
+
+            //if (JSON.parse(data).d === "Temperature (C)") {
+            //}
         } catch (e) {
             //eat it;
             console.log(e);
@@ -336,154 +338,263 @@ sp.on('data', function (data) {
 //    'cdatetime DATETIME)'
 
 function evaluateRules(fact) {
-    var result = 1;
-    var action = {};
+    var result = 0;
+    var rulesToBeSatisfied = 0;
     var counter = 0;
+    var expression = '';
+    var triggeredRuleId = '';
+    var action = {};
 
 
-    db.all('SELECT DISTINCT rule_id FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '"', function (err, distinct_rules_rows) {
+    db.all('SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '"', function (err, distinct_rules_rows) {
         if (err !== null) {
             console.log(err);
 
             next(err);
         }
         else {
-            //console.log(row);
+            console.log('SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '"');
             if (distinct_rules_rows.length > 0) {
                 distinct_rules_rows.forEach(function (distinct_rules_row) {
-                    //console.log(distinct_rules_row.rule_id);
+                    // console.log("-->" + distinct_rules_row.rule_id);
 
                     ////////////////////////////////////////////////////////////
 
 
-                    db.all('SELECT DISTINCT * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '"', function (err, specific_distinct_rules_rows) {
+                    db.all('SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND isPrimary = "Y"', function (err, specific_distinct_rules_rows) {
                         if (err !== null) {
                             console.log(err);
                             next(err);
                         }
                         else {
-                            //console.log(row);
+                            console.log('SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '"');
                             if (specific_distinct_rules_rows.length > 0) {
                                 specific_distinct_rules_rows.forEach(function (specific_distinct_rules_row) {
+                                    triggeredRuleId = specific_distinct_rules_row.rule_id;
+                                    console.log("--> Evaluating Rule: "+  specific_distinct_rules_row.rule_id);
 
 
                                     //console.log(specific_distinct_rules_row.rule_id);
-                                    if (specific_distinct_rules_rows.length === 1) {
-                                        //console.log("--> Simple Rule");
-                                        var expression = '';
+                                    if (specific_distinct_rules_rows.length == 1) {
+                                        console.log("--> 1- Simple Rule");
+                                        //var expression = '';
+                                        var valueType = '';
+
+                                        try {
+                                            typeof eval(JSON.parse(fact).v);
+                                            //console.log("numBer");
+                                            valueType = 'number';
+                                        } catch (e) {
+                                            valueType = 'string';
+                                        }
+
+
                                         if (specific_distinct_rules_row.condition_expression !== 'between') { // not between
-                                            expression = JSON.parse(fact).v + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+
+                                            if (valueType == 'string') {
+                                                expression = '\'' + JSON.parse(fact).v + '\'' + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                //console.log("1 - " + expression);
+
+                                            } else {
+                                                expression = JSON.parse(fact).v + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                //console.log("2 - " + expression);
+
+                                            }
+
                                         } else {
                                             expression = specific_distinct_rules_row.condition_value_lower + ' <= ' + JSON.parse(fact).v + ' <= ' + specific_distinct_rules_row.condition_value_higher;
                                         }
 
 
-                                        if (eval(expression)) {
-                                            console.log('~~~~expression: ' + expression + ' - eval: ' + eval(expression));
+                                        try {
 
-                                            console.log('Rule triggered::', specific_distinct_rules_row.rule_id);
-                                            //result = true;
-                                            action = {
-                                                "m": specific_distinct_rules_row.consequence_mcid,
-                                                "c": specific_distinct_rules_row.consequence_compid,
-                                                "d": "",
-                                                "a": specific_distinct_rules_row.consequence_action,
-                                                "v": specific_distinct_rules_row.consequence_value
-                                            };
-                                            sp.write(JSON.stringify(action) + "\n", function (err, results) {
-                                                console.log('OUT:', JSON.stringify(action));
+                                            if (eval(expression)) {
 
-                                                //console.log('bytes written: ', results);
-                                            });
+                                                console.log('Simple Rule triggered::', specific_distinct_rules_row.rule_id);
+                                                console.log('--> Rule: - (' + expression + ') - value: ' + eval(expression));
+                                                //result = true;
+                                                action = {
+                                                    "m": specific_distinct_rules_row.consequence_mcid,
+                                                    "c": specific_distinct_rules_row.consequence_compid,
+                                                    "d": "",
+                                                    "a": specific_distinct_rules_row.consequence_action,
+                                                    "v": specific_distinct_rules_row.consequence_value
+                                                };
+                                                sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                    console.log('OUT1:', JSON.stringify(action));
+
+                                                    //console.log('bytes written: ', results);
+                                                });
+                                            }
+
+                                        } catch (e) {
+                                            //console.log("-->" + e)
                                         }
-
+                                        ;
 
                                     } else {
 
-                                        console.log("--> Composite Rule");
-                                        //console.log("--> Simple Rule");
-                                        var expression = '';
 
-                                        if (counter === 0) {
-                                            console.log('first loop');
+                                        // var expression = '';
+                                        if (counter == 0) {
+                                            rulesToBeSatisfied = specific_distinct_rules_rows.length;
+
+                                            console.log("--> Composite Rule");
+                                            console.log("--> Rules to be checked: " + specific_distinct_rules_rows.length);
+                                        }
+
+
+                                        if (counter == 0) {
+                                            var valueType = '';
+
+                                            counter++;
+
+                                            try {
+                                                typeof eval(JSON.parse(fact).v);
+                                                // console.log("numBer");
+                                                valueType = 'number';
+                                            } catch (e) {
+                                                valueType = 'string';
+                                            }
+
+
+                                            //console.log('first loop');
+
 
                                             if (specific_distinct_rules_row.condition_expression !== 'between') { // not between
-                                                expression = JSON.parse(fact).v + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+
+
+                                                if (valueType == 'string') {
+                                                    expression = '\'' + JSON.parse(fact).v + '\'' + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                    //console.log("1 - " + expression);
+
+                                                } else {
+                                                    expression = JSON.parse(fact).v + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                    //console.log("2 - " + expression);
+
+                                                }
+
+
+                                                //expression = JSON.parse(fact).v + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+
+
                                             } else {
                                                 expression = specific_distinct_rules_row.condition_value_lower + ' <= ' + JSON.parse(fact).v + ' <= ' + specific_distinct_rules_row.condition_value_higher;
                                             }
+
                                             if (eval(expression)) {
-                                                result++;
-                                                console.log('1~~~~expression: ' + expression + ' - eval: ' + eval(expression));
-                                                console.log('1~~~~result: ' + result + ' - result++ ');
+                                                result = result + 1;
+                                                //console.log('1~~~~result: ' + result );
+
+                                                //console.log('1~~~~result: ' + result + ' - result++ ');
                                             } else {
-                                                result--;
-                                                console.log('1~~~~expression: ' + expression + ' - eval: ' + eval(expression));
-                                                console.log('1~~~~result: ' + result + ' - result-- ');
+                                                // result--;
+                                                //console.log('1~~~~expression: ' + expression + ' - eval: ' + eval(expression));
+                                                // console.log('1~~~~result: ' + result + ' - result-- ');
                                             }
-                                            counter++;
+                                            console.log('--> Rule: (' + counter + ') - (' + expression + ') - value: ' + eval(expression));
+
+                                            //counter++;
                                         } else {
 
                                             ///////////////////////////////////////////////////////////////////////
-                                            console.log('beyong first loop');
+                                            // console.log('beyong first loop');
 
 
-                                            db.all('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_rules_row.condition_mcid + '" AND compId = "' + specific_distinct_rules_row.condition_compid + '" ORDER BY cdatetime DESC LIMIT 1', function (err, streams_rows) {
+                                            db.all('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_rules_row.condition_mcid + '" AND compId = "' + specific_distinct_rules_row.condition_compid + '" AND isPrimary = "N" ORDER BY cdatetime DESC LIMIT 1'/*+ (specific_distinct_rules_rows.length -1)*/, function (err, streams_rows) {
                                                 if (err !== null) {
                                                     next(err);
                                                 }
                                                 else {
-
+console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_rules_row.condition_mcid + '" AND compId = "' + specific_distinct_rules_row.condition_compid + '" ORDER BY cdatetime DESC LIMIT 1');
                                                     streams_rows.forEach(function (streams_row) {
+                                                        counter++;
+
+                                                        var valueType = '';
+
+                                                        try {
+                                                            typeof eval(streams_row.value);
+                                                            // console.log("numBer");
+                                                            valueType = 'number';
+                                                        } catch (e) {
+                                                            valueType = 'string';
+                                                        }
+
 
                                                         if (streams_row.condition_expression !== 'between') { // not between
-                                                            expression = streams_row.value + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+
+                                                            if (valueType == 'string') {
+                                                                expression = '\'' + streams_row.value + '\'' + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                                //console.log("1 - " + expression);
+
+                                                            } else {
+                                                                expression = streams_row.value + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+                                                                //console.log("2 - " + expression);
+
+                                                            }
+
+
+                                                            // expression = streams_row.value + ' ' + specific_distinct_rules_row.condition_expression + ' ' + specific_distinct_rules_row.condition_value;
+
+
                                                         } else {
                                                             expression = specific_distinct_rules_row.condition_value_lower + ' <= ' + streams_row.value + ' <= ' + specific_distinct_rules_row.condition_value_higher;
                                                         }
+
                                                         if (eval(expression)) {
-                                                            result++;
-                                                            console.log('2~~~~expression: ' + expression + ' - eval: ' + eval(expression));
-                                                            console.log('2~~~~result: ' + result + ' - result++ ');
+                                                            result = result + 1;
+                                                            //console.log('2~~~~result: ' + result );
+                                                            //console.log('2~~~~result: ' + result + ' - result++ ');
                                                         } else {
-                                                            result--;
-                                                            console.log('2~~~~expression: ' + expression + ' - eval: ' + eval(expression));
-                                                            console.log('2~~~~result: ' + result + ' - result-- ');
+                                                            //result--;
+                                                            //console.log('2~~~~expression: ' + expression + ' - eval: ' + eval(expression));
+                                                            //console.log('2~~~~result: ' + result + ' - result-- ');
                                                         }
-                                                        counter++;
+                                                        console.log('--> Rule: (' + counter + ') - (' + expression + ') - value: ' + eval(expression));
+
+
+
+
+                                                        if (result == rulesToBeSatisfied) {
+                                                            console.log("******result: " + result);
+                                                            console.log("******rulesToBeSatisfied: " + rulesToBeSatisfied);
+                                                            console.log('2-->Composite Rule triggered::', triggeredRuleId);
+                                                            action = {
+                                                                "m": specific_distinct_rules_row.consequence_mcid,
+                                                                "c": specific_distinct_rules_row.consequence_compid,
+                                                                "d": "",
+                                                                "a": specific_distinct_rules_row.consequence_action,
+                                                                "v": specific_distinct_rules_row.consequence_value
+                                                            };
+                                                            sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                                console.log('2OUT:', JSON.stringify(action));
+
+                                                                //console.log('bytes written: ', results);
+                                                            });
+
+                                                        }
+
+
+
+
                                                     });
 
                                                 }
                                             });
 
-                                            ///////////////////////////////////////////////////////////////////
-
                                         }
 
 
-                                    }
 
 
-                                    console.log("******specific_distinct_rules_rows.length:" + specific_distinct_rules_rows.length + "  result: " + result);
+                                            ///////////////////////////////////////////////////////////////////
 
-                                    if (result == specific_distinct_rules_rows.length) {
-                                        console.log("******IN******");
-                                        console.log('Rule triggered::', specific_distinct_rules_row.rule_id);
-                                        action = {
-                                            "m": specific_distinct_rules_row.consequence_mcid,
-                                            "c": specific_distinct_rules_row.consequence_compid,
-                                            "d": "",
-                                            "a": specific_distinct_rules_row.consequence_action,
-                                            "v": specific_distinct_rules_row.consequence_value
-                                        };
-                                        sp.write(JSON.stringify(action) + "\n", function (err, results) {
-                                            console.log('OUT:', JSON.stringify(action));
 
-                                            //console.log('bytes written: ', results);
-                                        });
 
                                     }
+
                                 });
+
 
                                 //console.log('row is empty');
 
@@ -491,7 +602,16 @@ function evaluateRules(fact) {
                                 //console.log('row is NOT empty');
                             }
 
+                            console.log('end evaluating rule ----');
+
                         }
+                        //sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                        //    //console.log('OUT:', JSON.stringify(action));
+                        //
+                        //    //console.log('bytes written: ', results);
+                        //});
+
+
                     });
 
 
@@ -622,6 +742,7 @@ function evaluateRules(fact) {
     //    //}
 
     //});
+
 
 }
 
