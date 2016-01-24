@@ -231,9 +231,9 @@ io.sockets.on('connection', function (socket) {
 
 //data from arduino
 sp.on('data', function (data) {
-        console.log('IN: ' + data);
+        // console.log('IN: ' + data);       //ooooooooooooooooooooooooooooooo
         try {
-            evaluateRules(data);
+            evaluateRules2(data);
 
             //if (JSON.parse(data).d === "Temperature (C)") {
             //}
@@ -337,6 +337,234 @@ sp.on('data', function (data) {
 //    'active TEXT, ' +
 //    'cdatetime DATETIME)'
 
+
+var evaluateRules2 = function (fact) { // Start evaluateRules2 function
+    var ruleResult = 0;
+    var myCounter = 0;
+    var counterUpperValue = 0;
+
+
+    console.log("");
+    //console.log("> BEGIN function evaluateRules2") ;
+    var select_distinct_rules_statement = 'SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y"';
+    //console.log("-->" +select_distinct_rules_statement);
+
+
+    db.all(select_distinct_rules_statement, function (err, distinct_rules_rows) { // Start: get all the DISTINCT rules in the rules_master table
+
+        if (err !== null) {
+            next(err);
+        } else { // start distinct rules list
+            //console.log("----> For mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+            distinct_rules_rows.forEach(function (distinct_rules_row) { // Start forEach distinct_rules_row
+                //console.log("---->" +distinct_rules_row.rule_id);
+
+                // Start Evaluate Primary Rule
+                var select_specific_primary_rules_statement = 'SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y"';
+                //console.log(select_specific_primary_rules_statement);
+                db.all(select_specific_primary_rules_statement, function (err, specific_rules_rows) { // Start: get all the SPECIFIC rules in the rules_master table
+
+                    if (err !== null) {
+                        next(err);
+                    } else { // start specificrules list
+                        //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+                        specific_rules_rows.forEach(function (specific_rules_row) { // Start forEach specific_rules_row
+                            //console.log("------> Primary Rule: " + specific_rules_row.rule_id);
+                            counterUpperValue = specific_rules_rows.length;
+                            //console.log('In Primary Rules: '+counter + '/'+ counterUpperValue)
+
+                            var valueType = '';
+                            var expression = '';
+
+
+                            try {
+                                typeof eval(JSON.parse(fact).v);
+                                valueType = 'number';
+                            } catch (e) {
+                                valueType = 'string';
+                            }
+
+                            if (specific_rules_row.condition_expression !== 'between') { // not between
+
+                                if (valueType == 'string') {
+                                    expression = '\'' + JSON.parse(fact).v + '\'' + ' ' + specific_rules_row.condition_expression + ' ' + specific_rules_row.condition_value;
+                                } else {
+                                    expression = JSON.parse(fact).v + ' ' + specific_rules_row.condition_expression + ' ' + specific_rules_row.condition_value;
+                                }
+
+                            } else {
+                                expression = specific_rules_row.condition_value_lower + ' <= ' + JSON.parse(fact).v + ' <= ' + specific_rules_row.condition_value_higher;
+                            }
+                           // console.log("--------> expression = " + expression);
+
+
+                            if (eval(expression)) {
+                                ruleResult = 1;
+                            } else {
+                                ruleResult = 0;
+                            }
+                            console.log("------> Primary Rule: " + specific_rules_row.rule_id + " mcId: " + specific_rules_row.condition_mcid + " compId: " + specific_rules_row.condition_compid
+                                + " condition expression : " + specific_rules_row.condition_expression + " condition value : " + specific_rules_row.condition_value + " Last Saved DB Value: " + JSON.parse(fact).v + "  Test ruleResult = " + ruleResult +  "  expression = " + expression);
+
+
+                            if (ruleResult) {
+                                console.log("----------> ruleResult = " + ruleResult + "   SHOULD Evaluate non primary rules " + specific_rules_row.rule_id + ";   mcID:'" + JSON.parse(fact).m + "' ;  compid = '" + JSON.parse(fact).c) + "'";
+
+
+                                // Start Evaluate Primary Rule
+                                var select_specific_secondary_rules_statement = 'SELECT  * FROM rules_master WHERE rule_id = "' + specific_rules_row.rule_id + '" AND isPrimary = "N"';
+                                //console.log(select_specific_secondary_rules_statement);
+                                db.all(select_specific_secondary_rules_statement, function (err, specific_rules_secondary_rows) { // Start: get all the SPECIFIC secondary rules in the rules_master table
+                                    if (err !== null) {
+                                        next(err);
+                                    } else { // start specificrules list
+                                        //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+
+                                        counterUpperValue = specific_rules_secondary_rows.length + 1;
+
+                                        //console.log('This is a simple rule - SEND ACTION HERE FOR SIMPLE RULE .....' + distinct_rules_row.rule_id);
+
+
+
+                                        if (counterUpperValue == 1) {
+                                            action = {
+                                                "m": specific_rules_row.consequence_mcid,
+                                                "c": specific_rules_row.consequence_compid,
+                                                "d": "",
+                                                "a": specific_rules_row.consequence_action,
+                                                "v": specific_rules_row.consequence_value
+                                            };
+                                            sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                console.log('This is a simple rule - SEND ACTION HERE FOR SIMPLE RULE .....' + specific_rules_row.rule_id);
+                                                console.log('OUTS:', JSON.stringify(action));
+
+                                                //console.log('bytes written: ', results);
+                                            });
+
+                                        } else {
+                                        }
+
+
+                                        specific_rules_secondary_rows.forEach(function (specific_rules_secondary_row, rowCounter) { // Start forEach specific_rules_secondary_row
+
+
+                                            var select_specific_secondary_db_stream_value_statement = 'SELECT  * FROM streams_master WHERE mcId= "' + specific_rules_secondary_row.condition_mcid + '" AND compId = "' + specific_rules_secondary_row.condition_compid + '" ORDER BY cdatetime DESC  LIMIT 1';
+                                            //console.log(select_specific_secondary_db_stream_value_statement);
+                                            db.all(select_specific_secondary_db_stream_value_statement, function (err, specific_secondary_db_stream_rows) { // Start: get all the SPECIFIC secondary rules in the rules_master table
+
+                                                if (err !== null) {
+                                                    next(err);
+                                                } else { // start specificrules list
+                                                    //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+
+                                                    specific_secondary_db_stream_rows.forEach(function (specific_secondary_db_stream_row) { // Start forEach specific_rules_secondary_row
+
+
+
+
+
+                                                        try {
+                                                            typeof eval(specific_secondary_db_stream_row.value);
+                                                            valueType = 'number';
+                                                        } catch (e) {
+                                                            valueType = 'string';
+                                                        }
+
+                                                        if (specific_rules_secondary_row.condition_expression !== 'between') { // not between
+
+                                                            if (valueType == 'string') {
+                                                                expression = '\'' + specific_secondary_db_stream_row.value + '\'' + ' ' + specific_rules_secondary_row.condition_expression + ' ' + specific_rules_secondary_row.condition_value;
+                                                            } else {
+                                                                expression = specific_secondary_db_stream_row.value + ' ' + specific_rules_secondary_row.condition_expression + ' ' + specific_rules_secondary_row.condition_value;
+                                                            }
+
+                                                        } else {
+                                                            expression = specific_rules_secondary_row.condition_value_lower + ' <= ' + specific_secondary_db_stream_row.value + ' <= ' + specific_rules_secondary_row.condition_value_higher;
+                                                        }
+                                                        //console.log("--------> expression = " + expression);
+
+
+                                                        if (eval(expression)) {
+                                                            ruleResult = ruleResult * 1;
+                                                        } else {
+                                                            ruleResult = ruleResult * 0;
+                                                        }
+
+                                                        console.log("------> Secondary Rule: " + specific_rules_secondary_row.rule_id + " mcId: " + specific_rules_secondary_row.condition_mcid + " compId: " + specific_rules_secondary_row.condition_compid
+                                                            + " condition expression : " + specific_rules_secondary_row.condition_expression + " condition value : " + specific_rules_secondary_row.condition_value + " Last Saved DB Value: " + specific_secondary_db_stream_row.value + "  Test ruleResult = " + ruleResult +  "  expression = " + expression);
+                                                       // console.log("--------> Test ruleResult = " + ruleResult );
+
+
+                                                        console.log('In Secondary Rules: ' + (rowCounter+2) + '/' + (specific_rules_secondary_rows.length + 1));
+                                                        /// need counter and test ruleResult to trigger action
+
+
+
+                                                        if ((ruleResult == 1) && ((rowCounter+2) == (specific_rules_secondary_rows.length + 1))) {
+
+
+
+                                                            action = {
+                                                                "m": specific_rules_row.consequence_mcid,
+                                                                "c": specific_rules_row.consequence_compid,
+                                                                "d": "",
+                                                                "a": specific_rules_row.consequence_action,
+                                                                "v": specific_rules_row.consequence_value
+                                                            };
+                                                            sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                                //console.log("------------>ACTION FOR COMPOSITE RULE: " + distinct_rules_row.rule_id);
+                                                                console.log('OUTC:', JSON.stringify(action));
+
+                                                                //console.log('bytes written: ', results);
+                                                            });
+
+
+                                                        } else {
+                                                           // console.log("------------>NO ACTION: RULES Have Not Been Satisfied : " + distinct_rules_row.rule_id);
+
+                                                        }
+
+
+                                                        //console.log("--------> LAST Test ruleResult = " + ruleResult);
+
+
+                                                    })
+
+                                                }
+                                            })
+
+
+                                        })
+                                    }
+///////
+
+
+                                })
+
+
+                            } else {
+                                //console.log("----------> ruleResult = " + ruleResult + "   EXIT WITHOUT Evaluate non primary rules" + distinct_rules_row.rule_id + ";   mcID:'" + JSON.parse(fact).m + "' ;  compid = '" + JSON.parse(fact).c) + "'";
+                            }
+
+
+                        });// end forEach specific_rules_row
+                    }// end specific rules list
+                })// End: get all the SPECIFIC rules in the rules_master table
+                // End Evaluate Primary Rule
+
+
+            })
+            ;// end forEach distinct_rules_row
+        }// end distinct rules list
+    })// End: get all the DISTINCT rules in the rules_master table
+
+    // console.log("--------> LAST Test ruleResult = " + ruleResult);
+
+
+    //console.log("> END function evaluateRules2") ;
+}// end evaluateRules2 function
+
+
 function evaluateRules(fact) {
     var result = 0;
     var rulesToBeSatisfied = 0;
@@ -371,7 +599,7 @@ function evaluateRules(fact) {
                             if (specific_distinct_rules_rows.length > 0) {
                                 specific_distinct_rules_rows.forEach(function (specific_distinct_rules_row) {
                                     triggeredRuleId = specific_distinct_rules_row.rule_id;
-                                    console.log("--> Evaluating Rule: "+  specific_distinct_rules_row.rule_id);
+                                    console.log("--> Evaluating Rule: " + specific_distinct_rules_row.rule_id);
 
 
                                     //console.log(specific_distinct_rules_row.rule_id);
@@ -506,7 +734,7 @@ function evaluateRules(fact) {
                                                     next(err);
                                                 }
                                                 else {
-console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_rules_row.condition_mcid + '" AND compId = "' + specific_distinct_rules_row.condition_compid + '" ORDER BY cdatetime DESC LIMIT 1');
+                                                    console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_rules_row.condition_mcid + '" AND compId = "' + specific_distinct_rules_row.condition_compid + '" ORDER BY cdatetime DESC LIMIT 1');
                                                     streams_rows.forEach(function (streams_row) {
                                                         counter++;
 
@@ -553,8 +781,6 @@ console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_ru
                                                         console.log('--> Rule: (' + counter + ') - (' + expression + ') - value: ' + eval(expression));
 
 
-
-
                                                         if (result == rulesToBeSatisfied) {
                                                             console.log("******result: " + result);
                                                             console.log("******rulesToBeSatisfied: " + rulesToBeSatisfied);
@@ -575,8 +801,6 @@ console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_ru
                                                         }
 
 
-
-
                                                     });
 
                                                 }
@@ -585,10 +809,7 @@ console.log('SELECT * FROM streams_master WHERE mcId = "' + specific_distinct_ru
                                         }
 
 
-
-
-                                            ///////////////////////////////////////////////////////////////////
-
+                                        ///////////////////////////////////////////////////////////////////
 
 
                                     }
