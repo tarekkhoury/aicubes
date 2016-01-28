@@ -1,10 +1,10 @@
 
 
-INSERT or REPLACE INTO rules_master VALUES ("motion_door_light_on_Composite_rule_1_7" ,"switch on light 21 based on Motion and Door" , "1" , "7" , "==" , "'NO'" , "" , "" , "2" , "1" , "SET" , "OFF" , "Y" ,"Y", "2016-01-17 14:46:24");
+INSERT or REPLACE INTO rules_master VALUES ("R17S_21_1" ,"switch on light 21 based on Motion and Door" , "1" , "7" , "==" , "'NO'" , "" , "" , "2" , "1" , "SET" , "OFF" , "Y" ,"Y", "2016-01-17 14:46:24");
 
 
 
-INSERT or REPLACE INTO rules_master VALUES ("motion_door_light_on_Composite_rule_1_7" ,"switch on light 21 based on Motion and Door" , "1" , "7" , "==" , "'YES'" , "" , "" , "2" , "1" , "SET" , "ON" , "Y" ,"Y", "2016-01-17 14:46:24");
+INSERT or REPLACE INTO rules_master VALUES ("R17S_21_2" ,"switch on light 21 based on Motion and Door" , "1" , "7" , "==" , "'YES'" , "" , "" , "2" , "1" , "SET" , "ON" , "Y" ,"Y", "2016-01-17 14:46:24");
 
 
 
