@@ -182,16 +182,21 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='rules_master
         }
         else if (rows === undefined) {
             db.run('CREATE TABLE rules_master (' +
+                'id INTEGER PRIMARY KEY, ' +
                 'rule_id TEXT, ' +
                 'rule_name TEXT, ' +
                 'condition_mcid TEXT, ' +
+                'condition_mcid_name  TEXT, ' +
                 'condition_compid TEXT, ' +
+                'condition_compid_name  TEXT, ' +
                 'condition_expression TEXT,' +
                 'condition_value TEXT, ' +
                 'condition_value_lower TEXT, ' +
                 'condition_value_higher TEXT, ' +
                 'consequence_mcid TEXT, ' +
+                'consequence_mcid_name  TEXT, ' +
                 'consequence_compid TEXT, ' +
+                'consequence_compid_name  TEXT, ' +
                 'consequence_action TEXT, ' +
                 'consequence_value TEXT, ' +
                 'active TEXT, ' +
@@ -399,12 +404,15 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
                                     expression = specific_rules_row.condition_value_lower + ' <= ' + JSON.parse(fact).v + ' <= ' + specific_rules_row.condition_value_higher;
                                 }
                                 // console.log("--------> expression = " + expression);
-
+                                try {
                                     if (eval(expression)) {
                                         ruleResult = 1;
                                     } else {
                                         ruleResult = 0;
                                     }
+                                } catch (e) {
+                                    console.log(e);
+                                }
 
                                 console.log("------> Primary Rule: " + specific_rules_row.rule_id + " mcId: " + specific_rules_row.condition_mcid + " compId: " + specific_rules_row.condition_compid
                                     + " condition expression : " + specific_rules_row.condition_expression + " condition value : " + specific_rules_row.condition_value + " Last Saved DB Value: " + JSON.parse(fact).v + "  Test ruleResult = " + ruleResult + "  expression = " + expression);
@@ -437,6 +445,12 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
                                                     "a": specific_rules_row.consequence_action,
                                                     "v": specific_rules_row.consequence_value
                                                 };
+
+                                                if (specific_rules_row.consequence_action == "notify") {
+
+                                                    console.log("S xxxxxxxxxxxxx   CALL AWS SNS APIs for notifications xxxxxxxxxxxxxxx");
+                                                }
+
                                                 sp.write(JSON.stringify(action) + "\n", function (err, results) {
                                                     console.log('This is a simple rule - SEND ACTION HERE FOR SIMPLE RULE .....' + specific_rules_row.rule_id);
                                                     console.log('OUT_S:', JSON.stringify(action));
@@ -483,11 +497,18 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
                                                             //console.log("--------> expression = " + expression);
 
 
-                                                            if (eval(expression)) {
-                                                                ruleResult = ruleResult * 1;
-                                                            } else {
-                                                                ruleResult = ruleResult * 0;
+
+                                                            try {
+                                                                if (eval(expression)) {
+                                                                    ruleResult = ruleResult * 1;
+                                                                } else {
+                                                                    ruleResult = ruleResult * 0;
+                                                                }
+                                                            } catch (e) {
+                                                                console.log(e);
                                                             }
+
+
 
                                                             console.log("------> Secondary Rule: " + specific_rules_secondary_row.rule_id + " mcId: " + specific_rules_secondary_row.condition_mcid + " compId: " + specific_rules_secondary_row.condition_compid
                                                                 + " condition expression : " + specific_rules_secondary_row.condition_expression + " condition value : " + specific_rules_secondary_row.condition_value + " Last Saved DB Value: " + specific_secondary_db_stream_row.value + "  Test ruleResult = " + ruleResult + "  expression = " + expression);
@@ -508,6 +529,11 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
                                                                     "a": specific_rules_row.consequence_action,
                                                                     "v": specific_rules_row.consequence_value
                                                                 };
+
+                                                                if (specific_rules_row.consequence_action == "notify") {
+
+                                                                    console.log("C xxxxxxxxxxxxx   CALL AWS CNS APIs for notifications xxxxxxxxxxxxxxx");
+                                                                }
 
                                                                 sp.write(JSON.stringify(action) + "\n", function (err, results) {
                                                                     console.log("------------>ACTION FOR COMPOSITE RULE: " + distinct_rules_row.rule_id);

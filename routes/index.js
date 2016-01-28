@@ -871,10 +871,10 @@ router.post('/api/v1.0/rules', function (req, res, next) {
             obj = JSON.stringify(req.body)
 
             //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
-            var insert_stmt = 'INSERT INTO rules_master VALUES ("' + req.body.rule_id + '","' + req.body.rule_name + '","' + req.body.condition_mcid + '","' + req.body.condition_compid + '","' + req.body.condition_expression + '","' + req.body.condition_value + '","' + req.body.condition_value_lower + '","' + req.body.condition_value_higher + '","' + req.body.consequence_mcid + '","' + req.body.consequence_compid + '","' + req.body.consequence_action + '","' + req.body.consequence_value + '","' + req.body.active + '","' + req.body.isPrimary + '","' + dt + '")';
-            var update_stmt = "UPDATE rules_master SET rule_id ='" + req.body.rule_id + "', rule_name='" + req.body.rule_name + "', condition_mcid='" + req.body.condition_mcid + "', condition_compid='" + req.body.condition_compid + "', condition_expression='" + req.body.condition_expression + "', condition_value='" + req.body.condition_value + "', condition_value_lower='" + req.body.condition_value_lower + "', condition_value_higher='" + req.body.condition_value_higher + "', consequence_mcid='" + req.body.consequence_mcid + "', consequence_compid='" + req.body.consequence_compid + "', consequence_action='" + req.body.consequence_action + "', consequence_value='" + req.body.consequence_value + "', active='" + req.body.active + "', isPrimary='" + req.body.isPrimary + "', cdatetime='" + dt + "' WHERE rule_id ='" + req.body.rule_id + "' AND rule_name='" + req.body.rule_name + "'";
+            var insert_stmt = 'INSERT INTO rules_master VALUES (NULL,"' + req.body.rule_id + '","' + req.body.rule_name + '","' + req.body.condition_mcid + '","'+ req.body.condition_mcid_name + '","' + req.body.condition_compid + '","'+ req.body.condition_compid_name + '","' + req.body.condition_expression + '","' + req.body.condition_value + '","' + req.body.condition_value_lower + '","' + req.body.condition_value_higher + '","' + req.body.consequence_mcid + '","'+ req.body.consequence_mcid_name + '","' + req.body.consequence_compid + '","'+ req.body.consequence_compid_name + '","' + req.body.consequence_action + '","' + req.body.consequence_value + '","' + req.body.active + '","' + req.body.isPrimary + '","' + dt + '")';
+            var update_stmt = "UPDATE rules_master SET rule_id ='" + req.body.rule_id + "', rule_name='" + req.body.rule_name + "', condition_mcid='" + req.body.condition_mcid +"', condition_mcid_name='" + req.body.condition_mcid_name + "', condition_compid='" + req.body.condition_compid +"', condition_compid_name='" + req.body.condition_compid_name + "', condition_expression='" + req.body.condition_expression + "', condition_value='" + req.body.condition_value + "', condition_value_lower='" + req.body.condition_value_lower + "', condition_value_higher='" + req.body.condition_value_higher + "', consequence_mcid='" + req.body.consequence_mcid + "', consequence_mcid_name='" + req.body.consequence_mcid_name + "', consequence_compid='" + req.body.consequence_compid +"', consequence_compid_name='" + req.body.consequence_compid_name + "', consequence_action='" + req.body.consequence_action + "', consequence_value='" + req.body.consequence_value + "', active='" + req.body.active + "', isPrimary='" + req.body.isPrimary + "', cdatetime='" + dt + "' WHERE id ='" + req.body.id + "'";
             //var select_stmt = "SELECT rule_id FROM rules_master WHERE rule_id = '" + req.body.rule_id + "'";
-            var select_stmt = "SELECT rule_id FROM rules_master WHERE rule_id ='" + req.body.rule_id + "' AND rule_name='" + req.body.rule_name + "'AND condition_mcid='" + req.body.condition_mcid + "'AND condition_compid='" + req.body.condition_compid + "'AND condition_expression='" + req.body.condition_expression + "'AND condition_value='" + req.body.condition_value + "'AND condition_value_lower='" + req.body.condition_value_lower + "'AND condition_value_higher='" + req.body.condition_value_higher + "'";
+            var select_stmt = "SELECT rule_id FROM rules_master WHERE id ='" + req.body.id + "'";
 
             console.log(insert_stmt);
             console.log(update_stmt);
@@ -959,11 +959,11 @@ router.post('/api/v1.0/rules', function (req, res, next) {
 });
 
 
-router.delete('/rule/:id', function (req, res, next) {
+router.delete('/api/v1.0/rule/:id', function (req, res, next) {
     var db = new sqlite3.Database('cozy.db');
 
     db.serialize(function () {
-        db.get("DELETE FROM rules_master WHERE rule_id = ?", req.params.id, function (err, row) {
+        db.get("DELETE FROM rules_master WHERE id = ?", req.params.id, function (err, row) {
 
             if (err) {
                 console.log(err);

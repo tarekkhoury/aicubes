@@ -99,8 +99,6 @@
                                                         <% devices.forEach(function(device) { %>
 
                                                         <option value="<%= device.mcId %>"> <%= device.name %> </option>
-                                                        <!--<option value="2">Arduino Uno</option>-->
-                                                        <!--<option value="3">Arduino Micro Pro</option>-->
 
                                                         <% }) %>
 
@@ -160,7 +158,7 @@
                                             <div style="background-color:grey; overflow: auto;">
                                                 <label>Consequence</label>
                                             </div>
-                                            <div style="background-color:lightgrey; overflow: auto;">
+                                            <div id = "consequence_i" style="background-color:lightgrey; overflow: auto;">
 
 
                                                 <div class="form-group">
@@ -256,6 +254,8 @@
                                             <form id="updateForm" role="form" method="" action="">
 
                                                 <div class="form-group">
+                                                    <input type="hidden" class="form-control" required name="id_u" readonly/>
+
                                                     <label for="ruleId_u">Rule Id</label>
                                                     <input type="text" class="form-control" required name="ruleId_u" readonly/>
                                                 </div>
@@ -513,8 +513,9 @@
 
                                 <% rules.forEach(function(rule){ %>
 
-                                <tr id="rule_<%= rule.rule_id %>" class="">
+                                <tr id="rule_<%= rule.id %>" class="">
                                     <td>
+                                        <div hidden id="id_<%= rule.id %>"><%= rule.id %></div>
                                         <div id="ruleId_<%= rule.rule_id %>"><%= rule.rule_id %></div>
                                     </td>
                                     <td>
@@ -529,12 +530,15 @@
                                     </td>
                                     <td>
                                         <div id="ruleCondition_mcid_<%= rule.rule_id %>"><%= rule.condition_mcid %>
-                                        </div>
+
+                                            </div>
+                                        <div id="ruleCondition_mcid_<%= rule.rule_id %>"><%= rule.condition_mcid_name %></div>
                                     </td>
                                     <td>
-                                        <div id="ruleCondition_compid_<%= rule.rule_id %>"><%= rule.condition_compid %>
+                                            <div id="ruleCondition_compid_<%= rule.rule_id %>"><%if (rule.condition_compid !== 'null') { %> <%= rule.condition_compid %> <%} %>
+                                            </div>
+                                        <div id="ruleCondition_compid_<%= rule.rule_id %>"><%if (rule.condition_compid !== 'null') { %> <%= rule.condition_compid_name %> <%} %></div>
 
-                                        </div>
                                     </td>
                                     <td>
                                         <div id="ruleCondition_expression_<%= rule.rule_id %>"><%= rule.condition_expression %>
@@ -556,12 +560,16 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div id="ruleConsequence_mcid_<%= rule.rule_id %>"><%= rule.consequence_mcid %>
+                                        <div id="ruleConsequence_mcid_<%= rule.rule_id %>"><%= rule.consequence_mcid %>                                        </div>
+
+                                        <div id="ruleConsequence_mcid_<%= rule.rule_id %>"><%= rule.consequence_mcid_name %>
 
                                         </div>
                                     </td>
                                     <td>
-                                        <div id="ruleConsequence_compid_<%= rule.rule_id %>"><%= rule.consequence_compid %>
+                                        <div id="ruleConsequence_compid_<%= rule.rule_id %>"><%if (rule.consequence_compid !== 'null') { %> <%= rule.consequence_compid %> <%} %>                                        </div>
+
+                                        <div id="ruleConsequence_compid_<%= rule.rule_id %>"><%if (rule.consequence_compid !== 'null') { %> <%= rule.consequence_compid_name %> <%} %>
 
                                         </div>
                                     </td>
@@ -571,7 +579,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div id="ruleConsequence_value_<%= rule.rule_id %>"><%= rule.consequence_value %>
+                                        <div id="ruleConsequence_value_<%= rule.rule_id %>">  <%if (rule.consequence_value !== 'null') { %> <%= rule.consequence_value %> <%} %>
 
                                         </div>
                                     </td>
@@ -579,12 +587,12 @@
                                     <!--<a id="updateRule_<%= rule.rule_id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
                                     <td>
                                         <button id="updateRule_<%= rule.rule_id %>"
-                                                onclick="updaterule('<%= rule.rule_id %>', '<%= rule.rule_name %>','<%= rule.condition_mcid %>','<%= rule.condition_compid %>','<%= rule.condition_expression %>', '<%= rule.condition_value %>', '<%= rule.condition_value_lower %>', '<%= rule.condition_value_higher %>', '<%= rule.consequence_mcid %>', '<%= rule.consequence_compid %>', '<%= rule.consequence_action %>', '<%= rule.consequence_value %>', '<%= rule.active %>', '<%= rule.isPrimary %>')"
+                                                onclick="updaterule('<%= rule.id %>','<%= rule.rule_id %>', '<%= rule.rule_name %>','<%= rule.condition_mcid %>','<%= rule.condition_compid %>','<%= rule.condition_expression %>', '<%= rule.condition_value %>', '<%= rule.condition_value_lower %>', '<%= rule.condition_value_higher %>', '<%= rule.consequence_mcid %>', '<%= rule.consequence_compid %>', '<%= rule.consequence_action %>', '<%= rule.consequence_value %>', '<%= rule.active %>', '<%= rule.isPrimary %>')"
                                                 class="btn btn-default btn-sm"><span
                                                     class="glyphicon glyphicon-pencil"></span></button>
                                         <!---->
-                                        <button id="deleteRule_<%= rule.rule_id %>"
-                                                onclick="deleterule('<%= rule.rule_id %>')"
+                                        <button id="deleteRule_<%= rule.id %>"
+                                                onclick="deleterule('<%= rule.id %>')"
                                                 class="btn btn-default btn-sm"><span
                                                     class="glyphicon glyphicon-trash"></span>
                                         </button>
@@ -619,10 +627,46 @@
         $('#addForm').find('#betweenDiv2_i').hide();
         $('#addForm').find('#valueDiv_i').hide();
         $('#addForm').find("#ruleConsequence_value_i").empty();
+        $('#addForm').find('#consequence_i').hide();
 
 
 
-    })
+    });
+
+//    $('#ruleIsPrimary_i').change(function () {
+//
+//        if ($('#addForm').find('input[name="ruleIsPrimary_i"]').is(':checked')) {
+//            $('#addForm').find('#consequence_i').show();
+//            //alert(" isPrimary='Y'");
+//
+//        } else
+//        {
+//            $('#addForm').find('#consequence_i').hide();
+//            //alert(" isPrimary='N'");
+//
+//
+//        }
+//
+//    });
+
+
+
+    $('#addForm').find('input[name="ruleIsPrimary_i"]').click(function(){
+        if($(this).prop("checked") == true){
+//            alert("Checkbox is checked.");
+        $('#addForm').find('#consequence_i').show();
+
+        }
+        else if($(this).prop("checked") == false){
+//            alert("Checkbox is unchecked.");
+                        $('#addForm').find('#consequence_i').hide();
+
+        }
+    });
+
+
+
+
 
     $('#refresh-1').click(function () {
         document.location.reload();
@@ -643,25 +687,26 @@
 
         if ($('#addForm').find('input[name="ruleActive_i"]').is(':checked')) {
             active_v='Y';
-            alert(" active='Y'");
+            //alert(" active='Y'");
         } else
         {
             active_v='N';
-            alert(" active='N'");
+            //alert(" active='N'");
 
         }
 
         if ($('#addForm').find('input[name="ruleIsPrimary_i"]').is(':checked')) {
             isPrimary_v='Y';
-            alert(" isPrimary='Y'");
+            //alert(" isPrimary='Y'");
 
         } else
         {
             isPrimary_v='N';
-            alert(" isPrimary='N'");
+            //alert(" isPrimary='N'");
 
 
         }
+
 
         var data1 = {
             rule_id: $('#addForm').find('input[name="ruleId_i"]').val(),
@@ -677,9 +722,16 @@
             consequence_action: $('#addForm').find('select[name="ruleConsequence_action_i"]').val(),
             consequence_value: $('#addForm').find('select[name="ruleConsequence_value_i"]').val(),
             active: active_v,
-            isPrimary: isPrimary_v
+            isPrimary: isPrimary_v,
+            condition_mcid_name: $('#ruleCondition_mcid_i option:selected').text(),
+            condition_compid_name: $('#ruleCondition_compid_i option:selected').text(),
+            consequence_mcid_name: $('#ruleConsequence_mcid_i option:selected').text(),
+            consequence_compid_name: $('#ruleConsequence_compid_i option:selected').text()
 
         };
+
+        alert(JSON.stringify(data1) );
+
 
         $.ajax({
             url: '/api/v1.0/rules',
@@ -704,9 +756,10 @@
     });
 
 
-    function updaterule(rule_id, rule_name, condition_mcid, condition_compid, condition_expression, condition_value, condition_value_lower, condition_value_higher, consequence_mcid, consequence_compid, consequence_action, consequence_value, active, isPrimary) {
+    function updaterule(id, rule_id, rule_name, condition_mcid, condition_compid, condition_expression, condition_value, condition_value_lower, condition_value_higher, consequence_mcid, consequence_compid, consequence_action, consequence_value, active, isPrimary) {
         $('#modal-container-2').modal('show');
 
+        $('#updateForm').find('input[name="id_u"]').val(id);
         $('#updateForm').find('input[name="ruleId_u"]').val(rule_id);
         $('#updateForm').find('input[name="ruleName_u"]').val(rule_name);
         $('#updateForm').find('select[name="ruleCondition_mcid_u"]').val(condition_mcid);
@@ -793,8 +846,36 @@
 
     $('#updateButton').click(function () {
         // var updateItem = confirm ('Do you want to update record: ' + $('#updateForm').find('input[name="password"]').val() + ' ?');
-        var data1 = {
+        var active_v;
+        var isPrimary_v;
 
+        //alert($('#addForm').find('input[name="ruleActive_i"]').is(':checked'));
+
+        if ($('#updateForm').find('input[name="ruleActive_u"]').is(':checked')) {
+            active_v='Y';
+            //alert(" active='Y'");
+        } else
+        {
+            active_v='N';
+            //alert(" active='N'");
+
+        }
+
+        if ($('#updateForm').find('input[name="ruleIsPrimary_u"]').is(':checked')) {
+            isPrimary_v='Y';
+            //alert(" isPrimary='Y'");
+
+        } else
+        {
+            isPrimary_v='N';
+            //alert(" isPrimary='N'");
+
+
+        }
+
+
+        var data1 = {
+            id: $('#updateForm').find('input[name="id_u"]').val(),
             rule_id: $('#updateForm').find('input[name="ruleId_u"]').val(),
             rule_name: $('#updateForm').find('input[name="ruleName_u"]').val(),
             condition_mcid: $('#updateForm').find('select[name="ruleCondition_mcid_u"]').val(),
@@ -807,9 +888,20 @@
             consequence_compid: $('#updateForm').find('select[name="ruleConsequence_compid_u"]').val(),
             consequence_action: $('#updateForm').find('select[name="ruleConsequence_action_u"]').val(),
             consequence_value: $('#updateForm').find('select[name="ruleConsequence_value_u"]').val(),
-            active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
-            isPrimary: $('#updateForm').find('input[name="ruleIsPrimary_u"]').val()
+//            active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            isPrimary: $('#updateForm').find('input[name="ruleIsPrimary_u"]').val() active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            isPrimary: $('#updateForm').find('input[name="ruleIsPrimary_u"]').val()
+            active: active_v,
+            isPrimary: isPrimary_v,
+            condition_mcid_name: $('#ruleCondition_mcid_u option:selected').text(),
+            condition_compid_name: $('#ruleCondition_compid_u option:selected').text(),
+            consequence_mcid_name: $('#ruleConsequence_mcid_u option:selected').text(),
+            consequence_compid_name: $('#ruleConsequence_compid_u option:selected').text()
+
         };
+
+        alert(JSON.stringify(data1));
 
         $.ajax({
             url: '/api/v1.0/rules',
@@ -821,14 +913,14 @@
             processData: false,
             cache: false,
             success: function (data) {
-               // document.location.reload(true);
+               document.location.reload(true);
 
 //                $('#alertSuccess').show();
 //                alert('SUCCESS'+data);
 
             },
             error: function (xhr, ajaxOptions, thrownError) {
-              //  document.location.reload(true);
+              document.location.reload(true);
 
 //                alert(xhr.status);
 //                alert(ajaxOptions);
@@ -843,7 +935,7 @@
         //var delItem = confirm ('Do you want to delete rule: ' + id  +' ?');
         if (true) {
             $.ajax({
-                url: '/rule/' + id,
+                url: '/api/v1.0/rule/' + id,
                 type: 'DELETE',
                 success: function (result) {
                     //$("#alertSuccess").show();
