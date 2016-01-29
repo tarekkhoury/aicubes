@@ -2,138 +2,138 @@
 <html lang="en">
 
 <head>
-  <% include partials/head %>
+    <% include partials/head %>
 </head>
 
 <header>
-  <% include partials/header %>
+    <% include partials/header %>
 </header>
 
 <body>
 
 
-
 <!-- Custom CSS -->
 <style>
-  body {
-    padding-top: 70px;
-    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  }
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
 </style>
 
 <!-- Page Content -->
 <!--<div class="container-fluid">-->
 
-  <!--<div class="row">-->
-    <!--<div class="col-lg-12 text-center">-->
-      <!--<h1><i>ai</i><b>Cubes</b></h1>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash; /.row &ndash;&gt;-->
+<!--<div class="row">-->
+<!--<div class="col-lg-12 text-center">-->
+<!--<h1><i>ai</i><b>Cubes</b></h1>-->
+<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; /.row &ndash;&gt;-->
 
 </div>
-
-
 
 
 <!-- /.container -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
-      <!--<h2>Sensors</h2>-->
-      <!--<p>Status of sensors in different rooms </p>-->
-      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
-      <div><a id="refresh-1" href="notifications" role="button" class="btn"
-              data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a> <p></div>
+    <div class="row">
+        <div class="col-xs-2 col-md-2"></div>
+        <div class="col-xs-8 col-md-8">
+            <!--<h2>Sensors</h2>-->
+            <!--<p>Status of sensors in different rooms </p>-->
+            <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+            <div><a id="refresh-1" href="notifications" role="button" class="btn"
+                    data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+                <p></div>
+
+            <% categories.forEach(function(category){ %>
+            <div class="panel panel-default">
+
+                <h3><%= category.category %></h3>
+                <p></p>
+
+                <table class="table table-hover table-striped table-responsive">
+                    <thead>
 
 
+                    <tr class=" ">
+                        <!--<th>MicroController ID</th>-->
+                        <!--<th>Component ID</th>-->
+                        <th>Description</th>
+                        <!--<th>Action</th>-->
+                        <th>Value</th>
+                        <th>Control</th>
 
-      <% categories.forEach(function(category){ %>
-      <h2><%=category.category%></h2>
-      <p> </p>
-
-      <table  class="table table-hover table-striped table-responsive">
-        <thead>
-
-
-        <tr class=" ">
-          <!--<th>MicroController ID</th>-->
-          <!--<th>Component ID</th>-->
-          <th>Description</th>
-          <!--<th>Action</th>-->
-          <th>Value</th>
-          <th>Control</th>
-
-        </tr>
+                    </tr>
 
 
-        </thead>
-        <tbody>
+                    </thead>
+                    <tbody>
 
-        <% components.forEach(function(component){ %>
-        <% if (component.category === category.category && component.visible ==='y') { %>
+                    <% components.forEach(function(component){ %>
+                    <% if (component.category === category.category && component.visible === 'y') { %>
 
-        <tr class="">
-          <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <!--<td><div id="compId_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <!--<td class="col-md-1"><div id="compDesc_<%= component.mcId %>_<%= component.compId %>"><%= component.desc %></div></td>-->
-          <td class="col-md-1"><div id="compName_<%= component.mcId %>_<%= component.compId %>"><%= component.name %></div></td>
+                    <tr class="">
+                        <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                        <!--<td><div id="compId_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                        <!--<td class="col-md-1"><div id="compDesc_<%= component.mcId %>_<%= component.compId %>"><%= component.desc %></div></td>-->
+                        <td class="col-xs-1">
+                            <div id="compName_<%= component.mcId %>_<%= component.compId %>"><%= component.name %></div>
+                        </td>
 
-          <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <td class="col-md-2"><div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div></td>
-          <th>
-            <% if (component.value === 'Digital Switches'){ %>
-            <button id="setOnL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-record"></span></button>
-            <button id="setOffL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-off"></span></button>
-          <%  } else { %>
-            <button id="refreshValue" onClick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'GET', '')" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
+                        <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                        <td class="col-xs-1">
+                            <div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div>
+                        </td>
+                        <td class="col-xs-1">
+                            <% if (component.value === 'Digital Switches'){ %>
+                            <button id="setOnL_<%= component.mcId %>_<%= component.compId %>"
+                                    onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-record"></span>
+                            </button>
+                            <button id="setOffL_<%= component.mcId %>_<%= component.compId %>"
+                                    onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-off"></span>
+                            </button>
+                            <% } else { %>
+                            <button id="refreshValue"
+                                    onClick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'GET', '')"
+                                    class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+
+                            <% }; %>
+                        </td>
+
+                    </tr>
+                    <% }; %>
+                    <% }) %>
 
 
+                    <tbody>
+                </table>
 
-          <%};%>
-          </th>
+            </div>
 
-        </tr>
-        <% };%>
-        <% })%>
+            <% }) %>
 
-
-
-        <tbody>
-      </table>
-
-
-
-      <%})%>
-
-
+        </div>
+        <div class="col-xs-2 col-md-2"></div>
     </div>
-  <div class="col-md-2"></div>
-</div>
 
 </div>
-
-
-
-
-
-
 
 
 <!--<div class="container-fluid">-->
-     <!--<h1><%= title %></h1>-->
+<!--<h1><%= title %></h1>-->
 <!--<p>Welcome to <%= title %></p>-->
-  <!--<h1>My First Bootstrap Page</h1>-->
-  <!--<p>This is some text.</p> -->
+<!--<h1>My First Bootstrap Page</h1>-->
+<!--<p>This is some text.</p> -->
 <!--</div>-->
 
 
 <footer>
-  <% include partials/footer %>
+    <% include partials/footer %>
 </footer>
 
 
@@ -142,7 +142,7 @@
 
 
 <script>
-  $('#refresh-1').click(function () {
-    document.location.reload();
-  });
+    $('#refresh-1').click(function () {
+        document.location.reload();
+    });
 </script>

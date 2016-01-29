@@ -215,6 +215,28 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='rules_master
     });
 
 
+// Database initialization
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='categories_master'",
+    function (err, rows) {
+        if (err !== null) {
+            console.log(err);
+        }
+        else if (rows === undefined) {
+            db.run('CREATE TABLE categories_master (id INTEGER PRIMARY KEY, category_name TEXT, category_desc TEXT, category_order INTEGER, cdatetime DATETIME)', function (err) {
+                if (err !== null) {
+                    console.log(err);
+                }
+                else {
+                    console.log("SQL Table 'categories_master' initialized.");
+                }
+            });
+        }
+        else
+            console.log("SQL Table 'categories_master' already initialized.");
+    });
+
+
+
 //click from client
 io.sockets.on('connection', function (socket) {
     //button pushed

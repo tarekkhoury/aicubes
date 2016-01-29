@@ -159,17 +159,26 @@
                         <label for="category">Display Category or Group</label>
                         <select id="category" name="category"
                                 class="form-control dropdown-toggle">
-                            <option value="All">All</option>
-                            <option value="Digital Sensors">Digital Sensors</option>
-                            <option value="Digital Switches">Digital Switches</option>
-                            <option value="Lights">Lights</option>
-                            <option value="Weather Sensors">Weather Sensors</option>
-                            <option value="Analog Switches">Analog Switches</option>
-                            <option value="Analog Sensors">Analog Sensors</option>
-                            <option value="Security">Security</option>
-                            <option value="Safety">Safety</option>
-                            <option value="Room 1">Room 1</option>
-                            <option value="Room 2">Room 2</option>
+                            <% categories.forEach(function(category){ %>
+
+                            <option value="<%=category.category_name%>"><%=category.category_name%></option>
+
+                            <%});%>
+
+
+
+                            <!--<option value="All">All</option>-->
+                            <!--<option value="Digital Sensors">Digital Sensors</option>-->
+                            <!--<option value="Digital Switches">Digital Switches</option>-->
+                            <!--<option value="Lights">Lights</option>-->
+                            <!--<option value="Weather Sensors">Weather Sensors</option>-->
+                            <!--<option value="Analog Switches">Analog Switches</option>-->
+                            <!--<option value="Analog Sensors">Analog Sensors</option>-->
+                            <!--<option value="Security">Security</option>-->
+                            <!--<option value="Safety">Safety</option>-->
+                            <!--<option value="Room 1">Room 1</option>-->
+                            <!--<option value="Room 2">Room 2</option>-->
+
 
                         </select>
 

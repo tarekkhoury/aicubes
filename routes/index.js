@@ -11,6 +11,7 @@ var categories = [];
 var data = [];
 var data2 = [];
 var rules = [];
+//var categories = [];
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -104,6 +105,24 @@ router.get('/devices', function (req, res, next) {
 
 
     });
+
+    db.all('SELECT * FROM categories_master ORDER BY category_name DESC', function (err, row) {
+        if (err !== null) {
+            next(err);
+        }
+        else {
+
+            categories = row;
+
+            //console.log("devices>>");
+            //console.log(devices_devices);
+            //console.log("--");
+
+        }
+
+    });
+
+
     db.close();
 
 
@@ -111,7 +130,8 @@ router.get('/devices', function (req, res, next) {
         {
             title: 'Devices',
             devices: devices_devices,
-            components: devices_components
+            components: devices_components,
+            categories:categories
         });
 });
 
@@ -272,6 +292,40 @@ router.get('/users', function (req, res, next) {
 });
 
 
+
+
+/* GET Remote page. */
+router.get('/categories', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+    // all components
+    db.serialize(function () {
+        db.all('SELECT * FROM categories_master', function (err, row) {
+            if (err !== null) {
+                next(err);
+            }
+            else {
+                categories = row;
+                //console.log("users>>");
+                //console.log(users);
+                //console.log("--");
+
+                res.render('categories',
+                    {
+                        title: 'aiCubes - users',
+                        categories: categories
+                    });
+            }
+        });
+    });
+    db.close();
+
+});
+
+
+
+
+
+
 /* GET Remote page. */
 router.get('/dashboards', function (req, res, next) {
     //var db = new sqlite3.Database('cozy.db');
@@ -420,6 +474,7 @@ router.get('/login', function (req, res, next) {
             //dashboards: [{"user_id":"tkhoury","name":"Tarek Khoury","Password":"!@#$%^&*","Role":"Admin", "active":"Y"}]
         });
 });
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1213,6 +1268,151 @@ router.get('/api/v1.0/notifications', function (req, res, next) {
     db.close();
 
 });
+
+
+
+////////////////////////////// Categories APIs ////////////////////////////
+
+router.post('/api/v1.0/categories', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        try {
+
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+            var obj = {};
+            obj = JSON.stringify(req.body)
+
+            //var id = 0 ;
+            //
+            //if( !isNaN(parseInt(req.body.category_id))) {
+            //    id = 0;
+            //} else
+            //{
+            //    id = parseInt(req.body.category_id)
+            //
+            //}
+            //
+            //
+            //console.log(isNaN(id));
+            //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
+            var insert_stmt = "INSERT or REPLACE INTO categories_master VALUES (NULL, '" + req.body.category_name + "','" + req.body.category_desc + "'," + parseInt(req.body.category_order) + ",'" + dt + "')";
+            var update_stmt = "UPDATE categories_master SET  category_name =  '" + req.body.category_name + "', category_desc = '" + req.body.category_desc + "', category_order = " + parseInt(req.body.category_order) + " WHERE id = " + parseInt(req.body.category_id) ;
+            var select_stmt = 'SELECT * FROM categories_master WHERE id = ' + parseInt(req.body.category_id);
+
+            console.log( insert_stmt);
+            console.log( update_stmt);
+            console.log( select_stmt);
+
+
+            db.all(select_stmt, function (err, row) {
+                if (err !== null) {
+                    console.log(err);
+                    next(err);
+                }
+                else {
+                    console.log(row);
+
+                    if (row.length > 0) {
+                        console.log('row is NOT empty');
+
+
+                        /////new code
+
+
+                        db.serialize(function () {
+                            db.run(update_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("category update success");
+
+                                    res.status(202);
+
+                                }
+                                res.end();
+                            });
+
+                        });
+
+
+                        ///// new code
+
+                    }
+                    else {
+                        console.log('row is empty');
+                        console.log('insert category....');
+
+                        db.serialize(function () {
+                            db.run(insert_stmt, function (err, row) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500);
+                                }
+                                else {
+                                    console.log("category insert success");
+
+                                    res.status(202);
+
+                                }
+                            });
+
+                        });
+
+
+                    }
+
+
+                }
+
+            });
+
+
+        } catch
+            (e) {
+            //eat it;
+            console.log(e);
+
+        }
+    });
+    // db.close();
+
+
+});
+
+
+router.delete('/category/:id', function (req, res, next) {
+    var db = new sqlite3.Database('cozy.db');
+
+    db.serialize(function () {
+        db.get("DELETE FROM categories_master WHERE id = ?", req.params.id, function (err, row) {
+
+            if (err) {
+                console.log(err);
+                res.status(500);
+            }
+            else {
+                res.status(202);
+                console.log("category deleted success");
+
+            }
+            res.end();
+
+        });
+
+    });
+
+    db.close();
+
+});
+
+
+////////////////////////////// Categories APIs ////////////////////////////
+
 
 
 
