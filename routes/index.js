@@ -141,7 +141,7 @@ router.get('/notifications', function (req, res, next) {
     var db = new sqlite3.Database('cozy.db');
     // all components
     db.serialize(function () {
-        db.all('SELECT id, name_short, name_long, type, contact FROM notifications_master', function (err, row) {
+        db.all('SELECT * FROM notifications_master', function (err, row) {
             if (err !== null) {
                 next(err);
             }
@@ -673,13 +673,16 @@ router.post('/api/v1.0/notifications', function (req, res, next) {
             obj = JSON.stringify(req.body)
 
             //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
-            var insert_stmt = "INSERT or REPLACE INTO notifications_master VALUES ('" + req.body.id + "','" + req.body.name_short + "','" + req.body.name_long + "','" + req.body.type + "','" + req.body.contact + "','" + dt + "')";
-            var update_stmt = "UPDATE notifications_master SET id = '" + req.body.id + "', name_short =  '" + req.body.name_short + "', name_long = '" + req.body.name_long + "', type = '" + req.body.type + "', contact = '" + req.body.contact + "' WHERE id = '" + req.body.id + "'";
-            var select_stmt = 'SELECT id FROM notifications_master WHERE id = ' + req.body.id;
-
+            var insert_stmt = "INSERT or REPLACE INTO notifications_master VALUES (NULL ,'" + req.body.name_short + "','" + req.body.name_long + "','" + req.body.type + "','" + req.body.contact + "','" + dt + "')";
+            var update_stmt = "UPDATE notifications_master SET name_short =  '" + req.body.name_short + "', name_long = '" + req.body.name_long + "', type = '" + req.body.type + "', contact = '" + req.body.contact + "' WHERE id = " + req.body.id;
+            var select_stmt = "SELECT id FROM notifications_master WHERE id = " + req.body.id;
+            console.log( insert_stmt);
+            console.log( update_stmt);
+            console.log( select_stmt);
 
             db.all(select_stmt, function (err, row) {
                 if (err !== null) {
+                    console.log(err);
                     next(err);
                 }
                 else {
@@ -799,10 +802,13 @@ router.post('/api/v1.0/users', function (req, res, next) {
             obj = JSON.stringify(req.body)
 
             //var insert_stmt = db.prepare('INSERT or REPLACE INTO notifications_master VALUES (?,?,?,?,?,?)');
-            var insert_stmt = "INSERT or REPLACE INTO users_master VALUES ('" + req.body.user_id + "','" + req.body.password + "','" + req.body.first_name + "','" + req.body.last_name + "','" + req.body.email + "','" + dt + "')";
-            var update_stmt = "UPDATE users_master SET user_id = '" + req.body.id + "', password =  '" + req.body.password + "', first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name + "', email = '" + req.body.email + "' WHERE user_id = '" + req.body.user_id + "'";
+            var insert_stmt = "INSERT or REPLACE INTO users_master VALUES (NULL ,'" + req.body.password + "','" + req.body.first_name + "','" + req.body.last_name + "','" + req.body.email + "','" + dt + "')";
+            var update_stmt = "UPDATE users_master SET user_id = '" + req.body.id + "', password =  '" + req.body.password + "', first_name = '" + req.body.first_name + "', last_name = '" + req.body.last_name + "', email = '" + req.body.email + "' WHERE user_id = " + req.body.user_id ;
             var select_stmt = 'SELECT user_id FROM users_master WHERE user_id = ' + req.body.user_id;
 
+            console.log( insert_stmt);
+            console.log( update_stmt);
+            console.log( select_stmt);
 
             db.all(select_stmt, function (err, row) {
                 if (err !== null) {

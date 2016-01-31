@@ -138,7 +138,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notification
         }
         else if (rows === undefined) {
             //   db.run('CREATE TABLE notifications_master (id integer primary key autoincrement, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
-            db.run('CREATE TABLE notifications_master (id TEST, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+            db.run('CREATE TABLE notifications_master (id INTEGER PRIMARY KEY, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
 
                 if (err !== null) {
                     console.log(err);
@@ -160,7 +160,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users_master
             console.log(err);
         }
         else if (rows === undefined) {
-            db.run('CREATE TABLE users_master (user_id TEXT PRIMARY KEY, password TEXT, first_name TEXT, last_name TEXT,email TEXT, cdatetime DATETIME)', function (err) {
+            db.run('CREATE TABLE users_master (user_id INTEGER PRIMARY KEY, password TEXT, first_name TEXT, last_name TEXT,email  TEXT UNIQUE, cdatetime DATETIME)', function (err) {
                 if (err !== null) {
                     console.log(err);
                 }

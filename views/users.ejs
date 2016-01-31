@@ -62,30 +62,39 @@
                   <div class="modal-body">
                     <form id="addForm" role="form" method="" action="">
 
-                      <div class="form-group">
+                      <div class="form-group hidden">
                         <label for="userId">ID</label><input type="text" class="form-control"
-                                                         required name="userId"/>
+                                                         required name="userId" value="-1"/>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="firstName">First Name </label><input type="text"
+                                                                         class="form-control"
+                                                                         required
+                                                                         name="firstName"/>
+                        <!--placeholder="Email address"-->
+                      </div>
+
+                      <div class="form-group">
+                        <label for="lastName"> Last Name </label><input type="text"
+                                                                        class="form-control"
+                                                                        required  name="lastName"/>
+
+
+                      <div class="form-group">
+                        <label for="email">Email</label><input type="email"
+                                                               class="form-control" required
+                                                               name="email"/>
                       </div>
 
                       <div class="form-group">
                         <label for="password">Password</label><input type="text"
                                                                          class="form-control"
                                                                          required
-                                                                         name="password"/>
+                                                                     name="password"/>
                       </div>
 
-                      <div class="form-group">
-                        <label for="firstName">First Name </label><input type="text"
-                                                                        class="form-control"
-                                                                        required
-                                                                        name="firstName"/>
-                        <!--placeholder="Email address"-->
-                      </div>
 
-                      <div class="form-group">
-                        <label for="lastName"> Last Name </label><input type="text"
-                        class="form-control"
-                        required  name="lastName"/>
 
                         <!--<label for="lastName">Operation Type</label>-->
                         <!--<select id="operationDropdownMenu" name="lastName"-->
@@ -97,11 +106,7 @@
                       </div>
 
 
-                      <div class="form-group">
-                        <label for="email">email</label><input type="text"
-                                                                   class="form-control" required
-                                                                   name="email"/>
-                      </div>
+
 
 
                       <div class="modal-footer">
@@ -140,7 +145,28 @@
                           <label for="userId">User ID</label><input type="text"
                                                                 class="form-control" required
                                                                 name="userId" readonly/>
+
+
+                          <div class="form-group">
+                            <label for="email">First Name</label><input type="text"
+                                                                        class="form-control"
+                                                                        required
+                                                                        name="firstName"/>
+                            <!--placeholder="Email address" -->
+                          </div>
+
+                          <div class="form-group">
+                            <label for="lastName">Last Name</label><input type="text"
+                                                                          class="form-control"
+                                                                          required name="lastName"/>
+
                         </div>
+                        <div class="form-group">
+                          <label for="email">Email</label><input type="email"
+                                                                 class="form-control"
+                                                                 required name="email"/>
+                        </div>
+
 
                         <div class="form-group">
                           <label for="password">Password</label><input type="text"
@@ -149,18 +175,6 @@
                                                                      name="password"/>
                         </div>
 
-                        <div class="form-group">
-                          <label for="email">First Name</label><input type="text"
-                                                                     class="form-control"
-                                                                     required
-                                                                     name="firstName"/>
-                          <!--placeholder="Email address" -->
-                        </div>
-
-                        <div class="form-group">
-                          <label for="lastName">Last Name</label><input type="text"
-                          class="form-control"
-                          required name="lastName"/>
 
 
                           <!--<label for="lastName">Operation Type</label>-->
@@ -173,11 +187,7 @@
 
                         </div>
 
-                        <div class="form-group">
-                          <label for="email">email</label><input type="text"
-                                                                     class="form-control"
-                                                                     required name="email"/>
-                        </div>
+
 
 
                         <div class="modal-footer">
@@ -209,11 +219,11 @@
               <table class="table table-hover table-striped table-responsive">
                 <thead>
                 <tr>
-                  <th>Login id</th>
-                  <th>Password</th>
+                  <!--<th>Login id</th>-->
                   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Email</th>
+                  <th>Password</th>
                   <th></th>
 
                 </tr>
@@ -224,21 +234,23 @@
                 <% users.forEach(function(user){ %>
 
                 <tr id="user_<%= user.user_id %>" class="">
-                  <td>
-                    <div id="userId_<%= user.user_id %>"><%= user.user_id %></div>
-                  </td>
-                  <td>
-                    <div id="userNameShort_<%= user.user_id %>"><%= user.password %></div>
-                  </td>
+                  <!--<td>-->
+                    <!--<div id="userId_<%= user.user_id %>"><%= user.user_id %></div>-->
+                  <!--</td>-->
                   <td class="col-md-1">
-                    <div id="userNameLong_<%= user.user_id %>"><%= user.first_name %></div>
+                    <div id="firstName_<%= user.user_id %>"><%= user.first_name %></div>
                   </td>
                   <td>
                     <div id="lastName_<%= user.user_id %>"><%= user.last_name %></div>
                   </td>
+
                   <td class="col-md-2">
-                    <div id="userContact_<%= user.user_id %>"><%= user.email %></div>
+                    <div id="email_<%= user.user_id %>"><%= user.email %></div>
                   </td>
+                  <td>
+                    <div id="password_<%= user.user_id %>"><%= user.password %></div>
+                  </td>
+
 
                   <td class="col-md-2">
                     <!--<a id="updateUser_<%= user.user_id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
