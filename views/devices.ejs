@@ -235,138 +235,161 @@
                 <p></div>
 
             <% devices.forEach(function(device){ %>
+            <div class="panel panel-default">
 
-            <table class="table table-hover table-striped table-responsive">
+                <table class="table table-hover table-striped table-responsive">
 
-                <thead>
-                <tr class="info">
-                    <th>Device ID</th>
-                    <th>Name</th>
-                    <!--<th>Component ID</th>-->
-                    <!--<th>Desc</th>-->
-                    <!--<th>Action</th>-->
-                    <th>Value</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
+                    <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Name</th>
+                        <!--<th>Component ID</th>-->
+                        <!--<th>Desc</th>-->
+                        <!--<th>Action</th>-->
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                <tr id="device_id_<%= device.value %>">
-                    <td>
-                        <div id="device_mcID_<%= device.value %>d"><%= device.value %></div>
-                    </td>
-                    <td>
-                        <div id="device_name_<%= device.value %>d"><%= device.name %></div>
-                    </td>
-                    <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
-                    <!--<td class="col-md-1d">-->
-                    <!--<div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div>-->
-                    <!--</td>-->
-                    <!--<td><div id="device_action_<%= device.value %>d"></div><%= device.action %></td>-->
-                    <td class="col-md-2">
-                        <div id="device_compValue_<%= device.value %>d"> ...</div>
-                    </td>
-                    <td class="col-md-2">
-                        <button id="discoComponents<%= device.value %>" onclick="clickButton(this.id)"
-                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <!--<button id="updateDevice_<%= device.value %>d" onclick="clickButton(this.id)"-->
-                        <!--class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>-->
+                    <tr id="device_id_<%= device.value %>">
+                        <td>
+                            <div id="device_mcID_<%= device.value %>d"><%= device.value %></div>
+                        </td>
+                        <td>
+                            <div id="device_name_<%= device.value %>d"><%= device.name %></div>
+                        </td>
+                        <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
+                        <!--<td class="col-md-1d">-->
+                        <!--<div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div>-->
+                        <!--</td>-->
+                        <!--<td><div id="device_action_<%= device.value %>d"></div><%= device.action %></td>-->
+                        <td class="col-md-2">
+                            <div id="device_compValue_<%= device.value %>d" class="glyphicon glyphicon-remove"></div>
+                        </td>
+                        <td class="col-md-2">
+                            <button id="discoComponents<%= device.value %>" onclick="clickButton(this.id)"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                            <!--<button id="updateDevice_<%= device.value %>d" onclick="clickButton(this.id)"-->
+                            <!--class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>-->
 
-                        <button id="updateDevice_<%= device.value %>d"
-                                onclick="updateDevice('<%= device.value %>','', '<%= device.name %>','<%= device.desc %>','<%= device.action %>','<%= device.value %>')"
-                                class="btn btn-default btn-sm"><span
-                                    class="glyphicon glyphicon-pencil"></span></button>
-
-
-                        <button id="deleteDevice_<%= device.value %>d" onclick="deleteDevice('<%= device.mcId %>')"
-                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span>
-                        </button>
-                    </td>
-
-                </tr>
+                            <button id="updateDevice_<%= device.value %>d"
+                                    onclick="updateDevice('<%= device.value %>','', '<%= device.name %>','<%= device.desc %>','<%= device.action %>','<%= device.value %>')"
+                                    class="btn btn-default btn-sm"><span
+                                        class="glyphicon glyphicon-pencil"></span></button>
 
 
-                <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
+                            <button id="deleteDevice_<%= device.value %>d" onclick="deleteDevice('<%= device.mcId %>')"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+
+                    </tr>
 
 
-                <tr id="device_comps_id_<%= device.value %>">
-
-                    <td colspan="5">
-                        <table class="table table-hover table-striped table-responsive">
-                            <thead>
-
-                            <tr class="active">
-                                <!--<th>Dev#</th>-->
-                                <th>Comp#</th>
-                                <th>Name</th>
-
-                                <!--<th>Desc</th>-->
-                                <!--<th>Action</th>-->
-                                <th>Value</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <% components.forEach(function(component){ %>
-                            <% if (component.mcId == device.value) { %>
-                            <div id="device_id_c_<%= component.mcId %>">
-                                <tr id="component_id_<%= component.mcId %>_<%= component.compId %>" class="">
-                                    <!--<td>-->
-                                    <!--<div id="device_mcID_<%= component.mcId %>_<%= component.compId %>c"><%= component.mcId %></div>-->
-                                    <!--</td>-->
-                                    <td>
-                                        <div id="device_compId_<%= component.mcId %>_<%= component.compId %>c"><%= component.compId %></div>
-                                    </td>
-                                    <td>
-                                        <div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div>
-                                    </td>
-                                    <!--<td class="col-md-1d">-->
-                                    <!--<div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>-->
-                                    <!--</td>-->
-                                    <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
-                                    <td class="col-md-2">
-                                        <div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value %></div>
-                                    </td>
-                                    <td class="col-md-2">
-                                        <!--<button id="updateDevice_<%= component.mcId %>_<%= component.compId %>c"-->
-                                        <!--onclick="clickButton(this.id)" class="btn btn-default btn-sm"><span-->
-                                        <!--class="glyphicon glyphicon-pencil"></span></button>-->
-
-                                        <button id="updateComponent_<%= component.mcId %>_<%= component.compId %>c"
-                                                onclick="updateComponent('<%= component.mcId %>', '<%= component.compId %>','<%= component.desc %>','<%= component.action %>','<%= component.value %>','<%= component.name %>','<%= component.visible %>','<%= component.category %>')"
-                                                class="btn btn-default btn-sm"><span
-                                                    class="glyphicon glyphicon-pencil"></span></button>
+                    <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
 
 
-                                        <button id="deleteComponent_<%= component.mcId %>_<%= component.compId %>c"
-                                                onclick="deleteComponent('<%= component.mcId %>','<%= component.compId %>')"
-                                                class="btn btn-default btn-sm"><span
-                                                    class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </td>
-                                    <!--<td class="col-md-2"> <button id="discoComponents<%= component.value %>" onclick="clickButton(this.id)">COMPONENTS</button></td>-->
+                    <tr id="device_comps_id_<%= device.value %>">
 
-                                </tr>
+                        <h4 align="right">
+                            <button type="button" data-toggle="collapse" data-target="#toggle_<%= device.value %>"
+                                    class="btn btn-link btn-sm " align="right">
+                                <span id="button<%= device.value %>" class="glyphicon glyphicon-plus" ></span>
+
+                            </button> </h4>
+                        <td colspan="5">
+                            <div class="panel panel-default" hidden id="toggle_<%= device.value %>">
+                                <script>
+
+                                    $('#toggle_<%= device.value %>').on('hide.bs.collapse', function () {
+                                        $("#button<%= device.value %>").removeClass("glyphicon glyphicon-minus").addClass("glyphicon glyphicon-plus");
+
+                                    });
+
+                                    $('#toggle_<%= device.value %>').on('show.bs.collapse', function () {
+                                        $("#button<%= device.value %>").removeClass("glyphicon glyphicon-plus").addClass("glyphicon glyphicon-minus");
+                                    });
+
+                                </script>
+
+
+                                <table class="table table-hover table-striped table-responsive">
+                                    <thead>
+
+                                    <tr class="active">
+                                        <!--<th>Dev#</th>-->
+                                        <th>Component ID</th>
+                                        <th>Name</th>
+
+                                        <!--<th>Desc</th>-->
+                                        <!--<th>Action</th>-->
+                                        <th>Type</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <% components.forEach(function(component){ %>
+                                    <% if (component.mcId == device.value) { %>
+                                    <div id="device_id_c_<%= component.mcId %>">
+                                        <tr id="component_id_<%= component.mcId %>_<%= component.compId %>" class="">
+                                            <!--<td>-->
+                                            <!--<div id="device_mcID_<%= component.mcId %>_<%= component.compId %>c"><%= component.mcId %></div>-->
+                                            <!--</td>-->
+                                            <td>
+                                                <div id="device_compId_<%= component.mcId %>_<%= component.compId %>c"><%= component.compId %></div>
+                                            </td>
+                                            <td>
+                                                <div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div>
+                                            </td>
+                                            <!--<td class="col-md-1d">-->
+                                            <!--<div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>-->
+                                            <!--</td>-->
+                                            <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
+                                            <td class="col-md-2">
+                                                <div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value %></div>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <!--<button id="updateDevice_<%= component.mcId %>_<%= component.compId %>c"-->
+                                                <!--onclick="clickButton(this.id)" class="btn btn-default btn-sm"><span-->
+                                                <!--class="glyphicon glyphicon-pencil"></span></button>-->
+
+                                                <button id="updateComponent_<%= component.mcId %>_<%= component.compId %>c"
+                                                        onclick="updateComponent('<%= component.mcId %>', '<%= component.compId %>','<%= component.desc %>','<%= component.action %>','<%= component.value %>','<%= component.name %>','<%= component.visible %>','<%= component.category %>')"
+                                                        class="btn btn-default btn-sm"><span
+                                                            class="glyphicon glyphicon-pencil"></span></button>
+
+
+                                                <button id="deleteComponent_<%= component.mcId %>_<%= component.compId %>c"
+                                                        onclick="deleteComponent('<%= component.mcId %>','<%= component.compId %>')"
+                                                        class="btn btn-default btn-sm"><span
+                                                            class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </td>
+                                            <!--<td class="col-md-2"> <button id="discoComponents<%= component.value %>" onclick="clickButton(this.id)">COMPONENTS</button></td>-->
+
+                                        </tr>
+                                    </div>
+                                    <% } %>
+                                    <% }) %>
+
+
+                                    <tbody>
+                                </table>
                             </div>
-                            <% } %>
-                            <% }) %>
 
+                        </td>
 
-                            <tbody>
-                        </table>
-                    </td>
+                    </tr>
 
-                </tr>
+                    <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
 
-                <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
-
-                <% }) %>
-
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+            </div>
+            <% }) %>
 
         </div>
         <div class="col-xs-2 col-md-2"></div>
