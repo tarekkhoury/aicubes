@@ -1,0 +1,13 @@
+BDB2525 No log files found
+BDB2526 Finding last valid log LSN: file: 1 offset 4223303
+BDB1518 Recovery complete at Tue Nov 29 07:32:17 2016
+BDB1519 Maximum transaction ID 0 recovery checkpoint [1][4223211]
+BDB2526 Finding last valid log LSN: file: 1 offset 6588830
+BDB1518 Recovery complete at Tue Nov 29 09:00:55 2016
+BDB1519 Maximum transaction ID 0 recovery checkpoint [1][6588738]
+BDB2526 Finding last valid log LSN: file: 1 offset 6608656
+BDB1518 Recovery complete at Wed Nov 30 03:40:08 2016
+BDB1519 Maximum transaction ID 0 recovery checkpoint [1][6608564]
+BDB2526 Finding last valid log LSN: file: 1 offset 6628567
+BDB1518 Recovery complete at Thu Dec  1 03:37:26 2016
+BDB1519 Maximum transaction ID 0 recovery checkpoint [1][6628475]

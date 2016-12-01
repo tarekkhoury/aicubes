@@ -4,23 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var AWS = require('aws-sdk'); 
+var Consumer = require('sqs-consumer');
 
-//var RuleEngine = require("node-rules");
-
-
-//var jsonFile = require('jsonfile');
-//var util = require('util')
+var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+AWS.config.credentials = credentials;
+AWS.config.region = 'ap-southeast-2';
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('cozy.db');
 
-
+var api = require('./routes/api');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 var server = app.listen(3001);
-
 
 var io = require('socket.io')(server);
 var fs = require('fs');
@@ -28,8 +27,12 @@ var serialport = require('serialport');
 
 io.set('log level', 2);
 
+
+console.log ('>>>> Node Application Starting');
+console.log ('>>>> listening on serialport /dev/ttyUSB0  ,  baudRate: 9600');
+
 // Serial Port
-var portName = '/dev/cu.usbserial-FTH0YKO1'; // Mac環境
+var portName = '/dev/ttyUSB0';
 var sp = new serialport.SerialPort(portName, {
     baudRate: 9600,
     parser: serialport.parsers.readline("\n"),
@@ -45,16 +48,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -237,6 +241,39 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='categories_m
 
 
 
+
+// this code to receive messages from AWS SQS
+try {
+var sqsQueueListner = Consumer.create({
+  queueUrl: 'https://sqs.ap-southeast-2.amazonaws.com/847733718105/iot-out-queue',
+  handleMessage: function (message, done) {
+    // do some work with `message` 
+
+    console.log(' -- '); 
+    console.log('SQS IN message: >> ' + message.Body); 
+    console.log(' -- '); 
+        //write to serialport
+        sp.write(message.Body + "\n", function (err, results) {
+            //console.log('bytes written: ', results);
+        });
+
+
+    done();
+  }
+});
+ 
+sqsQueueListner.on('error', function (message) {
+    console.log('message: >> ' +message); 
+});
+ 
+sqsQueueListner.start();
+} catch(e) {
+    console.log(e);
+}
+// this code to receive messages from AWS SQS
+
+
+
 //click from client
 io.sockets.on('connection', function (socket) {
     //button pushed
@@ -257,9 +294,19 @@ io.sockets.on('connection', function (socket) {
 
 });
 
+// sending data to SQS queue 
+var queueIn = new AWS.SQS({apiVersion: '2012-11-05', params: {QueueUrl: 'https://sqs.ap-southeast-2.amazonaws.com/847733718105/iot-in-queue'}});
+
 //data from arduino
 sp.on('data', function (data) {
-        console.log('IN: ' + data);       //ooooooooooooooooooooooooooooooo
+        console.log('IN: ' + data);      
+
+        queueIn.sendMessage({MessageBody: data}, function (err, data) {
+            if (!err) console.log('SQS Message sent.') ;
+            if (err) console.log(err) ;
+        });
+
+
         try {
             evaluateRules(data);
 
@@ -270,8 +317,8 @@ sp.on('data', function (data) {
             console.log(e);
         }
 
-        try {
 
+        try {
 
             //var devicesFile = 'config/devices.json';
             var d = new Date();
@@ -350,20 +397,6 @@ sp.on('data', function (data) {
 );
 
 
-//'CREATE TABLE rules_master (rule_id TEXT, ' +
-//    'rule_name TEXT, ' +
-//    'condition_mcid TEXT, ' +
-//    'condition_compid TEXT, ' +
-//    'condition_expression TEXT,' +
-//    'condition_value TEXT, ' +
-//    'condition_value_lower TEXT, ' +
-//    'condition_value_higher TEXT, ' +
-//    'consequence_mcid TEXT, ' +
-//    'consequence_compid TEXT, ' +
-//    'consequence_action TEXT, ' +
-//    'consequence_value TEXT, ' +
-//    'active TEXT, ' +
-//    'cdatetime DATETIME)'
 
 
 var evaluateRules = function (fact) { // Start evaluateRules2 function
@@ -376,7 +409,7 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
 
         console.log("");
         //console.log("> BEGIN function evaluateRules2") ;
-        var select_distinct_rules_statement = 'SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y"';
+        var select_distinct_rules_statement = 'SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y" AND active = "Y"';
         //console.log("-->" +select_distinct_rules_statement);
 
 
@@ -390,7 +423,7 @@ var evaluateRules = function (fact) { // Start evaluateRules2 function
                     console.log("---->" + distinct_rules_row.rule_id);
 
                     // Start Evaluate Primary Rule
-                    var select_specific_primary_rules_statement = 'SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y"';
+                    var select_specific_primary_rules_statement = 'SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y" AND active = "Y"' ;
                     //console.log(select_specific_primary_rules_statement);
                     db.all(select_specific_primary_rules_statement, function (err, specific_rules_rows) { // Start: get all the SPECIFIC rules in the rules_master table
 

@@ -1,0 +1,5 @@
+sudo apt-get update
+sudo apt-get install gcc-4.9 g++-4.9
+sudo npm install -g sqlite3 --unsafe-perm 
+
+sudo npm install -g serialport --unsafe-perm 
