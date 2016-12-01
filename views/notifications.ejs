@@ -62,9 +62,9 @@
                                     <div class="modal-body">
                                         <form id="addForm" role="form" method="" action="">
 
-                                            <div class="form-group">
+                                            <div class="form-group hidden">
                                                 <label for="id">ID</label><input type="text" class="form-control"
-                                                                                 required name="id"/>
+                                                                                   name="id" value="-1"/>
                                             </div>
 
                                             <div class="form-group">
@@ -316,7 +316,7 @@
             name_short: $('#addForm').find('input[name="name_short"]').val(),
             name_long: $('#addForm').find('input[name="name_long"]').val(),
             // type: $('#addForm').find('input[name="type"]').val(),
-            type: $('#updateForm').find('select[name="notificationType"]').val(),
+            type: $('#addForm').find('select[name="notificationType"]').val(),
             contact: $('#addForm').find('input[name="contact"]').val()
         };
 

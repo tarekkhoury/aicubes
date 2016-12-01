@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <% include partials/head %>
+</head>
+
+<header>
+  <% include partials/header %>
+</header>
+
+<body>
+
+
+<!-- Custom CSS -->
+<style>
+  body {
+    padding-top: 70px;
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  }
+</style>
+
+<!-- Page Content -->
+<div class="container-fluid">
+
+
+</div>
+
+
+<!-- /.container -->
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-xs-2 col-md-2"></div>
+    <div class="col-xs-8 col-md-8">
+      <h2>Categories</h2>
+      <p>Create categories to use to app </p>
+      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+
+      <main>
+
+        <div class="tab-content">
+
+          <!-- Start Add Modal -->
+          <div class="tab-pane active" id="crudAdd">
+            <a id="modal-1" href="#modal-container-1" role="button" class="btn"
+               data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> Add record</a>
+            <a id="refresh-1" href="categories" role="button" class="btn"
+               data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+
+            <div class="modal fade" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                      Add new record
+                    </h4>
+                  </div>
+                  <div class="modal-body">
+                    <form id="addForm" role="form" method="" action="">
+
+                      <div  class="form-group hidden">
+                        <label for="id_i">ID</label><input type="text" class="form-control"
+                                                         required  name="id_i" value="0"/>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="category_name_i">Name</label><input type="text"
+                                                                         class="form-control"
+                                                                         required
+                                                                         name="category_name_i"/>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="category_desc_i">Desc </label><input type="text"
+                                                                        class="form-control"
+                                                                        required
+                                                                        name="category_desc_i"/>
+                        <!--placeholder="Email address"-->
+                      </div>
+
+                      <div class="form-group">
+                        <label for="category_order_i"> Order </label><input type="text"
+                        class="form-control"
+                        required  name="category_order_i"/>
+
+
+
+                      </div>
+
+
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                        </button>
+                        <button id="insertButton" type="submit" class="btn btn-primary">Save
+                          changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  <!--  -->
+                </div>
+              </div>
+            </div>
+            <!-- End Add Modal -->
+
+            <!-- Start Update Modal -->
+            <div class="tab-pane active" id="crudUpdate">
+              <div class="modal fade" id="modal-container-2" role="dialog"
+                   aria-labelledby="myModalLabel_1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel_1">
+                        Update record
+                      </h4>
+                    </div>
+                    <div class="modal-body">
+                      <form id="updateForm" role="form" method="" action="">
+
+                        <div class="form-group">
+                          <label for="id_u"> ID</label><input type="text"
+                                                                class="form-control" required
+                                                                name="id_u" readonly/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="category_name_u">Name</label><input type="text"
+                                                                     class="form-control"
+                                                                     required
+                                                                     name="category_name_u"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="category_desc_u">Desc</label><input type="text"
+                                                                     class="form-control"
+                                                                     required
+                                                                     name="category_desc_u"/>
+                          <!--placeholder="Email address" -->
+                        </div>
+
+                        <div class="form-group">
+                          <label for="category_order_u">Order</label><input type="text"
+                          class="form-control"
+                          required name="category_order_u"/>
+
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                          </button>
+                          <button id="updateButton" type="submit" class="btn btn-primary">
+                            Update
+                            changes
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    <!--  -->
+                  </div>
+                </div>
+                <!-- End Update Modal -->
+
+              </div>
+
+            </div>
+            <!-- End Modal -->
+            <br/>
+
+
+
+            <br/>
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-responsive">
+                <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Desc</th>
+                  <th>Order</th>
+                  <th></th>
+
+                </tr>
+                </thead>
+
+                <tbody id="table_div">
+
+                <% categories.forEach(function(category){ %>
+
+                <tr id="category_<%= category.id %>" class="">
+                  <td>
+                    <div id="id_<%= category.id %>"><%= category.id %></div>
+                  </td>
+                  <td>
+                    <div id="categoryName_<%= category.id %>"><%= category.category_name %></div>
+                  </td>
+                  <td class="col-md-1">
+                    <div id="categoryDesc_<%= category.id %>"><%= category.category_desc %></div>
+                  </td>
+                  <td>
+                    <div id="categoryOrder_<%= category.id %>"><%= category.category_order %></div>
+                  </td>
+
+
+                  <td class="col-md-2">
+                    <!--<a id="updateUser_<%= category.id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
+
+                    <button id="updateCategory_<%= category.id %>"
+                            onclick="updatecategory('<%= category.id %>', '<%= category.category_name %>','<%= category.category_desc %>','<%= category.category_order %>')"
+                            class="btn btn-default btn-sm"><span
+                              class="glyphicon glyphicon-pencil"></span></button>
+                    <!---->
+                    <button id="deleteCategory_<%= category.id %>"
+                            onclick="deletecategory('<%= category.id %>')"
+                            class="btn btn-default btn-sm"><span
+                              class="glyphicon glyphicon-trash"></span>
+                    </button>
+                  </td>
+                </tr>
+
+                <% }) %>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <% include partials/footer %>
+      </footer>
+    </div>
+    <div class="col-xs-2 col-md-2"></div>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+  //$('#alertSuccess').hide();
+  //$('#alertWarning').hide();
+
+  //    $("#modal-container-1").on('hide', function () {
+  //        //alert('modal hidden');
+  //    });
+
+  $('#refresh-1').click(function () {
+    document.location.reload();
+  });
+
+
+  $('#insertButton').click(function () {
+    $('#modal-container-1').modal('hide');
+  });
+
+
+  $('#insertButton').click(function () {
+    //var insertItem = confirm('Do you want to update record: ' + $('#addForm').find('input[name="password"]').val() + ' ?');
+    var data1 = {
+      category_id: $('#addForm').find('input[name="id_i"]').val(),
+      category_name: $('#addForm').find('input[name="category_name_i"]').val(),
+      category_desc: $('#addForm').find('input[name="category_desc_i"]').val(),
+      category_order: $('#addForm').find('input[name="category_order_i"]').val()
+    };
+
+    // alert('------------------' + data1);
+    $.ajax({
+      url: '/api/v1.0/categories',
+      dataType: "json",
+      type: "POST",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data1),
+      async: true,
+      processData: false,
+      cache: false,
+      success: function (data) {
+        document.location.reload(true);
+
+//                $('#alertSuccess').show();
+      },
+      error: function (xhr) {
+        document.location.reload(true);
+
+//                alert('ERROR');
+      }
+    });
+  });
+
+
+  function updatecategory(id, category_name, category_desc, category_order) {
+    $('#modal-container-2').modal('show');
+    $('#updateForm').find('input[name="id_u"]').val(id);
+    $('#updateForm').find('input[name="category_name_u"]').val(category_name);
+    $('#updateForm').find('input[name="category_desc_u"]').val(category_desc);
+    $('#updateForm').find('input[name="category_order_u"]').val(category_order);
+  }
+
+
+  $('#updateButton').click(function () {
+    // var updateItem = confirm ('Do you want to update record: ' + $('#updateForm').find('input[name="password"]').val() + ' ?');
+    var data1 = {
+      category_id: $('#updateForm').find('input[name="id_u"]').val(),
+      category_name: $('#updateForm').find('input[name="category_name_u"]').val(),
+      category_desc: $('#updateForm').find('input[name="category_desc_u"]').val(),
+      category_order: $('#updateForm').find('input[name="category_order_u"]').val()
+    };
+    $.ajax({
+      url: '/api/v1.0/categories',
+      dataType: "json",
+      type: "post",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data1),
+      async: true,
+      processData: false,
+      cache: false,
+      success: function (data) {
+        document.location.reload(true);
+
+//                $('#alertSuccess').show();
+//                alert('SUCCESS'+data);
+
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        document.location.reload(true);
+
+//                alert(xhr.status);
+//                alert(ajaxOptions);
+//                alert(thrownError);
+      }
+    });
+  });
+
+
+  function deletecategory(id) {
+
+    //var delItem = confirm ('Do you want to delete category: ' + id  +' ?');
+    if (true) {
+      $.ajax({
+        url: '/category/' + id,
+        type: 'DELETE',
+        success: function (result) {
+          //$("#alertSuccess").show();
+          $('#category_' + id).remove();
+        },
+        error: function (xhr) {
+          alert('error');
+        }
+      });
+
+
+    }
+  }
+  ;
+
+
+</script>

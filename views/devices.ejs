@@ -24,9 +24,9 @@
 <div class="container-fluid">
 
     <!--<div class="row">-->
-        <!--<div class="col-lg-12 text-center">-->
-            <!--<h1><i>ai</i><b>Cubes</b></h1>-->
-        <!--</div>-->
+    <!--<div class="col-lg-12 text-center">-->
+    <!--<h1><i>ai</i><b>Cubes</b></h1>-->
+    <!--</div>-->
     <!--</div>-->
     <!-- /.row -->
 
@@ -51,39 +51,37 @@
 
                         <div class="form-group">
                             <label for="userId">Device ID</label><input type="text"
-                                                                  class="form-control" required
-                                                                  name="mcId" readonly/>
+                                                                        class="form-control" required
+                                                                        name="mcId" readonly/>
                         </div>
 
                         <div class="form-group">
                             <label for="name">Display Name</label><input type="text"
-                                                                       class="form-control"
-                                                                       required
-                                                                       name="name"/>
+                                                                         class="form-control"
+                                                                         required
+                                                                         name="name"/>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Desc</label><input type="text"
-                                                                       class="form-control"
-                                                                       required
-                                                                       name="desc" readonly/>
+                                                                  class="form-control"
+                                                                  required
+                                                                  name="desc" readonly/>
                             <!--placeholder="Email address" -->
                         </div>
 
                         <div class="form-group">
                             <label for="action">Action</label><input type="text"
-                            class="form-control"
-                            required name="action" readonly/>
-
-
+                                                                     class="form-control"
+                                                                     required name="action" readonly/>
 
 
                         </div>
 
                         <div class="form-group">
                             <label for="contact">Value</label><input type="text"
-                                                                       class="form-control"
-                                                                       required name="value" readonly/>
+                                                                     class="form-control"
+                                                                     required name="value" readonly/>
                         </div>
 
 
@@ -107,7 +105,6 @@
 
 </div>
 <!-- End Modal -->
-
 
 
 <!-- Start Update Modal for Device -->
@@ -135,8 +132,8 @@
 
                         <div class="form-group">
                             <label for="compId">Component ID</label><input type="text"
-                                                                        class="form-control" required
-                                                                        name="compId" readonly/>
+                                                                           class="form-control" required
+                                                                           name="compId" readonly/>
                         </div>
 
 
@@ -146,7 +143,6 @@
                                                                          required
                                                                          name="name"/>
                         </div>
-
 
 
                         <label for="visible">Visible</label>
@@ -159,17 +155,24 @@
                         <label for="category">Display Category or Group</label>
                         <select id="category" name="category"
                                 class="form-control dropdown-toggle">
-                            <option value="All">All</option>
-                            <option value="Digital Sensors">Digital Sensors</option>
-                            <option value="Digital Switches">Digital Switches</option>
-                            <option value="Lights">Lights</option>
-                            <option value="Weather Sensors">Weather Sensors</option>
-                            <option value="Analog Switches">Analog Switches</option>
-                            <option value="Analog Sensors">Analog Sensors</option>
-                            <option value="Security">Security</option>
-                            <option value="Safety">Safety</option>
-                            <option value="Room 1">Room 1</option>
-                            <option value="Room 2">Room 2</option>
+                            <% categories.forEach(function(category){ %>
+
+                            <option value="<%= category.category_name %>"><%= category.category_name %></option>
+
+                            <% }); %>
+
+                            <!--<option value="All">All</option>-->
+                            <!--<option value="Digital Sensors">Digital Sensors</option>-->
+                            <!--<option value="Digital Switches">Digital Switches</option>-->
+                            <!--<option value="Lights">Lights</option>-->
+                            <!--<option value="Weather Sensors">Weather Sensors</option>-->
+                            <!--<option value="Analog Switches">Analog Switches</option>-->
+                            <!--<option value="Analog Sensors">Analog Sensors</option>-->
+                            <!--<option value="Security">Security</option>-->
+                            <!--<option value="Safety">Safety</option>-->
+                            <!--<option value="Room 1">Room 1</option>-->
+                            <!--<option value="Room 2">Room 2</option>-->
+
 
                         </select>
 
@@ -218,7 +221,6 @@
 <!-- End Modal -->
 
 
-
 <!-- /.container -->
 <div class="container-fluid">
 
@@ -229,149 +231,171 @@
             <p>Status of Devices </p>
             <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
             <div><a id="refresh-1" href="notifications" role="button" class="btn"
-               data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a> <p></div>
+                    data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+                <p></div>
 
             <% devices.forEach(function(device){ %>
-            <table class="table table-hover table-striped table-responsive">
+            <div class="panel panel-default">
 
-                <thead>
-                <tr class="info">
-                    <th>Device ID</th>
-                    <th>Name</th>
-                    <!--<th>Component ID</th>-->
-                    <!--<th>Desc</th>-->
-                    <!--<th>Action</th>-->
-                    <th>Value</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
+                <table class="table table-hover table-striped table-responsive">
 
-                <tr id="device_id_<%= device.value %>" class="info">
-                    <td>
-                        <div id="device_mcID_<%= device.value %>d"><%= device.value %></div>
-                    </td>
-                    <td>
-                        <div id="device_name_<%= device.value %>d"><%= device.name %></div>
-                    </td>
-                    <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
-                    <!--<td class="col-md-1d">-->
+                    <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Name</th>
+                        <!--<th>Component ID</th>-->
+                        <!--<th>Desc</th>-->
+                        <!--<th>Action</th>-->
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr id="device_id_<%= device.value %>">
+                        <td>
+                            <div id="device_mcID_<%= device.value %>d"><%= device.value %></div>
+                        </td>
+                        <td>
+                            <div id="device_name_<%= device.value %>d"><%= device.name %></div>
+                        </td>
+                        <!--<td><div id="device_compId_<%= device.value %>d"><%= device.compId %></div></td>-->
+                        <!--<td class="col-md-1d">-->
                         <!--<div id="device_compDesc_<%= device.value %>d"><%= device.desc %></div>-->
-                    <!--</td>-->
-                    <!--<td><div id="device_action_<%= device.value %>d"></div><%= device.action %></td>-->
-                    <td class="col-md-2">
-                        <div id="device_compValue_<%= device.value %>d"> ...</div>
-                    </td>
-                    <td class="col-md-2">
-                        <button id="discoComponents<%= device.value %>" onclick="clickButton(this.id)"
-                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-refresh"></span>
-                        </button>
-                        <!--<button id="updateDevice_<%= device.value %>d" onclick="clickButton(this.id)"-->
-                                <!--class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>-->
+                        <!--</td>-->
+                        <!--<td><div id="device_action_<%= device.value %>d"></div><%= device.action %></td>-->
+                        <td class="col-md-2">
+                            <div id="device_compValue_<%= device.value %>d" class="glyphicon glyphicon-remove"></div>
+                        </td>
+                        <td class="col-md-2">
+                            <button id="discoComponents<%= device.value %>" onclick="clickButton(this.id)"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-refresh"></span>
+                            </button>
+                            <!--<button id="updateDevice_<%= device.value %>d" onclick="clickButton(this.id)"-->
+                            <!--class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></button>-->
 
-                        <button id="updateDevice_<%= device.value %>d"
-                                onclick="updateDevice('<%= device.value %>','', '<%= device.name %>','<%= device.desc %>','<%= device.action %>','<%= device.value %>')"
-                                class="btn btn-default btn-sm"><span
-                                    class="glyphicon glyphicon-pencil"></span></button>
-
-
-
-                        <button id="deleteDevice_<%= device.value %>d" onclick="deleteDevice('<%= device.mcId %>')"
-                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
-                    </td>
-
-                </tr>
+                            <button id="updateDevice_<%= device.value %>d"
+                                    onclick="updateDevice('<%= device.value %>','', '<%= device.name %>','<%= device.desc %>','<%= device.action %>','<%= device.value %>')"
+                                    class="btn btn-default btn-sm"><span
+                                        class="glyphicon glyphicon-pencil"></span></button>
 
 
-                <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
+                            <button id="deleteDevice_<%= device.value %>d" onclick="deleteDevice('<%= device.mcId %>')"
+                                    class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
+
+                    </tr>
 
 
-                <tr id="device_comps_id_<%= device.value %>" class="info">
+                    <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
 
-                    <td colspan="5">
-                        <table class="table table-hover table-striped table-responsive">
-                            <thead>
 
-                            <tr class="active">
-                                <!--<th>Dev#</th>-->
-                                <th>Comp#</th>
-                                <th>Name</th>
+                    <tr id="device_comps_id_<%= device.value %>">
 
-                                <!--<th>Desc</th>-->
-                                <!--<th>Action</th>-->
-                                <th>Value</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                        <h4 align="right">
+                            <button type="button" data-toggle="collapse" data-target="#toggle_<%= device.value %>"
+                                    class="btn btn-link btn-sm " align="right">
+                                <span id="button<%= device.value %>" class="glyphicon glyphicon-plus" ></span>
 
-                            <% components.forEach(function(component){ %>
-                            <% if (component.mcId == device.value) { %>
-                            <div id="device_id_c_<%= component.mcId %>">
-                                <tr id="component_id_<%= component.mcId %>_<%= component.compId %>" class="">
-                                    <!--<td>-->
-                                        <!--<div id="device_mcID_<%= component.mcId %>_<%= component.compId %>c"><%= component.mcId %></div>-->
-                                    <!--</td>-->
-                                    <td>
-                                        <div id="device_compId_<%= component.mcId %>_<%= component.compId %>c"><%= component.compId %></div>
-                                    </td>
-                                    <td>
-                                        <div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div>
-                                    </td>
-                                    <!--<td class="col-md-1d">-->
-                                        <!--<div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>-->
-                                    <!--</td>-->
-                                    <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
-                                    <td class="col-md-2">
-                                        <div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value %></div>
-                                    </td>
-                                    <td class="col-md-2">
-                                        <!--<button id="updateDevice_<%= component.mcId %>_<%= component.compId %>c"-->
+                            </button> </h4>
+                        <td colspan="5">
+                            <div class="panel panel-default" hidden id="toggle_<%= device.value %>">
+                                <script>
+
+                                    $('#toggle_<%= device.value %>').on('hide.bs.collapse', function () {
+                                        $("#button<%= device.value %>").removeClass("glyphicon glyphicon-minus").addClass("glyphicon glyphicon-plus");
+
+                                    });
+
+                                    $('#toggle_<%= device.value %>').on('show.bs.collapse', function () {
+                                        $("#button<%= device.value %>").removeClass("glyphicon glyphicon-plus").addClass("glyphicon glyphicon-minus");
+                                    });
+
+                                </script>
+
+
+                                <table class="table table-hover table-striped table-responsive">
+                                    <thead>
+
+                                    <tr class="active">
+                                        <!--<th>Dev#</th>-->
+                                        <th>Component ID</th>
+                                        <th>Name</th>
+
+                                        <!--<th>Desc</th>-->
+                                        <!--<th>Action</th>-->
+                                        <th>Type</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <% components.forEach(function(component){ %>
+                                    <% if (component.mcId == device.value) { %>
+                                    <div id="device_id_c_<%= component.mcId %>">
+                                        <tr id="component_id_<%= component.mcId %>_<%= component.compId %>" class="">
+                                            <!--<td>-->
+                                            <!--<div id="device_mcID_<%= component.mcId %>_<%= component.compId %>c"><%= component.mcId %></div>-->
+                                            <!--</td>-->
+                                            <td>
+                                                <div id="device_compId_<%= component.mcId %>_<%= component.compId %>c"><%= component.compId %></div>
+                                            </td>
+                                            <td>
+                                                <div id="device_named_<%= component.mcId %>_<%= component.compId %>c"><%= component.name %></div>
+                                            </td>
+                                            <!--<td class="col-md-1d">-->
+                                            <!--<div id="device_compDesc_<%= component.mcId %>_<%= component.compId %>c"><%= component.desc %></div>-->
+                                            <!--</td>-->
+                                            <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>c"><%= component.action %></div></td>-->
+                                            <td class="col-md-2">
+                                                <div id="device_compValue_<%= component.mcId %>_<%= component.compId %>c"><%= component.value %></div>
+                                            </td>
+                                            <td class="col-md-2">
+                                                <!--<button id="updateDevice_<%= component.mcId %>_<%= component.compId %>c"-->
                                                 <!--onclick="clickButton(this.id)" class="btn btn-default btn-sm"><span-->
-                                                    <!--class="glyphicon glyphicon-pencil"></span></button>-->
+                                                <!--class="glyphicon glyphicon-pencil"></span></button>-->
 
-                                        <button id="updateComponent_<%= component.mcId %>_<%= component.compId %>c"
-                                                onclick="updateComponent('<%= component.mcId %>', '<%= component.compId %>','<%= component.desc %>','<%= component.action %>','<%= component.value %>','<%= component.name %>','<%= component.visible %>','<%= component.category %>')"
-                                                class="btn btn-default btn-sm"><span
-                                                    class="glyphicon glyphicon-pencil"></span></button>
+                                                <button id="updateComponent_<%= component.mcId %>_<%= component.compId %>c"
+                                                        onclick="updateComponent('<%= component.mcId %>', '<%= component.compId %>','<%= component.desc %>','<%= component.action %>','<%= component.value %>','<%= component.name %>','<%= component.visible %>','<%= component.category %>')"
+                                                        class="btn btn-default btn-sm"><span
+                                                            class="glyphicon glyphicon-pencil"></span></button>
 
 
+                                                <button id="deleteComponent_<%= component.mcId %>_<%= component.compId %>c"
+                                                        onclick="deleteComponent('<%= component.mcId %>','<%= component.compId %>')"
+                                                        class="btn btn-default btn-sm"><span
+                                                            class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </td>
+                                            <!--<td class="col-md-2"> <button id="discoComponents<%= component.value %>" onclick="clickButton(this.id)">COMPONENTS</button></td>-->
 
-                                        <button id="deleteComponent_<%= component.mcId %>_<%= component.compId %>c"
-                                                onclick="deleteComponent('<%= component.mcId %>','<%= component.compId %>')"
-                                                class="btn btn-default btn-sm"><span
-                                                    class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </td>
-                                    <!--<td class="col-md-2"> <button id="discoComponents<%= component.value %>" onclick="clickButton(this.id)">COMPONENTS</button></td>-->
+                                        </tr>
+                                    </div>
+                                    <% } %>
+                                    <% }) %>
 
-                                </tr>
+
+                                    <tbody>
+                                </table>
                             </div>
-                            <% } %>
-                            <% }) %>
 
+                        </td>
 
-                            <tbody>
-                        </table>
-                    </td>
+                    </tr>
 
-                </tr>
+                    <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
 
-                <!--////////////////////////////////////////////////////////////////////////////////////////////////-->
-
-                <% }) %>
-
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+            </div>
+            <% }) %>
 
         </div>
         <div class="col-xs-2 col-md-2"></div>
     </div>
 
 </div>
-
-
 
 
 <!--<div class="container-fluid">-->
@@ -388,14 +412,11 @@
 </html>
 
 
-
-
 <script>
 
     $('#refresh-1').click(function () {
         document.location.reload();
     });
-
 
 
     function updateDevice(mcId, compId, name, desc, action, value) {
@@ -415,7 +436,7 @@
         // var updateItem = confirm ('Do you want to update record: ' + $('#updateFormD').find('input[name="name_short"]').val() + ' ?');
         var data1 = {
             mcId: $('#updateFormD').find('input[name="mcId"]').val(),
-            compId:'' ,
+            compId: '',
             desc: $('#updateFormD').find('input[name="desc"]').val(),
             action: $('#updateFormD').find('input[name="action"]').val(),
             value: $('#updateFormD').find('input[name="value"]').val(),
@@ -513,9 +534,6 @@
             }
         });
     });
-
-
-
 
 
 </script>

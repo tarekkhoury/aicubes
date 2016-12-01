@@ -4,23 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var AWS = require('aws-sdk'); 
+var Consumer = require('sqs-consumer');
 
-
-
-//var jsonFile = require('jsonfile');
-//var util = require('util')
+var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+AWS.config.credentials = credentials;
+AWS.config.region = 'ap-southeast-2';
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('cozy.db');
 
-
-
+var api = require('./routes/api');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 var server = app.listen(3001);
-
 
 var io = require('socket.io')(server);
 var fs = require('fs');
@@ -28,8 +27,12 @@ var serialport = require('serialport');
 
 io.set('log level', 2);
 
+
+console.log ('>>>> Node Application Starting');
+console.log ('>>>> listening on serialport /dev/ttyUSB0  ,  baudRate: 9600');
+
 // Serial Port
-var portName = '/dev/cu.usbserial-FTH0YKO1'; // Mac環境
+var portName = '/dev/ttyUSB0';
 var sp = new serialport.SerialPort(portName, {
     baudRate: 9600,
     parser: serialport.parsers.readline("\n"),
@@ -45,16 +48,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -86,8 +90,6 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
-
-
 
 
 // Database initialization
@@ -132,7 +134,6 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='devices_mast
     });
 
 
-
 // Database initialization
 db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notifications_master'",
     function (err, rows) {
@@ -140,10 +141,10 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='notification
             console.log(err);
         }
         else if (rows === undefined) {
-         //   db.run('CREATE TABLE notifications_master (id integer primary key autoincrement, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
-                db.run('CREATE TABLE notifications_master (id TEST, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+            //   db.run('CREATE TABLE notifications_master (id integer primary key autoincrement, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
+            db.run('CREATE TABLE notifications_master (id INTEGER PRIMARY KEY, name_short TEXT, name_long TEXT, type TEXT,contact TEXT, cdatetime DATETIME)', function (err) {
 
-                    if (err !== null) {
+                if (err !== null) {
                     console.log(err);
                 }
                 else {
@@ -163,7 +164,7 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users_master
             console.log(err);
         }
         else if (rows === undefined) {
-            db.run('CREATE TABLE users_master (user_id TEXT PRIMARY KEY, password TEXT, first_name TEXT, last_name TEXT,email TEXT, cdatetime DATETIME)', function (err) {
+            db.run('CREATE TABLE users_master (user_id INTEGER PRIMARY KEY, password TEXT, first_name TEXT, last_name TEXT,email  TEXT UNIQUE, cdatetime DATETIME)', function (err) {
                 if (err !== null) {
                     console.log(err);
                 }
@@ -177,6 +178,100 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='users_master
     });
 
 
+// Database initialization// add lowervalue and upper value........ for between comparison....
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='rules_master'",
+    function (err, rows) {
+        if (err !== null) {
+            console.log(err);
+        }
+        else if (rows === undefined) {
+            db.run('CREATE TABLE rules_master (' +
+                'id INTEGER PRIMARY KEY, ' +
+                'rule_id TEXT, ' +
+                'rule_name TEXT, ' +
+                'condition_mcid TEXT, ' +
+                'condition_mcid_name  TEXT, ' +
+                'condition_compid TEXT, ' +
+                'condition_compid_name  TEXT, ' +
+                'condition_expression TEXT,' +
+                'condition_value TEXT, ' +
+                'condition_value_lower TEXT, ' +
+                'condition_value_higher TEXT, ' +
+                'consequence_mcid TEXT, ' +
+                'consequence_mcid_name  TEXT, ' +
+                'consequence_compid TEXT, ' +
+                'consequence_compid_name  TEXT, ' +
+                'consequence_action TEXT, ' +
+                'consequence_value TEXT, ' +
+                'active TEXT, ' +
+                'isPrimary TEXT, ' +
+                'cdatetime DATETIME)', function (err) {
+                if (err !== null) {
+                    console.log(err);
+                }
+                else {
+                    console.log("SQL Table 'rules_master' initialized.");
+                }
+            });
+        }
+        else
+            console.log("SQL Table 'rules_master' already initialized.");
+    });
+
+
+// Database initialization
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='categories_master'",
+    function (err, rows) {
+        if (err !== null) {
+            console.log(err);
+        }
+        else if (rows === undefined) {
+            db.run('CREATE TABLE categories_master (id INTEGER PRIMARY KEY, category_name TEXT, category_desc TEXT, category_order INTEGER, cdatetime DATETIME)', function (err) {
+                if (err !== null) {
+                    console.log(err);
+                }
+                else {
+                    console.log("SQL Table 'categories_master' initialized.");
+                }
+            });
+        }
+        else
+            console.log("SQL Table 'categories_master' already initialized.");
+    });
+
+
+
+
+// this code to receive messages from AWS SQS
+try {
+var sqsQueueListner = Consumer.create({
+  queueUrl: 'https://sqs.ap-southeast-2.amazonaws.com/847733718105/iot-out-queue',
+  handleMessage: function (message, done) {
+    // do some work with `message` 
+
+    console.log(' -- '); 
+    console.log('SQS IN message: >> ' + message.Body); 
+    console.log(' -- '); 
+        //write to serialport
+        sp.write(message.Body + "\n", function (err, results) {
+            //console.log('bytes written: ', results);
+        });
+
+
+    done();
+  }
+});
+ 
+sqsQueueListner.on('error', function (message) {
+    console.log('message: >> ' +message); 
+});
+ 
+sqsQueueListner.start();
+} catch(e) {
+    console.log(e);
+}
+// this code to receive messages from AWS SQS
+
 
 
 //click from client
@@ -187,7 +282,7 @@ io.sockets.on('connection', function (socket) {
         //console.log(data);
 
         var receive = JSON.stringify(data);
-console.log("Out: " + receive + "");
+        console.log("Out: " + receive + "");
 
         //write to serialport
         sp.write(receive + "\n", function (err, results) {
@@ -199,35 +294,54 @@ console.log("Out: " + receive + "");
 
 });
 
+// sending data to SQS queue 
+var queueIn = new AWS.SQS({apiVersion: '2012-11-05', params: {QueueUrl: 'https://sqs.ap-southeast-2.amazonaws.com/847733718105/iot-in-queue'}});
+
 //data from arduino
 sp.on('data', function (data) {
-console.log('IN: ' + data);
-    try {
+        console.log('IN: ' + data);      
+
+        queueIn.sendMessage({MessageBody: data}, function (err, data) {
+            if (!err) console.log('SQS Message sent.') ;
+            if (err) console.log(err) ;
+        });
 
 
-        //var devicesFile = 'config/devices.json';
-        var d = new Date();
-        var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
-       // console.log(dt);
+        try {
+            evaluateRules(data);
 
-        var stmt_devices = db.prepare('INSERT or REPLACE INTO devices_master VALUES (?,?,?,?,?,?,?,?,?)');
-        var stmt_streams = db.prepare('INSERT or REPLACE INTO streams_master VALUES (?,?,?,?,?,?,?)');
+        } catch (e) {
+            //eat it;
+            console.log("Exception when calling evaluate Rule: ");
+
+            console.log(e);
+        }
+
+
+        try {
+
+            //var devicesFile = 'config/devices.json';
+            var d = new Date();
+            var dt = formatDate(d, "yyyy-MM-dd HH:mm:ss");
+            // console.log(dt);
+
+            var stmt_devices = db.prepare('INSERT or REPLACE INTO devices_master VALUES (?,?,?,?,?,?,?,?,?)');
+            var stmt_streams = db.prepare('INSERT or REPLACE INTO streams_master VALUES (?,?,?,?,?,?,?)');
 
 
             if (JSON.parse(data).a == "DEVICES") {
-                db.all('SELECT value FROM devices_master WHERE action = "DEVICES" AND value = ' + JSON.parse(data).v, function(err, row) {
-                    if(err !== null) {
+                db.all('SELECT value FROM devices_master WHERE action = "DEVICES" AND value = ' + JSON.parse(data).v, function (err, row) {
+                    if (err !== null) {
                         next(err);
                     }
                     else {
                         //console.log(row);
 
-                        if (row.length <= 0)
-                        {
+                        if (row.length <= 0) {
                             //console.log('row is empty');
                             //console.log('insert device....');
 
-                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v,JSON.parse(data).d , dt);
+                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d, dt);
                         }
                         else {
                             //console.log('row is NOT empty');
@@ -241,18 +355,17 @@ console.log('IN: ' + data);
 
             } else if (JSON.parse(data).a == "COMPS") {
 
-                db.all('SELECT compId FROM devices_master WHERE action = "COMPS" AND mcId = ' + JSON.parse(data).m + ' AND compId = ' +JSON.parse(data).c,  function(err, row) {
-                    if(err !== null) {
+                db.all('SELECT compId FROM devices_master WHERE action = "COMPS" AND mcId = ' + JSON.parse(data).m + ' AND compId = ' + JSON.parse(data).c, function (err, row) {
+                    if (err !== null) {
                         next(err);
                     }
                     else {
                         //console.log(row);
 
-                        if (row.length <= 0)
-                        {
+                        if (row.length <= 0) {
                             //console.log('row is empty');
                             //console.log('insert component....');
-                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d,'y',JSON.parse(data).v, dt);
+                            stmt_devices.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d, 'y', JSON.parse(data).v, dt);
                         }
                         else {
                             //console.log('row is NOT empty');
@@ -264,30 +377,278 @@ console.log('IN: ' + data);
                 io.sockets.emit('emit_from_server_devices', data);
 
 
-
             } else {
 
 
-
-
-                stmt_streams.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d,dt);
+                stmt_streams.run(JSON.parse(data).m, JSON.parse(data).c, JSON.parse(data).d, JSON.parse(data).a, JSON.parse(data).v, JSON.parse(data).d, dt);
 
                 io.sockets.emit('emit_from_server', data);
             }
 
 
         }
-    catch
-        (e)
-        {
+        catch
+            (e) {
             //eat it;
             console.log(e);
         }
 
     }
-
-
 );
+
+
+
+
+var evaluateRules = function (fact) { // Start evaluateRules2 function
+
+    try {
+        var ruleResult = 0;
+        var myCounter = 0;
+        var counterUpperValue = 0;
+
+
+        console.log("");
+        //console.log("> BEGIN function evaluateRules2") ;
+        var select_distinct_rules_statement = 'SELECT DISTINCT * FROM rules_master WHERE condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y" AND active = "Y"';
+        //console.log("-->" +select_distinct_rules_statement);
+
+
+        db.all(select_distinct_rules_statement, function (err, distinct_rules_rows) { // Start: get all the DISTINCT rules in the rules_master table
+
+            if (err !== null) {
+                next(err);
+            } else { // start distinct rules list
+                //console.log("----> For mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+                distinct_rules_rows.forEach(function (distinct_rules_row) { // Start forEach distinct_rules_row
+                    console.log("---->" + distinct_rules_row.rule_id);
+
+                    // Start Evaluate Primary Rule
+                    var select_specific_primary_rules_statement = 'SELECT  * FROM rules_master WHERE rule_id = "' + distinct_rules_row.rule_id + '" AND condition_mcid = "' + JSON.parse(fact).m + '" AND condition_compid = "' + JSON.parse(fact).c + '" AND isPrimary = "Y" AND active = "Y"' ;
+                    //console.log(select_specific_primary_rules_statement);
+                    db.all(select_specific_primary_rules_statement, function (err, specific_rules_rows) { // Start: get all the SPECIFIC rules in the rules_master table
+
+                        if (err !== null) {
+                            next(err);
+                        } else { // start specificrules list
+                            //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+                            specific_rules_rows.forEach(function (specific_rules_row) { // Start forEach specific_rules_row
+                                //console.log("------> Primary Rule: " + specific_rules_row.rule_id);
+                                counterUpperValue = specific_rules_rows.length;
+                                //console.log('In Primary Rules: '+counter + '/'+ counterUpperValue)
+
+                                var valueType = '';
+                                var expression = '';
+
+
+                                try {
+                                    typeof eval(JSON.parse(fact).v);
+                                    valueType = 'number';
+                                } catch (e) {
+                                    valueType = 'string';
+                                }
+
+                                if (specific_rules_row.condition_expression !== 'between') { // not between
+
+                                    if (valueType == 'string') {
+                                        expression = '\'' + JSON.parse(fact).v + '\'' + ' ' + specific_rules_row.condition_expression + ' ' + specific_rules_row.condition_value;
+                                    } else {
+                                        expression = JSON.parse(fact).v + ' ' + specific_rules_row.condition_expression + ' ' + specific_rules_row.condition_value;
+                                    }
+
+                                } else {
+                                    expression = specific_rules_row.condition_value_lower + ' <= ' + JSON.parse(fact).v + ' <= ' + specific_rules_row.condition_value_higher;
+                                }
+                                // console.log("--------> expression = " + expression);
+                                try {
+                                    if (eval(expression)) {
+                                        ruleResult = 1;
+                                    } else {
+                                        ruleResult = 0;
+                                    }
+                                } catch (e) {
+                                    console.log(e);
+                                }
+
+                                console.log("------> Primary Rule: " + specific_rules_row.rule_id + " mcId: " + specific_rules_row.condition_mcid + " compId: " + specific_rules_row.condition_compid
+                                    + " condition expression : " + specific_rules_row.condition_expression + " condition value : " + specific_rules_row.condition_value + " Last Saved DB Value: " + JSON.parse(fact).v + "  Test ruleResult = " + ruleResult + "  expression = " + expression);
+
+
+                                if (ruleResult) {
+                                    console.log("----------> ruleResult = " + ruleResult + "   SHOULD Evaluate non primary rules " + specific_rules_row.rule_id + ";   mcID:'" + JSON.parse(fact).m + "' ;  compid = '" + JSON.parse(fact).c) + "'";
+
+
+                                    // Start Evaluate Primary Rule
+                                    var select_specific_secondary_rules_statement = "SELECT  * FROM rules_master WHERE rule_id = '" + specific_rules_row.rule_id + "' AND isPrimary = 'N'";
+                                    //console.log(select_specific_secondary_rules_statement);
+                                    db.all(select_specific_secondary_rules_statement, function (err, specific_rules_secondary_rows) { // Start: get all the SPECIFIC secondary rules in the rules_master table
+                                        if (err !== null) {
+                                            console.log("err" + err);
+                                            next(err);
+                                        } else { // start specificrules list
+                                            //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+
+                                            counterUpperValue = specific_rules_secondary_rows.length + 1;
+
+                                            //console.log('This is a simple rule - SEND ACTION HERE FOR SIMPLE RULE .....' + distinct_rules_row.rule_id);
+
+
+                                            if (counterUpperValue == 1) {
+                                                action = {
+                                                    "m": specific_rules_row.consequence_mcid,
+                                                    "c": specific_rules_row.consequence_compid,
+                                                    "d": "",
+                                                    "a": specific_rules_row.consequence_action,
+                                                    "v": specific_rules_row.consequence_value
+                                                };
+
+                                                if (specific_rules_row.consequence_action == "notify") {
+
+                                                    console.log("S xxxxxxxxxxxxx   CALL AWS SNS APIs for notifications xxxxxxxxxxxxxxx");
+                                                }
+
+                                                sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                    console.log('This is a simple rule - SEND ACTION HERE FOR SIMPLE RULE .....' + specific_rules_row.rule_id);
+                                                    console.log('OUT_S:', JSON.stringify(action));
+                                                    console.log('bytes written: ', results);
+                                                });
+
+                                            } else {
+                                            }
+
+
+                                            specific_rules_secondary_rows.forEach(function (specific_rules_secondary_row, rowCounter) { // Start forEach specific_rules_secondary_row
+
+
+                                                var select_specific_secondary_db_stream_value_statement = 'SELECT  * FROM streams_master WHERE mcId= "' + specific_rules_secondary_row.condition_mcid + '" AND compId = "' + specific_rules_secondary_row.condition_compid + '" ORDER BY cdatetime DESC  LIMIT 1';
+                                                //console.log(select_specific_secondary_db_stream_value_statement);
+                                                db.all(select_specific_secondary_db_stream_value_statement, function (err, specific_secondary_db_stream_rows) { // Start: get all the SPECIFIC secondary rules in the rules_master table
+
+                                                    if (err !== null) {
+                                                        next(err);
+                                                    } else { // start specificrules list
+                                                        //console.log("------> For rule_id:" + distinct_rules_row.rule_id + ";   mcID:" + JSON.parse(fact).m + '" ;  compid = "' + JSON.parse(fact).c);
+
+                                                        specific_secondary_db_stream_rows.forEach(function (specific_secondary_db_stream_row) { // Start forEach specific_rules_secondary_row
+
+
+                                                            try {
+                                                                typeof eval(specific_secondary_db_stream_row.value);
+                                                                valueType = 'number';
+                                                            } catch (e) {
+                                                                valueType = 'string';
+                                                            }
+
+                                                            if (specific_rules_secondary_row.condition_expression !== 'between') { // not between
+
+                                                                if (valueType == 'string') {
+                                                                    expression = '\'' + specific_secondary_db_stream_row.value + '\'' + ' ' + specific_rules_secondary_row.condition_expression + ' ' + specific_rules_secondary_row.condition_value;
+                                                                } else {
+                                                                    expression = specific_secondary_db_stream_row.value + ' ' + specific_rules_secondary_row.condition_expression + ' ' + specific_rules_secondary_row.condition_value;
+                                                                }
+
+                                                            } else {
+                                                                expression = specific_rules_secondary_row.condition_value_lower + ' <= ' + specific_secondary_db_stream_row.value + ' <= ' + specific_rules_secondary_row.condition_value_higher;
+                                                            }
+                                                            //console.log("--------> expression = " + expression);
+
+
+
+                                                            try {
+                                                                if (eval(expression)) {
+                                                                    ruleResult = ruleResult * 1;
+                                                                } else {
+                                                                    ruleResult = ruleResult * 0;
+                                                                }
+                                                            } catch (e) {
+                                                                console.log(e);
+                                                            }
+
+
+
+                                                            console.log("------> Secondary Rule: " + specific_rules_secondary_row.rule_id + " mcId: " + specific_rules_secondary_row.condition_mcid + " compId: " + specific_rules_secondary_row.condition_compid
+                                                                + " condition expression : " + specific_rules_secondary_row.condition_expression + " condition value : " + specific_rules_secondary_row.condition_value + " Last Saved DB Value: " + specific_secondary_db_stream_row.value + "  Test ruleResult = " + ruleResult + "  expression = " + expression);
+                                                            // console.log("--------> Test ruleResult = " + ruleResult );
+
+
+                                                            console.log('In Secondary Rules: ' + (rowCounter + 2) + '/' + (specific_rules_secondary_rows.length + 1));
+                                                            /// need counter and test ruleResult to trigger action
+
+
+                                                            if ((ruleResult == 1) && ((rowCounter + 2) == (specific_rules_secondary_rows.length + 1))) {
+
+
+                                                                action = {
+                                                                    "m": specific_rules_row.consequence_mcid,
+                                                                    "c": specific_rules_row.consequence_compid,
+                                                                    "d": "",
+                                                                    "a": specific_rules_row.consequence_action,
+                                                                    "v": specific_rules_row.consequence_value
+                                                                };
+
+                                                                if (specific_rules_row.consequence_action == "notify") {
+
+                                                                    console.log("C xxxxxxxxxxxxx   CALL AWS CNS APIs for notifications xxxxxxxxxxxxxxx");
+                                                                }
+
+                                                                sp.write(JSON.stringify(action) + "\n", function (err, results) {
+                                                                    console.log("------------>ACTION FOR COMPOSITE RULE: " + distinct_rules_row.rule_id);
+                                                                    console.log('OUT_C:', JSON.stringify(action));
+                                                                    console.log('bytes written: ', results);
+                                                                });
+
+
+
+                                                            } else {
+                                                                // console.log("------------>NO ACTION: RULES Have Not Been Satisfied : " + distinct_rules_row.rule_id);
+
+                                                            }
+
+
+                                                            //console.log("--------> LAST Test ruleResult = " + ruleResult);
+
+
+                                                        })
+
+                                                    }
+                                                })
+
+
+                                            })
+                                        }
+///////
+
+
+                                    })
+
+
+                                } else {
+                                    //console.log("----------> ruleResult = " + ruleResult + "   EXIT WITHOUT Evaluate non primary rules" + distinct_rules_row.rule_id + ";   mcID:'" + JSON.parse(fact).m + "' ;  compid = '" + JSON.parse(fact).c) + "'";
+                                }
+
+
+                            });// end forEach specific_rules_row
+                        }// end specific rules list
+                    })// End: get all the SPECIFIC rules in the rules_master table
+                    // End Evaluate Primary Rule
+
+
+                })
+                ;// end forEach distinct_rules_row
+            }// end distinct rules list
+        })// End: get all the DISTINCT rules in the rules_master table
+
+        // console.log("--------> LAST Test ruleResult = " + ruleResult);
+
+
+        //console.log("> END function evaluateRules2") ;
+    }catch(e) {
+            console.log("--------> evaluateRule Exception = " + e);
+
+        }
+
+}// end evaluateRules function
+
+
 
 
 function formatDate(date, format, utc) {

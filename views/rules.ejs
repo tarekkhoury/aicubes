@@ -2,61 +2,1204 @@
 <html lang="en">
 
 <head>
-  <% include partials/head %>
+    <% include partials/head %>
 </head>
 
 <header>
-  <% include partials/header %>
+    <% include partials/header %>
 </header>
 
 <body>
 
 
-
 <!-- Custom CSS -->
 <style>
-  body {
-    padding-top: 70px;
-    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  }
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
 </style>
 
 <!-- Page Content -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-lg-12 text-center">
-      <h1><i>ai</i><b>Cubes</b></h1>
-    </div>
-  </div>
-  <!-- /.row -->
 
 </div>
-
-
 
 
 <!-- /.container -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-xs-2 col-md-2"></div>
-    <div class="col-xs-8 col-md-8">
-      <h2>Rules</h2>
-      <p>Add rules to take automatic actions </p>
-      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+    <div class="row">
+        <!--<div class="col-md-2"></div>-->
+        <div class="col-md-12">
+            <h2>Rules</h2>
+            <p><i>To rule your home</i>  </p>
+
+            <main>
+
+                <div class="tab-content">
+
+                    <!-- Start Add Modal -->
+                    <div class="tab-pane active" id="crudAdd">
+                        <a id="modal-1" href="#modal-container-1" role="button" class="btn"
+                           data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> Add record</a>
+                        <a id="refresh-1" href="rules" role="button" class="btn"
+                           data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+
+                        <div class="modal fade" id="modal-container-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">
+                                            Add new record
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addForm" role="form" method="" action="">
+
+                                            <div class="form-group">
+                                                <label for="ruleId_i">Rule Id</label>
+                                                <input type="text" class="form-control" required name="ruleId_i"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ruleName_i">Rule Name </label>
+                                                <input type="text" class="form-control" required name="ruleName_i"/>
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ruleActive_i">Active </label>
+                                                <input type="checkbox" name="ruleActive_i" value="Y">Yes
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="ruleIsPrimary_i">Primary</label>
+                                                <input type="checkbox" name="ruleIsPrimary_i" value="Y">Yes
+                                            </div>
+
+                                            <div class="form-group">
+                                                <br></div>
+                                            <div style="background-color:grey; overflow: auto;"><label>Condition</label>
+                                            </div>
 
 
+                                            <div style="background-color:lightgrey; overflow: auto;">
 
-      <footer>
-        <% include partials/footer %>
-      </footer>
+                                                <div class="form-group">
+                                                    <label for="ruleCondition_mcid_i">Device</label>
+                                                    <select id="ruleCondition_mcid_i" name="ruleCondition_mcid_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <option value=""></option>
+                                                        <% devices.forEach(function(device) { %>
 
+                                                        <option value="<%= device.mcId %>"> <%= device.name %> </option>
+
+                                                        <% }) %>
+
+                                                        <script>
+
+
+                                                        </script>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ruleCondition_compid_i">Component</label>
+                                                    <select id="ruleCondition_compid_i" name="ruleCondition_compid_i"
+                                                            class="form-control dropdown-toggle">
+
+
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ruleCondition_expression_i">Expression</label>
+                                                    <select id="ruleCondition_expression_i"
+                                                            name="ruleCondition_expression_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <option value=""></option>
+                                                        <option value="between">Between</option>
+                                                        <option value="==">==</option>
+                                                        <option value=">">></option>
+                                                        <option value="=>">=></option>
+                                                        <option value="<"><</option>
+                                                        <option value="=<">=<</option>
+
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="form-group" id="valueDiv_i">
+                                                    <label for="ruleCondition_value_i">Value</label>
+                                                    <input type="text" class="form-control" required
+                                                           name="ruleCondition_value_i"/>
+
+                                                </div>
+                                                <div class="form-group" id="betweenDiv1_i">
+                                                    <label for="ruleCondition_value_lower_i">Lower value </label>
+                                                    <input type="text" class="form-control" required
+                                                           name="ruleCondition_value_lower_i"/>
+                                                </div>
+                                                <div class="form-group" id="betweenDiv2_i">
+                                                    <label for="ruleCondition_value_higher_i">Upper value </label>
+                                                    <input type="text" class="form-control" required
+                                                           name="ruleCondition_value_higher_i"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <br></div>
+                                            <div style="background-color:grey; overflow: auto;">
+                                                <label>Consequence</label>
+                                            </div>
+                                            <div id = "consequence_i" style="background-color:lightgrey; overflow: auto;">
+
+
+                                                <div class="form-group">
+                                                    <label for="ruleConsequence_mcid_i">Device</label>
+                                                    <select id="ruleConsequence_mcid_i" name="ruleConsequence_mcid_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <option value=""></option>
+                                                        <% devices.forEach(function(device) { %>
+
+                                                        <option value="<%= device.mcId %>"> <%= device.name %> </option>
+                                                        <!--<option value="2">Arduino Uno</option>-->
+                                                        <!--<option value="3">Arduino Micro Pro</option>-->
+
+                                                        <% }) %>
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ruleConsequence_compid_i">Component</label>
+                                                    <select id="ruleConsequence_compid_i"
+                                                            name="ruleConsequence_compid_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <!--<option value="1">Door</option>-->
+                                                        <!--<option value="2">Light</option>-->
+                                                        <!--<option value="3">Temperature</option>-->
+                                                        <!--<option value="4">Humidity</option>-->
+                                                        <!--<option value="5">Pressure</option>-->
+                                                        <!--<option value="6">Altitude</option>-->
+                                                        <!--<option value="7">Motion</option>-->
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ruleConsequence_action_i">Action</label>
+                                                    <select id="ruleConsequence_action_i"
+                                                            name="ruleConsequence_action_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <option value=""></option>
+
+                                                        <option value="SET">SET</option>
+                                                        <option value="GET">GET</option>
+                                                        <option value="notify">Notify</option>
+                                                    </select>
+                                                </div>
+
+                                                <!--<div class="form-group">-->
+                                                <!--<label for="ruleConsequence_value">Value</label>-->
+                                                <!--<input type="text" class="form-control" required-->
+                                                <!--name="ruleConsequence_value"/>-->
+                                                <!--</div>-->
+                                                <div class="form-group">
+                                                    <label for="ruleConsequence_value_i">Value</label>
+                                                    <select id="ruleConsequence_value_i" name="ruleConsequence_value_i"
+                                                            class="form-control dropdown-toggle">
+                                                        <option value=""></option>
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                                </button>
+                                                <button id="insertButton" type="submit" class="btn btn-primary">Save
+                                                    changes
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!--  -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Add Modal -->
+
+                        <!-- Start Update Modal -->
+                        <div class="tab-pane active" id="crudUpdate">
+                            <div class="modal fade" id="modal-container-2" role="dialog"
+                                 aria-labelledby="myModalLabel_1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                ×
+                                            </button>
+                                            <h4 class="modal-title" id="myModalLabel_1">
+                                                Update record
+                                            </h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="updateForm" role="form" method="" action="">
+
+                                                <div class="form-group">
+                                                    <input type="hidden" class="form-control" required name="id_u" readonly/>
+
+                                                    <label for="ruleId_u">Rule Id</label>
+                                                    <input type="text" class="form-control" required name="ruleId_u" readonly/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ruleName_u">Rule Name </label>
+                                                    <input type="text" class="form-control" required name="ruleName_u" readonly/>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ruleActive_u">Active </label>
+                                                    <input type="checkbox" name="ruleActive_u" value="Y">Yes
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ruleIsPrimary_u">Primary</label>
+                                                    <input type="checkbox" name="ruleIsPrimary_u" value="Y">Yes
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <br></div>
+                                                <div style="background-color:grey; overflow: auto;">
+                                                    <label>Condition</label>
+                                                </div>
+
+
+                                                <div style="background-color:lightgrey; overflow: auto;">
+
+                                                    <div class="form-group">
+                                                        <label for="ruleCondition_mcid_u">Device</label>
+                                                        <select id="ruleCondition_mcid_u" name="ruleCondition_mcid_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+                                                            <% devices.forEach(function(device) { %>
+
+                                                            <option value="<%= device.mcId %>"> <%= device.name %> </option>
+                                                            <!--<option value="2">Arduino Uno</option>-->
+                                                            <!--<option value="3">Arduino Micro Pro</option>-->
+
+                                                            <% }) %>
+
+                                                            <script>
+
+
+                                                            </script>
+
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ruleCondition_compid_u">Component</label>
+                                                        <select id="ruleCondition_compid_u"
+                                                                name="ruleCondition_compid_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+                                                            <% components.forEach(function(component) { %>
+
+                                                            <option value="<%= component.compId %>"> <%= component.name %> </option>
+                                                            <!--<option value="2">Arduino Uno</option>-->
+                                                            <!--<option value="3">Arduino Micro Pro</option>-->
+
+                                                            <% }) %>
+
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="ruleCondition_expression_u">Expression</label>
+                                                        <select id="ruleCondition_expression_u"
+                                                                name="ruleCondition_expression_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+                                                            <option value="between">Between</option>
+                                                            <option value="==">==</option>
+                                                            <option value=">">></option>
+                                                            <option value="=>">=></option>
+                                                            <option value="<"><</option>
+                                                            <option value="=<">=<</option>
+
+                                                        </select>
+                                                    </div>
+
+
+                                                    <div class="form-group" id="valueDiv_u">
+                                                        <label for="ruleCondition_value_u">Value</label>
+                                                        <input type="text" class="form-control" required
+                                                               name="ruleCondition_value_u"/>
+
+                                                    </div>
+                                                    <div class="form-group" id="betweenDiv1_u">
+                                                        <label for="ruleCondition_value_lower_u">Lower value </label>
+                                                        <input type="text" class="form-control" required
+                                                               name="ruleCondition_value_lower_u"/>
+                                                    </div>
+                                                    <div class="form-group" id="betweenDiv2_u">
+                                                        <label for="ruleCondition_value_higher_u">Upper value </label>
+                                                        <input type="text" class="form-control" required
+                                                               name="ruleCondition_value_higher_u"/>
+                                                    </div>
+
+
+                                                    <!--<div class="form-group" id="valueDiv_u">-->
+                                                    <!--<label for="ruleCondition_value_u">Value</label>-->
+                                                    <!--<input type="text" class="form-control" required-->
+                                                    <!--name="ruleCondition_value_u"/>-->
+
+                                                    <!--</div>-->
+                                                    <!--<div class="form-group" id="betweenDiv1_u">-->
+                                                    <!--<label for="ruleCondition_value_lower_u">Lower value </label>-->
+                                                    <!--<input type="text" class="form-control" required-->
+                                                    <!--name="ruleCondition_value_lower_u"/>-->
+                                                    <!--</div>-->
+                                                    <!--<div class="form-group" id="betweenDiv2_u">-->
+                                                    <!--<label for="ruleCondition_value_higher_u">Upper value </label>-->
+                                                    <!--<input type="text" class="form-control" required-->
+                                                    <!--name="ruleCondition_value_higher_u"/>-->
+                                                    <!--</div>-->
+                                                </div>
+                                                <div class="form-group">
+                                                    <br></div>
+                                                <div style="background-color:grey; overflow: auto;">
+                                                    <label>Consequence</label>
+                                                </div>
+                                                <div style="background-color:lightgrey; overflow: auto;">
+
+
+                                                    <div class="form-group">
+                                                        <label for="ruleConsequence_mcid_u">Device</label>
+                                                        <select id="ruleConsequence_mcid_u"
+                                                                name="ruleConsequence_mcid_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+                                                            <% devices.forEach(function(device) { %>
+
+                                                            <option value="<%= device.mcId %>"> <%= device.name %> </option>
+                                                            <!--<option value="2">Arduino Uno</option>-->
+                                                            <!--<option value="3">Arduino Micro Pro</option>-->
+
+                                                            <% }) %>
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="ruleConsequence_compid_u">Component</label>
+                                                        <select id="ruleConsequence_compid_u"
+                                                                name="ruleConsequence_compid_u"
+                                                                class="form-control dropdown-toggle">
+
+                                                            <option value=""></option>
+                                                            <% components.forEach(function(component) { %>
+
+                                                            <option value="<%= component.compId %>"> <%= component.name %> </option>
+                                                            <!--<option value="2">Arduino Uno</option>-->
+                                                            <!--<option value="3">Arduino Micro Pro</option>-->
+
+                                                            <% }) %>
+
+                                                            <!--<option value="1">Door</option>-->
+                                                            <!--<option value="2">Light</option>-->
+                                                            <!--<option value="3">Temperature</option>-->
+                                                            <!--<option value="4">Humidity</option>-->
+                                                            <!--<option value="5">Pressure</option>-->
+                                                            <!--<option value="6">Altitude</option>-->
+                                                            <!--<option value="7">Motion</option>-->
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="ruleConsequence_action_u">Action</label>
+                                                        <select id="ruleConsequence_action_u"
+                                                                name="ruleConsequence_action_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+
+                                                            <option value="SET">SET</option>
+                                                            <option value="GET">GET</option>
+                                                            <option value="notify">Notify</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <!--<div class="form-group">-->
+                                                    <!--<label for="ruleConsequence_value">Value</label>-->
+                                                    <!--<input type="text" class="form-control" required-->
+                                                    <!--name="ruleConsequence_value"/>-->
+                                                    <!--</div>-->
+                                                    <div class="form-group">
+                                                        <label for="ruleConsequence_value_u">Value</label>
+                                                        <select id="ruleConsequence_value_u"
+                                                                name="ruleConsequence_value_u"
+                                                                class="form-control dropdown-toggle">
+                                                            <option value=""></option>
+
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                    <button id="updateButton" type="submit" class="btn btn-primary">
+                                                        Update
+                                                        changes
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <!--  -->
+                                    </div>
+                                </div>
+                                <!-- End Update Modal -->
+
+                            </div>
+
+                        </div>
+                        <!-- End Modal -->
+                        <br/>
+
+
+                        <br/>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped table-responsive">
+
+                                <thead>
+                                <tr>
+                                    <th bgcolor="#d3d3d3" align="center" colspan="4" align="middle">Rule</th>
+                                    <th bgcolor="#a9a9a9" bg align="center" colspan="6">Condndition</th>
+                                    <th bgcolor="#808080" align="center" colspan="4">Consequence</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Active</th>
+                                    <th>Primary</th>
+                                    <th>Device</th>
+                                    <th>Comp</th>
+                                    <th>Exp</th>
+                                    <th>Val</th>
+                                    <th>Val L</th>
+                                    <th>Val U</th>
+                                    <th>Device</th>
+                                    <th>Comp</th>
+                                    <th>Action</th>
+                                    <th>Val</th>
+
+                                    <th></th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="table_div">
+
+                                <% rules.forEach(function(rule){ %>
+
+                                <tr id="rule_<%= rule.id %>" class="">
+                                    <td>
+                                        <div hidden id="id_<%= rule.id %>"><%= rule.id %></div>
+                                        <div id="ruleId_<%= rule.rule_id %>"><%= rule.rule_id %></div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleName_<%= rule.rule_id %>"><%= rule.rule_name %></div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleActive_<%= rule.rule_id %>"><%if( rule.active =='Y') { %> <span class="glyphicon glyphicon-ok"></span> <% } else { %> <span class="glyphicon glyphicon-remove"></span> <%}%></div>
+                                    </td>
+
+                                    <td>
+                                        <div id="ruleIsPrimary_<%= rule.rule_id %>"><%if( rule.isPrimary =='Y') { %> <span class="glyphicon glyphicon-ok"></span> <% } else { %> <span class="glyphicon glyphicon-remove"></span> <%}%></div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleCondition_mcid_<%= rule.rule_id %>"><%= rule.condition_mcid %>
+
+                                            </div>
+                                        <div id="ruleCondition_mcid_<%= rule.rule_id %>"><%= rule.condition_mcid_name %></div>
+                                    </td>
+                                    <td>
+                                            <div id="ruleCondition_compid_<%= rule.rule_id %>"><%if (rule.condition_compid !== 'null') { %> <%= rule.condition_compid %> <%} %>
+                                            </div>
+                                        <div id="ruleCondition_compid_<%= rule.rule_id %>"><%if (rule.condition_compid !== 'null') { %> <%= rule.condition_compid_name %> <%} %></div>
+
+                                    </td>
+                                    <td>
+                                        <div id="ruleCondition_expression_<%= rule.rule_id %>"><%= rule.condition_expression %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleCondition_value_<%= rule.rule_id %>"><%= rule.condition_value %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleCondition_value_lower_<%= rule.rule_id %>"><%= rule.condition_value_lower %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleCondition_value_higher_<%= rule.rule_id %>"><%= rule.condition_value_higher %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleConsequence_mcid_<%= rule.rule_id %>"><%= rule.consequence_mcid %>                                        </div>
+
+                                        <div id="ruleConsequence_mcid_<%= rule.rule_id %>"><%= rule.consequence_mcid_name %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleConsequence_compid_<%= rule.rule_id %>"><%if (rule.consequence_compid !== 'null') { %> <%= rule.consequence_compid %> <%} %>                                        </div>
+
+                                        <div id="ruleConsequence_compid_<%= rule.rule_id %>"><%if (rule.consequence_compid !== 'null') { %> <%= rule.consequence_compid_name %> <%} %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleConsequence_action_<%= rule.rule_id %>"><%= rule.consequence_action %>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="ruleConsequence_value_<%= rule.rule_id %>">  <%if (rule.consequence_value !== 'null') { %> <%= rule.consequence_value %> <%} %>
+
+                                        </div>
+                                    </td>
+
+                                    <!--<a id="updateRule_<%= rule.rule_id %>" href="#modal-container-2" role="button" class="btn btn-primary" data-toggle="modal"><span class="glyphicon glyphicon-pencil"></span></a>-->
+                                    <td>
+                                        <button id="updateRule_<%= rule.rule_id %>"
+                                                onclick="updaterule('<%= rule.id %>','<%= rule.rule_id %>', '<%= rule.rule_name %>','<%= rule.condition_mcid %>','<%= rule.condition_compid %>','<%= rule.condition_expression %>', '<%= rule.condition_value %>', '<%= rule.condition_value_lower %>', '<%= rule.condition_value_higher %>', '<%= rule.consequence_mcid %>', '<%= rule.consequence_compid %>', '<%= rule.consequence_action %>', '<%= rule.consequence_value %>', '<%= rule.active %>', '<%= rule.isPrimary %>')"
+                                                class="btn btn-default btn-sm"><span
+                                                    class="glyphicon glyphicon-pencil"></span></button>
+                                        <!---->
+                                        <button id="deleteRule_<%= rule.id %>"
+                                                onclick="deleterule('<%= rule.id %>')"
+                                                class="btn btn-default btn-sm"><span
+                                                    class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <% }) %>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer>
+                <% include partials/footer %>
+            </footer>
+        </div>
+        <!--<div class="col-xs-2 col-md-2"></div>-->
+    </div>
+</div>
 
 </body>
 </html>
 
 
 <script>
+
+    $(function () {
+        $('#addForm').find('#betweenDiv1_i').hide();
+        $('#addForm').find('#betweenDiv2_i').hide();
+        $('#addForm').find('#valueDiv_i').hide();
+        $('#addForm').find("#ruleConsequence_value_i").empty();
+        $('#addForm').find('#consequence_i').hide();
+
+
+
+    });
+
+//    $('#ruleIsPrimary_i').change(function () {
+//
+//        if ($('#addForm').find('input[name="ruleIsPrimary_i"]').is(':checked')) {
+//            $('#addForm').find('#consequence_i').show();
+//            //alert(" isPrimary='Y'");
+//
+//        } else
+//        {
+//            $('#addForm').find('#consequence_i').hide();
+//            //alert(" isPrimary='N'");
+//
+//
+//        }
+//
+//    });
+
+
+
+    $('#addForm').find('input[name="ruleIsPrimary_i"]').click(function(){
+        if($(this).prop("checked") == true){
+//            alert("Checkbox is checked.");
+        $('#addForm').find('#consequence_i').show();
+
+        }
+        else if($(this).prop("checked") == false){
+//            alert("Checkbox is unchecked.");
+                        $('#addForm').find('#consequence_i').hide();
+
+        }
+    });
+
+
+
+
+
+    $('#refresh-1').click(function () {
+        document.location.reload();
+    });
+
+
+    $('#insertButton').click(function () {
+        $('#modal-container-1').modal('hide');
+    });
+
+
+    $('#insertButton').click(function () {
+        //var insertItem = confirm('Do you want to update record: ' + $('#addForm').find('input[name="password"]').val() + ' ?');
+        var active_v;
+        var isPrimary_v;
+
+        //alert($('#addForm').find('input[name="ruleActive_i"]').is(':checked'));
+
+        if ($('#addForm').find('input[name="ruleActive_i"]').is(':checked')) {
+            active_v='Y';
+            //alert(" active='Y'");
+        } else
+        {
+            active_v='N';
+            //alert(" active='N'");
+
+        }
+
+        if ($('#addForm').find('input[name="ruleIsPrimary_i"]').is(':checked')) {
+            isPrimary_v='Y';
+            //alert(" isPrimary='Y'");
+
+        } else
+        {
+            isPrimary_v='N';
+            //alert(" isPrimary='N'");
+
+
+        }
+
+
+        var data1 = {
+            rule_id: $('#addForm').find('input[name="ruleId_i"]').val(),
+            rule_name: $('#addForm').find('input[name="ruleName_i"]').val(),
+            condition_mcid: $('#addForm').find('select[name="ruleCondition_mcid_i"]').val(),
+            condition_compid: $('#addForm').find('select[name="ruleCondition_compid_i"]').val(),
+            condition_expression: $('#addForm').find('select[name="ruleCondition_expression_i"]').val(),
+            condition_value: $('#addForm').find('input[name="ruleCondition_value_i"]').val(),
+            condition_value_lower: $('#addForm').find('input[name="ruleCondition_value_lower_i"]').val(),
+            condition_value_higher: $('#addForm').find('input[name="ruleCondition_value_higher_i"]').val(),
+            consequence_mcid: $('#addForm').find('select[name="ruleConsequence_mcid_i"]').val(),
+            consequence_compid: $('#addForm').find('select[name="ruleConsequence_compid_i"]').val(),
+            consequence_action: $('#addForm').find('select[name="ruleConsequence_action_i"]').val(),
+            consequence_value: $('#addForm').find('select[name="ruleConsequence_value_i"]').val(),
+            active: active_v,
+            isPrimary: isPrimary_v,
+            condition_mcid_name: $('#ruleCondition_mcid_i option:selected').text(),
+            condition_compid_name: $('#ruleCondition_compid_i option:selected').text(),
+            consequence_mcid_name: $('#ruleConsequence_mcid_i option:selected').text(),
+            consequence_compid_name: $('#ruleConsequence_compid_i option:selected').text()
+
+        };
+
+        alert(JSON.stringify(data1) );
+
+
+        $.ajax({
+            url: '/api/v1.0/rules',
+            dataType: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data1),
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+//                $('#alertSuccess').show();
+                document.location.reload(true);
+
+            },
+            error: function (xhr) {
+//                alert('ERROR');
+                document.location.reload(true);
+
+            }
+        });
+    });
+
+
+    function updaterule(id, rule_id, rule_name, condition_mcid, condition_compid, condition_expression, condition_value, condition_value_lower, condition_value_higher, consequence_mcid, consequence_compid, consequence_action, consequence_value, active, isPrimary) {
+        $('#modal-container-2').modal('show');
+
+        $('#updateForm').find('input[name="id_u"]').val(id);
+        $('#updateForm').find('input[name="ruleId_u"]').val(rule_id);
+        $('#updateForm').find('input[name="ruleName_u"]').val(rule_name);
+        $('#updateForm').find('select[name="ruleCondition_mcid_u"]').val(condition_mcid);
+        $('#updateForm').find('select[name="ruleCondition_compid_u"]').val(condition_compid);
+        $('#updateForm').find('select[name="ruleCondition_expression_u"]').val(condition_expression);
+
+        if (condition_expression == "between") {
+//            $('#updateForm').find('input[name="ruleCondition_value_u"]').hide();
+//            $('#updateForm').find('input[name="ruleCondition_value_lower_u"]').show();
+//            $('#updateForm').find('input[name="ruleCondition_value_higher_u"]').show();
+            $('#updateForm').find('#betweenDiv1_u').show();
+            $('#updateForm').find('#betweenDiv2_u').show();
+            $('#updateForm').find('#valueDiv_u').hide();
+        } else {
+//            $('#updateForm').find('input[name="ruleCondition_value_u"]').show();
+//            $('#updateForm').find('input[name="ruleCondition_value_lower_u"]').hide();
+//            $('#updateForm').find('input[name="ruleCondition_value_higher_u"]').hide();
+            $('#updateForm').find('#betweenDiv1_u').hide();
+            $('#updateForm').find('#betweenDiv2_u').hide();
+            $('#updateForm').find('#valueDiv_u').show();
+        }
+
+        $('#updateForm').find('input[name="ruleCondition_value_u"]').val(condition_value);
+
+        $('#updateForm').find('input[name="ruleCondition_value_lower_u"]').val(condition_value_lower);
+        $('#updateForm').find('input[name="ruleCondition_value_higher_u"]').val(condition_value_higher);
+
+        $('#updateForm').find('select[name="ruleConsequence_mcid_u"]').val(consequence_mcid);
+        $('#updateForm').find('select[name="ruleConsequence_compid_u"]').val(consequence_compid);
+        $('#updateForm').find('select[name="ruleConsequence_action_u"]').val(consequence_action);
+
+
+        if (active == 'Y') {
+            $('#updateForm').find('input[name="ruleActive_u"]').prop('checked', true);
+        } else {
+            $('#updateForm').find('input[name="ruleActive_u"]').prop('checked', false);
+        }
+
+        if (isPrimary == 'Y') {
+            $('#updateForm').find('input[name="ruleIsPrimary_u"]').prop('checked', true);
+        } else {
+            $('#updateForm').find('input[name="ruleIsPrimary_u"]').prop('checked', false);
+        }
+
+//-------------------------- populate the value button
+
+        $('#updateForm').find("#ruleConsequence_value_u").empty();
+        $('#updateForm').find("#ruleConsequence_value_u").append("<option> </option>");
+
+        if ($('#updateForm').find('select[name="ruleConsequence_action_u"]').val() == "notify") {
+
+            $.ajax({
+                url: '/api/v1.0/notifications',
+                dataType: "json",
+                type: "get",
+                contentType: 'application/json; charset=utf-8',
+                data: '',
+                async: true,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    $.each(data.notifications, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                        $("#ruleConsequence_value_u").append("<option value=\"" + value.id + "\">" + value.name_short + "</option>");
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(ajaxOptions);
+                    alert(thrownError);
+                }
+            });
+
+        } else {
+            $("#ruleConsequence_value_u").append("<option value=\"" + "ON" + "\">" + "ON" + "</option>");
+            $("#ruleConsequence_value_u").append("<option value=\"" + "OFF" + "\">" + "OFF" + "</option>");
+
+        }
+        $('#updateForm').find('select[name="ruleConsequence_value_u"]').val(consequence_value);//********************
+
+    }
+
+    $('#updateButton').click(function () {
+        // var updateItem = confirm ('Do you want to update record: ' + $('#updateForm').find('input[name="password"]').val() + ' ?');
+        var active_v;
+        var isPrimary_v;
+
+        //alert($('#addForm').find('input[name="ruleActive_i"]').is(':checked'));
+
+        if ($('#updateForm').find('input[name="ruleActive_u"]').is(':checked')) {
+            active_v='Y';
+            //alert(" active='Y'");
+        } else
+        {
+            active_v='N';
+            //alert(" active='N'");
+
+        }
+
+        if ($('#updateForm').find('input[name="ruleIsPrimary_u"]').is(':checked')) {
+            isPrimary_v='Y';
+            //alert(" isPrimary='Y'");
+
+        } else
+        {
+            isPrimary_v='N';
+            //alert(" isPrimary='N'");
+
+
+        }
+
+
+        var data1 = {
+            id: $('#updateForm').find('input[name="id_u"]').val(),
+            rule_id: $('#updateForm').find('input[name="ruleId_u"]').val(),
+            rule_name: $('#updateForm').find('input[name="ruleName_u"]').val(),
+            condition_mcid: $('#updateForm').find('select[name="ruleCondition_mcid_u"]').val(),
+            condition_compid: $('#updateForm').find('select[name="ruleCondition_compid_u"]').val(),
+            condition_expression: $('#updateForm').find('select[name="ruleCondition_expression_u"]').val(),
+            condition_value: $('#updateForm').find('input[name="ruleCondition_value_u"]').val(),
+            condition_value_lower: $('#updateForm').find('input[name="ruleCondition_value_lower_u"]').val(),
+            condition_value_higher: $('#updateForm').find('input[name="ruleCondition_value_higher_u"]').val(),
+            consequence_mcid: $('#updateForm').find('select[name="ruleConsequence_mcid_u"]').val(),
+            consequence_compid: $('#updateForm').find('select[name="ruleConsequence_compid_u"]').val(),
+            consequence_action: $('#updateForm').find('select[name="ruleConsequence_action_u"]').val(),
+            consequence_value: $('#updateForm').find('select[name="ruleConsequence_value_u"]').val(),
+//            active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            isPrimary: $('#updateForm').find('input[name="ruleIsPrimary_u"]').val() active: $('#updateForm').find('input[name="ruleActive_u"]').val(),
+//            isPrimary: $('#updateForm').find('input[name="ruleIsPrimary_u"]').val()
+            active: active_v,
+            isPrimary: isPrimary_v,
+            condition_mcid_name: $('#ruleCondition_mcid_u option:selected').text(),
+            condition_compid_name: $('#ruleCondition_compid_u option:selected').text(),
+            consequence_mcid_name: $('#ruleConsequence_mcid_u option:selected').text(),
+            consequence_compid_name: $('#ruleConsequence_compid_u option:selected').text()
+
+        };
+
+        alert(JSON.stringify(data1));
+
+        $.ajax({
+            url: '/api/v1.0/rules',
+            dataType: "json",
+            type: "post",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data1),
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+               document.location.reload(true);
+
+//                $('#alertSuccess').show();
+//                alert('SUCCESS'+data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+              document.location.reload(true);
+
+//                alert(xhr.status);
+//                alert(ajaxOptions);
+//                alert(thrownError);
+            }
+        });
+    });
+
+
+    function deleterule(id) {
+
+        //var delItem = confirm ('Do you want to delete rule: ' + id  +' ?');
+        if (true) {
+            $.ajax({
+                url: '/api/v1.0/rule/' + id,
+                type: 'DELETE',
+                success: function (result) {
+                    //$("#alertSuccess").show();
+                    $('#rule_' + id).remove();
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+
+
+        }
+    }
+    ;
+
+
+    $("#ruleCondition_mcid_i").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        var m = $('#addForm').find('select[name="ruleCondition_mcid_i"]').val();
+        $("#ruleCondition_compid_i").empty();
+
+        $.ajax({
+            url: '/components/' + m,
+            dataType: "json",
+            type: "get",
+            contentType: 'application/json; charset=utf-8',
+            data: '',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                $.each(data.components, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                    $("#ruleCondition_compid_i").append("<option value=\"" + value.compId + "\">" + value.name + "</option>");
+                });
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(ajaxOptions);
+                alert(thrownError);
+            }
+        });
+    });
+
+
+    $("#ruleCondition_mcid_u").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        var m = $('#updateForm').find('select[name="ruleCondition_mcid_u"]').val();
+        $("#ruleCondition_compid_u").empty();
+
+        $.ajax({
+            url: '/components/' + m,
+            dataType: "json",
+            type: "get",
+            contentType: 'application/json; charset=utf-8',
+            data: '',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                $.each(data.components, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                    $("#ruleCondition_compid_u").append("<option value=\"" + value.compId + "\">" + value.name + "</option>");
+                });
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(ajaxOptions);
+                alert(thrownError);
+            }
+        });
+    });
+
+
+    $("#ruleConsequence_mcid_i").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        var m = $('#addForm').find('select[name="ruleConsequence_mcid_i"]').val();
+        $("#ruleConsequence_compid_i").empty();
+
+        $.ajax({
+            url: '/components/' + m,
+            dataType: "json",
+            type: "get",
+            contentType: 'application/json; charset=utf-8',
+            data: '',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                $.each(data.components, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                    $("#ruleConsequence_compid_i").append("<option value=\"" + value.compId + "\">" + value.name + "</option>");
+                });
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(ajaxOptions);
+                alert(thrownError);
+            }
+        });
+    });
+
+
+    $("#ruleConsequence_mcid_u").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        var m = $('#updateForm').find('select[name="ruleConsequence_mcid_u"]').val();
+        $("#ruleConsequence_compid_u").empty();
+
+        $.ajax({
+            url: '/components/' + m,
+            dataType: "json",
+            type: "get",
+            contentType: 'application/json; charset=utf-8',
+            data: '',
+            async: true,
+            processData: false,
+            cache: false,
+            success: function (data) {
+                $.each(data.components, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                    $("#ruleConsequence_compid_u").append("<option value=\"" + value.compId + "\">" + value.name + "</option>");
+                });
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(ajaxOptions);
+                alert(thrownError);
+            }
+        });
+    });
+
+
+    $("#ruleCondition_expression_i").change(function () {
+        if ($('#addForm').find('select[name="ruleCondition_expression_i"]').val() == "between") {
+
+            $('#addForm').find('#betweenDiv1_i').show();
+            $('#addForm').find('#betweenDiv2_i').show();
+            $('#addForm').find('#valueDiv_i').hide();
+
+        } else {
+
+            $('#addForm').find('#betweenDiv1_i').hide();
+            $('#addForm').find('#betweenDiv2_i').hide();
+            $('#addForm').find('#valueDiv_i').show();
+        }
+        ;
+
+
+    })
+
+    $("#ruleCondition_expression_u").change(function () {
+        if ($('#updateForm').find('select[name="ruleCondition_expression_u"]').val() == "between") {
+
+            $('#updateForm').find('#betweenDiv1_u').show();
+            $('#updateForm').find('#betweenDiv2_u').show();
+            $('#updateForm').find('#valueDiv_u').hide();
+
+//            $('#updateForm').find('#ruleCondition_value_higher_u').show();
+//            $('#updateForm').find('#ruleCondition_value_lower_u').show();
+//            $('#updateForm').find('#ruleCondition_value_u').hide();
+
+
+        } else {
+
+            /**/
+            $('#updateForm').find('#betweenDiv1_u').hide();
+            $('#updateForm').find('#betweenDiv2_u').hide();
+            $('#updateForm').find('#valueDiv_u').show();
+
+//            $('#updateForm').find('#ruleCondition_value_higher_u').hide();
+//            $('#updateForm').find('#ruleCondition_value_lower_u').hide();
+//            $('#updateForm').find('#ruleCondition_value_u').show();
+        }
+        ;
+
+
+    })
+
+
+    $("#ruleConsequence_action_i").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        $("#ruleConsequence_value_i").empty();
+        $("#ruleConsequence_value_i").append("<option> </option>");
+
+        if ($('#addForm').find('select[name="ruleConsequence_action_i"]').val() == "notify") {
+
+            $.ajax({
+                url: '/api/v1.0/notifications',
+                dataType: "json",
+                type: "get",
+                contentType: 'application/json; charset=utf-8',
+                data: '',
+                async: true,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    $.each(data.notifications, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                        $("#ruleConsequence_value_i").append("<option value=\"" + value.id + "\">" + value.name_short + "</option>");
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(ajaxOptions);
+                    alert(thrownError);
+                }
+            });
+
+
+        } else {
+            $("#ruleConsequence_value_i").append("<option value=\"" + "ON" + "\">" + "ON" + "</option>");
+            $("#ruleConsequence_value_i").append("<option value=\"" + "OFF" + "\">" + "OFF" + "</option>");
+
+        }
+    });
+
+
+    $("#ruleConsequence_action_u").change(function () {
+        //alert($('#addForm').find('select[name="ruleCondition_mcid"]').val());
+        $("#ruleConsequence_value_u").empty();
+        $("#ruleConsequence_value_u").append("<option> </option>");
+
+        if ($('#updateForm').find('select[name="ruleConsequence_action_u"]').val() == "notify") {
+
+            $.ajax({
+                url: '/api/v1.0/notifications',
+                dataType: "json",
+                type: "get",
+                contentType: 'application/json; charset=utf-8',
+                data: '',
+                async: true,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    $.each(data.notifications, function (key, value) {
+//                                                                            alert(value.name);
+//                                                                            alert(value.compId);
+                        $("#ruleConsequence_value_u").append("<option value=\"" + value.id + "\">" + value.name_short + "</option>");
+                    });
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(ajaxOptions);
+                    alert(thrownError);
+                }
+            });
+
+
+        } else {
+            $("#ruleConsequence_value_u").append("<option value=\"" + "ON" + "\">" + "ON" + "</option>");
+            $("#ruleConsequence_value_u").append("<option value=\"" + "OFF" + "\">" + "OFF" + "</option>");
+
+        }
+    });
+
 
 </script>

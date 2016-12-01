@@ -2,138 +2,210 @@
 <html lang="en">
 
 <head>
-  <% include partials/head %>
+    <% include partials/head %>
 </head>
 
 <header>
-  <% include partials/header %>
+    <% include partials/header %>
 </header>
 
 <body>
 
 
-
 <!-- Custom CSS -->
 <style>
-  body {
-    padding-top: 70px;
-    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  }
+    body {
+        padding-top: 70px;
+        /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    }
 </style>
 
 <!-- Page Content -->
 <!--<div class="container-fluid">-->
 
-  <!--<div class="row">-->
-    <!--<div class="col-lg-12 text-center">-->
-      <!--<h1><i>ai</i><b>Cubes</b></h1>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--&lt;!&ndash; /.row &ndash;&gt;-->
+<!--<div class="row">-->
+<!--<div class="col-lg-12 text-center">-->
+<!--<h1><i>ai</i><b>Cubes</b></h1>-->
+<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; /.row &ndash;&gt;-->
 
 </div>
-
-
 
 
 <!-- /.container -->
 <div class="container-fluid">
 
-  <div class="row">
-    <div class="col-xs-2 col-md-2"></div>
-    <div class="col-xs-8 col-md-8">
-      <!--<h2>Sensors</h2>-->
-      <!--<p>Status of sensors in different rooms </p>-->
-      <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
-      <div><a id="refresh-1" href="notifications" role="button" class="btn"
-              data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a> <p></div>
+    <div class="row">
+        <div class="col-xs-1 col-md-1"></div>
+        <div class="col-xs-10 col-md-10">
+
+            <div><a id="refresh-1" href="notifications" role="button" class="btn"
+                    data-toggle="modal"><span class="glyphicon glyphicon-refresh"></span> Refresh</a>
+                <p></div>
+            <% var counter = 0; %>
+            <% categories.forEach(function(category){ %>
+            <div class="panel panel-default" style="padding-left: 10px; padding-right: 10px;">
+
+                <h4><%= category.category %> </h4>
+                <h4 align="right">
+                    <button type="button" data-toggle="collapse" data-target="#toggle_<%= counter %>"
+                            class="btn btn-link btn-sm " align="right">
+                        <span id="button<%= counter %>" class="glyphicon glyphicon-plus" ></span>
+
+                    </button> </h4>
 
 
 
-      <% categories.forEach(function(category){ %>
-      <h2><%=category.category%></h2>
-      <p> </p>
+                <p></p>
+                <div class="panel panel-default" hidden id="toggle_<%= counter %>">
+                    <script>
 
-      <table  class="table table-hover table-striped table-responsive">
-        <thead>
+                        $('#toggle_<%= counter %>').on('hide.bs.collapse', function () {
+                            $("#button<%= counter %>").removeClass("glyphicon glyphicon-minus").addClass("glyphicon glyphicon-plus");
 
+                        });
 
-        <tr class=" ">
-          <!--<th>MicroController ID</th>-->
-          <!--<th>Component ID</th>-->
-          <th>Description</th>
-          <!--<th>Action</th>-->
-          <th>Value</th>
-          <th>Control</th>
+                        $('#toggle_<%= counter %>').on('show.bs.collapse', function () {
+                            $("#button<%= counter %>").removeClass("glyphicon glyphicon-plus").addClass("glyphicon glyphicon-minus");
+                        });
 
-        </tr>
+                    </script>
 
-
-        </thead>
-        <tbody>
-
-        <% components.forEach(function(component){ %>
-        <% if (component.category === category.category && component.visible ==='y') { %>
-
-        <tr class="">
-          <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <!--<td><div id="compId_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <!--<td class="col-md-1"><div id="compDesc_<%= component.mcId %>_<%= component.compId %>"><%= component.desc %></div></td>-->
-          <td class="col-md-1"><div id="compName_<%= component.mcId %>_<%= component.compId %>"><%= component.name %></div></td>
-
-          <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
-          <td class="col-md-2"><div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div></td>
-          <th>
-            <% if (component.value === 'Digital Switches'){ %>
-            <button id="setOnL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-record"></span></button>
-            <button id="setOffL_<%= component.mcId %>_<%= component.compId %>" onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')" class="btn btn-default btn-sm">  <span class="glyphicon glyphicon-off"></span></button>
-          <%  } else { %>
-            <button id="refreshValue" onClick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'GET', '')" class="btn btn-default btn-sm">
-              <span class="glyphicon glyphicon-refresh"></span>
-            </button>
+                    <% counter++ %>
+                    <table class="table table-hover table-striped table-responsive">
+                        <thead>
 
 
+                        <tr>
+                            <!--<th>MicroController ID</th>-->
+                            <!--<th>Component ID</th>-->
+                            <th>Description</th>
+                            <!--<th>Action</th>-->
+                            <th>Value</th>
+                            <th>Control</th>
 
-          <%};%>
-          </th>
-
-        </tr>
-        <% };%>
-        <% })%>
-
-
-
-        <tbody>
-      </table>
+                        </tr>
 
 
+                        </thead>
+                        <tbody>
 
-      <%})%>
+                        <% components.forEach(function(component){ %>
+                        <% if (component.category === category.category && component.visible === 'y') { %>
+
+                        <tr class="">
+                            <!--<td><div id="mcID_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                            <!--<td><div id="compId_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                            <!--<td class="col-md-1"><div id="compDesc_<%= component.mcId %>_<%= component.compId %>"><%= component.desc %></div></td>-->
+                            <td class="col-xs-1">
+                                <div id="compName_<%= component.mcId %>_<%= component.compId %>"><%= component.name %></div>
+                            </td>
+
+                            <!--<td><div id="compAction_<%= component.mcId %>_<%= component.compId %>"></div></td>-->
+                            <td class="col-xs-1">
+                                <div id="compValue_<%= component.mcId %>_<%= component.compId %>">...</div>
+                            </td>
+                            <td class="col-xs-1">
+                                <% if (component.value === 'Digital Switches'){ %>
+
+                                <!--<div class="make-switch">-->
+                                    <!--<input type="checkbox" size="small" checked="true" class="probeProbe"-->
+                                           <!--id="my-checkbox_<%= component.mcId %>_<%= component.compId %>"/>-->
+                                <!--</div>-->
 
 
+                                <script>
+
+
+//                                    //alert($("#compValue_<%= component.mcId %>_<%= component.compId %>").text());
+//                                    //
+////                                    if ($("#compValue_<%= component.mcId %>_<%= component.compId %>").text() == "ON") {
+////                                        $("#my-checkbox_<%= component.mcId %>_<%= component.compId %>").bootstrapSwitch('state', true);
+////
+////                                    } else
+////                                        {
+////                                            $("#my-checkbox_<%= component.mcId %>_<%= component.compId %>").bootstrapSwitch('state', false);
+////
+////
+////                                        }
+//
+//
+//                                    $('#compValue_<%= component.mcId %>_<%= component.compId %>').on('contentchanged', function () {
+//
+//                                        if ($("#compValue_<%= component.mcId %>_<%= component.compId %>").text() == "ON") {
+//                                            $("#my-checkbox_<%= component.mcId %>_<%= component.compId %>").bootstrapSwitch('state', true);
+//
+//                                        } else {
+//                                            $("#my-checkbox_<%= component.mcId %>_<%= component.compId %>").bootstrapSwitch('state', false);
+//
+//                                        }
+//                                    });
+//
+//
+//                                    $("#my-checkbox_<%= component.mcId %>_<%= component.compId %>").on('switchChange.bootstrapSwitch', function (event, state) {
+//                                        sendToServer('<%= component.mcId %>', '<%= component.compId %>', '', 'SET', (function(state) { if(state==true) {'OFF'} else {'ON'}}));
+////                                        alert(this);
+////                                        alert(event);
+////                                        alert(state);
+//
+//                                    });
+
+
+                                </script>
+
+                                <button id="setOnL_<%= component.mcId %>_<%= component.compId %>"
+                                onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'ON')"
+                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-record"></span>
+                                </button>
+
+
+                                <button id="setOffL_<%= component.mcId %>_<%= component.compId %>"
+                                onclick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'SET', 'OFF')"
+                                class="btn btn-default btn-sm"><span class="glyphicon glyphicon-off"></span>
+                                </button>
+
+                                <% } else { %>
+                                <button id="refreshValue"
+                                        onClick="sendToServer('<%= component.mcId %>', '<%= component.compId %>','' ,'GET', '')"
+                                        class="btn btn-link btn-sm">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+
+                                <% }; %>
+                            </td>
+
+                        </tr>
+                        <% }; %>
+                        <% }) %>
+
+
+                        <tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <% }) %>
+
+        </div>
+        <div class="col-xs-1 col-md-1"></div>
     </div>
-  <div class="col-xs-2 col-md-2"></div>
-</div>
 
 </div>
-
-
-
-
-
-
 
 
 <!--<div class="container-fluid">-->
-     <!--<h1><%= title %></h1>-->
+<!--<h1><%= title %></h1>-->
 <!--<p>Welcome to <%= title %></p>-->
-  <!--<h1>My First Bootstrap Page</h1>-->
-  <!--<p>This is some text.</p> -->
+<!--<h1>My First Bootstrap Page</h1>-->
+<!--<p>This is some text.</p> -->
 <!--</div>-->
 
 
 <footer>
-  <% include partials/footer %>
+    <% include partials/footer %>
 </footer>
 
 
@@ -142,7 +214,9 @@
 
 
 <script>
-  $('#refresh-1').click(function () {
-    document.location.reload();
-  });
+
+    $('#refresh-1').click(function () {
+        document.location.reload();
+    });
 </script>
+
